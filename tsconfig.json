@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "types": ["@types/lodash"],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "strict": true,
+    "paths": {
+      "@/*": ["src/render/*"],
+      "@src/*": ["src/*"],
+      "@root/*": ["./*"],
+      "@main/*": ["src/main/*"]
+    },
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["src", "typings"]
+}
