@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-09 11:38:22
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-09 16:59:41
+ * @LastEditTime: 2021-06-11 17:49:33
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -10,10 +10,9 @@
   <canvas :width="width" :height="height" class="bg-canvas" ref="canvas"></canvas>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, Ref, computed, readonly } from "vue"
+import { defineComponent, ref, onMounted, Ref, computed } from "vue"
 import { CusMediaStream } from "@main/Event/getMediaStream/media"
 import { VisualMedia } from "./utils/index"
-import { desktopCapturer } from "electron"
 export default defineComponent({
   name: "",
   components: {},

@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-09 09:02:21
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-09 17:25:18
+ * @LastEditTime: 2021-06-11 17:48:16
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -68,29 +68,17 @@ export class CusMediaStream {
   }
 
   public onPrecess(fn: callBack) {
-    if (this.ouputDevices.length == 0) {
-      setTimeout(() => {
-        this.onPrecess(fn)
-      }, 1000)
-      return
-    }
-    let params: Media = {
-      mandatory: {
-        // chromeMediaSource: "desktop",
-        chromeMediaSourceId: this.ouputDevices[2].deviceId,
-      },
-    }
-    console.log(this.ouputDevices[2])
     navigator.mediaDevices
-      .getDisplayMedia({
+      // @ts-ignore
+      .getUserMedia({
         audio: true,
-        video: true,
+        video: false,
       })
-      .then((stream) => {
+      .then((stream: MediaStream) => {
         fn(stream)
       })
-      .catch((err) => {
-        console.log(err)
+      .catch((err: string) => {
+        console.error(err)
       })
   }
 }

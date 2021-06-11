@@ -1,0 +1,23 @@
+.cross-enter-from {
+  transform: translateY(-10px);
+  opacity: 0;
+}
+.cross-enter-active {
+  transition: all 0.3s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.cross-enter-to {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.cross-leave-from {
+  transform: translateY(0);
+  opacity: 1;
+}
+.cross-leave-active {
+  transition: all 0.3s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.cross-leave-to {
+  transform: translateY(10px);
+  opacity: 0;
+}

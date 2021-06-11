@@ -1,0 +1,25 @@
+:root {
+  --theme-color: #3195ff;
+  --primary-color: #3195ff;
+  --primary-hover-color: #4ea3ff;
+  --font-dark-color: #ffffff;
+  --font-light-color: #ffffff;
+  --border-dark-color: #333333;
+  --border-light-color: #cccccc;
+
+  --large-size: 18px;
+  --middle-size: 14px;
+  --small-size: 12px;
+}
+
+$theme: (
+  primary: var(--primary-color),
+  primary-hover: var(--primary-hover-color),
+  font-dark-color: var(--font-dark-color),
+  font-light-color: var(--font-light-color),
+  border-dark-color: var(--border-dark-color),
+  border-light-color: var(--border-light-color),
+  large-size: var(--large-size),
+  middle-size: var(--middle-size),
+  small-size: var(--small-size),
+);

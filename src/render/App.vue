@@ -1,21 +1,14 @@
 <template>
-  <div class="app-box">
-    <CanvasBg />
-  </div>
+  <Layout />
 </template>
 
 <script>
-import CanvasBg from "@/pages/canvasBg/index.vue"
-export default {
+import Layout from "./layout/index.vue"
+import { defineComponent } from "vue"
+export default defineComponent({
   name: "App",
-  components: { CanvasBg },
-}
+  components: { Layout },
+})
 </script>
 
-<style lang="scss">
-.app-box {
-  height: 100%;
-  background: rgba(0, 0, 0, 0);
-  filter: blur(10px);
-}
-</style>
+<style lang="scss"></style>

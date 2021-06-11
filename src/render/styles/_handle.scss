@@ -1,0 +1,37 @@
+@import "./_theme.scss";
+
+@function themed($key) {
+  @return map-get($theme, $key);
+}
+
+@mixin background($color) {
+  background-color: themed($color);
+}
+
+@mixin primary($color) {
+  color: themed($color);
+}
+
+@mixin bg-hover($color) {
+  &:hover {
+    background-color: themed($color + "-hover");
+  }
+}
+
+@mixin border($color) {
+  border: 1px solid themed("border-" + $color + "-color");
+}
+
+@mixin text-hover($color) {
+  &:hover {
+    color: themed($color + "-hover");
+  }
+}
+
+@mixin font-color($color) {
+  color: themed("font-" + $color + "-color");
+}
+
+@mixin font-size($size) {
+  font-size: themed($size + "-size");
+}
