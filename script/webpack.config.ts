@@ -64,11 +64,11 @@ export const config = (env: typeof process.env.NODE_ENV, proc: 'main' | 'render'
           use: ['style-loader', 'css-loader'],
         },
         {
-          test: /\.less$/i,
+          test: /\.scss$/i,
           use: ['style-loader', 'css-loader', {
-            loader: 'less-loader',
+            loader: 'sass-loader',
             options: {
-              lessOptions: {
+              sassOptions: {
                 javascriptEnabled: true,
               },
             },

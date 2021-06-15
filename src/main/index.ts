@@ -1,7 +1,10 @@
 import { BrowserWindow, app } from "electron"
 const path = require("path")
 const isDevelopment = process.env
+
 import menuEvent from "./Event/Menu/index"
+import EventBus from "./Event/bus/index"
+
 let win: BrowserWindow
 
 function getLoadURL() {
@@ -23,9 +26,11 @@ app.on("ready", async () => {
     },
   })
 
-  menuEvent(win)
-
   win.loadURL(getLoadURL())
+
+  menuEvent(win)
+  EventBus(win)
+
   if (isDevelopment && !process.env.IS_TEST) {
     try {
       const { default: installExtension } = require("electron-devtools-installer")

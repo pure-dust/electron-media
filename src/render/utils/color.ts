@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 10:05:23
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-11 11:58:06
+ * @LastEditTime: 2021-06-15 16:48:11
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -57,6 +57,18 @@ type colorType = {
   "--border-light-color": string
 }
 
+export interface RGB {
+  r: number
+  g: number
+  b: number
+}
+
+export interface HSB {
+  h: number
+  s: number
+  b: number
+}
+
 export function createColor(color: string): string {
   let theme: colorType = {
     "--theme-color": color,
@@ -72,4 +84,98 @@ export function createColor(color: string): string {
     str += `${key}: ${theme[key]};`
   }
   return str
+}
+
+export function HSBToRGB(hsb: HSB): RGB {
+  let rgb = {
+    r: 0,
+    g: 0,
+    b: 0,
+  }
+  let h = Math.round(hsb.h)
+  let s = Math.round((hsb.s * 255) / 100)
+  let v = Math.round((hsb.b * 255) / 100)
+
+  if (s == 0) {
+    rgb.r = rgb.g = rgb.b = v
+  } else {
+    let t1 = v
+    let t2 = ((255 - s) * v) / 255
+    let t3 = ((t1 - t2) * (h % 60)) / 60
+
+    if (h == 360) h = 0
+
+    if (h < 60) {
+      rgb.r = t1
+      rgb.b = t2
+      rgb.g = t2 + t3
+    } else if (h < 120) {
+      rgb.g = t1
+      rgb.b = t2
+      rgb.r = t1 - t3
+    } else if (h < 180) {
+      rgb.g = t1
+      rgb.r = t2
+      rgb.b = t2 + t3
+    } else if (h < 240) {
+      rgb.b = t1
+      rgb.r = t2
+      rgb.g = t1 - t3
+    } else if (h < 300) {
+      rgb.b = t1
+      rgb.g = t2
+      rgb.r = t2 + t3
+    } else if (h < 360) {
+      rgb.r = t1
+      rgb.g = t2
+      rgb.b = t1 - t3
+    } else {
+      rgb.r = 0
+      rgb.g = 0
+      rgb.b = 0
+    }
+  }
+
+  return { r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b) }
+}
+
+export function RGBToHSB(rgb: RGB): HSB {
+  let hsb = { h: 0, s: 0, b: 0 }
+  let min = Math.min(rgb.r, rgb.g, rgb.b)
+  let max = Math.max(rgb.r, rgb.g, rgb.b)
+  let delta = max - min
+  hsb.b = max
+  hsb.s = max != 0 ? (255 * delta) / max : 0
+  if (hsb.s != 0) {
+    if (rgb.r == max) hsb.h = (rgb.g - rgb.b) / delta
+    else if (rgb.g == max) hsb.h = 2 + (rgb.b - rgb.r) / delta
+    else hsb.h = 4 + (rgb.r - rgb.g) / delta
+  } else hsb.h = -1
+  hsb.h *= 60
+  if (hsb.h < 0) hsb.h += 360
+  hsb.s *= 100 / 255
+  hsb.b *= 100 / 255
+  return hsb
+}
+
+export function RGBToHEX(rgb: RGB) {
+  let hex = [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)]
+  hex.map(function (str, i) {
+    if (str.length == 1) {
+      hex[i] = "0" + str
+    }
+  })
+  return "#" + hex.join("")
+}
+
+export function HEXToRGB(color: string): RGB {
+  let rgb = {
+    r: 0,
+    g: 0,
+    b: 0,
+  }
+  rgb.r = parseInt(color.substring(1, 3), 16)
+  rgb.g = parseInt(color.substring(3, 5), 16)
+  rgb.b = parseInt(color.substring(5, 7), 16)
+  return rgb
 }

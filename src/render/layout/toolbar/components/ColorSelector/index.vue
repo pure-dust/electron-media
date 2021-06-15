@@ -2,18 +2,18 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 13:51:44
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-11 17:14:55
+ * @LastEditTime: 2021-06-15 16:58:48
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
   <div class="bg-canvas">
-    <div class="color-bg" @mousedown="pointMove" ref="colorBox">
+    <div class="color-bg" :style="bgStyle" @mousedown="pointMove" ref="colorBox">
       <div class="color-cover"></div>
       <div class="point" :style="pointStyle"></div>
     </div>
     <div class="control-box">
-      <div class="slide-bar" @mousedown="slideMove" ref="slideBar">
+      <div class="slide-bar" @mousedown.capture="slideMove" ref="slideBar">
         <div class="slide-thumb" :style="`left: ${slide}px`"></div>
       </div>
     </div>
@@ -21,6 +21,10 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref, computed, reactive, watch } from "vue"
+import { createColor, HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from "@/utils/color"
+import { ipcRenderer } from "electron"
+import { useStore } from "@/store/index"
+
 export default defineComponent({
   name: "ColorSelector",
   props: {},
@@ -32,6 +36,13 @@ export default defineComponent({
     const height: Ref<number> = ref(0)
     const slide: Ref<number> = ref(0)
     const slideWidth: Ref<number> = ref(0)
+    const store = useStore()
+
+    let hsb: HSB = reactive({
+      h: 0,
+      s: 0,
+      b: 0,
+    })
 
     const point = reactive({
       x: 0,
@@ -39,51 +50,73 @@ export default defineComponent({
     })
 
     watch(slide, (v) => {
-      let per: number = parseFloat((v / slideWidth.value).toFixed(2))
-      console.log(per * 360)
+      let x: number = parseFloat((v / slideWidth.value).toFixed(2))
+      hsb.h = Math.round(360 * x)
+    })
+
+    watch(point, (v) => {
+      const { x, y } = v
+      let width: number = colorBox.value?.offsetWidth as number
+      let height: number = colorBox.value?.offsetHeight as number
+      hsb.s = Math.round((100 * x) / width)
+      hsb.b = Math.round((100 * (height - y)) / height)
+    })
+
+    watch(hsb, (v) => {
+      console.log(v)
+      let str: string = createColor(RGBToHEX(HSBToRGB(hsb)))
+      ipcRenderer.send("set-config", {
+        key: "theme",
+        value: RGBToHEX(HSBToRGB(hsb)),
+      })
+      document.querySelector(":root")?.setAttribute("style", str)
     })
 
     const pointStyle = computed(() => `top: ${point.y}px; left: ${point.x}px`)
 
-    const pointMove = (ev: MouseEvent) => {
-      let dom = ev.target as HTMLElement
+    const bgStyle = computed(() => {
+      let c: HSB = {
+        h: hsb.h,
+        s: 100,
+        b: 100,
+      }
+      const { r, g, b } = HSBToRGB(c)
+      return `background: linear-gradient(to right, #ffffff, rgba(${r},${g},${b}))`
+    })
 
+    const pointMove = (ev: MouseEvent) => {
       point.x = ev.offsetX
       point.y = ev.offsetY
 
-      // dom.onmouseleave = () => {
-      //   dom.onmousemove = null
-      //   dom.onmouseup = null
-      // }
+      document.onmousemove = (mouseEv: MouseEvent) => {
+        let left: number = colorBox.value?.getBoundingClientRect().x as number
+        let top: number = colorBox.value?.getBoundingClientRect().y as number
+        let minX: number = Math.min(mouseEv.pageX - left, Number(colorBox.value?.offsetWidth))
+        let minY: number = Math.min(mouseEv.pageY - top, Number(colorBox.value?.offsetHeight))
+        point.x = Math.max(0, minX)
+        point.y = Math.max(0, minY)
 
-      dom.onmousemove = (mouseEv: MouseEvent) => {
-        point.x = mouseEv.offsetX
-        point.y = mouseEv.offsetY
         mouseEv.preventDefault()
       }
 
-      dom.onmouseup = () => {
-        dom.onmousemove = null
+      document.onmouseup = () => {
+        document.onmousemove = null
       }
     }
 
     const slideMove = (ev: MouseEvent) => {
-      let dom = ev.target as HTMLElement
       slide.value = ev.offsetX
 
-      dom.onmousemove = (mouseEv: MouseEvent) => {
-        slide.value = mouseEv.offsetX
+      document.onmousemove = (mouseEv: MouseEvent) => {
+        let left: number = slideBar.value?.getBoundingClientRect().x as number
+        let min: number = Math.min(mouseEv.pageX - left, Number(slideBar.value?.offsetWidth))
+        slide.value = Math.max(0, min)
         mouseEv.preventDefault()
       }
 
-      // dom.onmouseleave = () => {
-      //   dom.onmousemove = null
-      //   dom.onmouseup = null
-      // }
-
-      dom.onmouseup = () => {
-        dom.onmousemove = null
-        dom.onmouseup = null
+      document.onmouseup = () => {
+        document.onmousemove = null
+        document.onmouseup = null
       }
     }
 
@@ -91,7 +124,9 @@ export default defineComponent({
       width.value = colorBox.value?.offsetWidth as number
       height.value = colorBox.value?.offsetHeight as number
       slideWidth.value = slideBar.value?.offsetWidth as number
+      hsb = RGBToHSB(HEXToRGB(store.getters.getTheme))
     })
+
     return {
       colorBox,
       slideBar,
@@ -99,6 +134,8 @@ export default defineComponent({
       pointStyle,
       slideMove,
       slide,
+      hsb,
+      bgStyle,
     }
   },
 })
