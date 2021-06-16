@@ -5,7 +5,14 @@
 }
 
 @mixin background($color) {
-  background-color: themed($color);
+  @if $color == "light" {
+    background-color: themed("bg-" + $color + "-color");
+  }
+  @if $color == "dark" {
+    background-color: themed("bg-" + $color + "-color");
+  } @else {
+    background-color: themed($color);
+  }
 }
 
 @mixin primary($color) {

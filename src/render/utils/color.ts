@@ -2,11 +2,43 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 10:05:23
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-15 16:48:11
+ * @LastEditTime: 2021-06-16 10:25:54
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
 
+type colorType = {
+  [key: string]: string
+  "--theme-color": string
+  "--primary-color": string
+  "--bg-light-color": string
+  "--bg-dark-color": string
+  "--primary-hover-color": string
+  "--font-dark-color": string
+  "--font-light-color": string
+  "--border-dark-color": string
+  "--border-light-color": string
+}
+
+export interface RGB {
+  r: number
+  g: number
+  b: number
+}
+
+export interface HSB {
+  h: number
+  s: number
+  b: number
+}
+
+/**
+ * @description: 混色器
+ * @param {string} color1
+ * @param {string} color2
+ * @param {number} color2 rate
+ * @return {string} HEX color
+ */
 function colourBlend(c1: string, c2: string, ratio: number): string {
   ratio = Math.max(Math.min(Number(ratio), 1), 0)
   let r1 = parseInt(c1.substring(1, 3), 16)
@@ -27,6 +59,12 @@ function colourBlend(c1: string, c2: string, ratio: number): string {
   return "#" + r + g + b
 }
 
+/**
+ * @description: 颜色加深减淡
+ * @param {string} col color
+ * @param {number} amt rate +减淡 -加深
+ * @return {string} HEX color
+ */
 function LightenDarkenColor(col: string, amt: number): string {
   let usePound = false
   if (col[0] == "#") {
@@ -46,33 +84,17 @@ function LightenDarkenColor(col: string, amt: number): string {
   return (usePound ? "#" : "") + (g | (b << 8) | (r << 16)).toString(16)
 }
 
-type colorType = {
-  [key: string]: string
-  "--theme-color": string
-  "--primary-color": string
-  "--primary-hover-color": string
-  "--font-dark-color": string
-  "--font-light-color": string
-  "--border-dark-color": string
-  "--border-light-color": string
-}
-
-export interface RGB {
-  r: number
-  g: number
-  b: number
-}
-
-export interface HSB {
-  h: number
-  s: number
-  b: number
-}
-
+/**
+ * @description: 创建系列颜色
+ * @param {string} color base color
+ * @return {string} 根元素颜色定义代码
+ */
 export function createColor(color: string): string {
   let theme: colorType = {
     "--theme-color": color,
     "--primary-color": color,
+    "--bg-light-color": colourBlend(color, "#FFFFFF", 0.95),
+    "--bg-dark-color": colourBlend(color, "#000000", 0.8),
     "--primary-hover-color": colourBlend(color, "#FFFFFF", 0.2),
     "--font-dark-color": colourBlend(color, "#000000", 0.7),
     "--font-light-color": colourBlend(color, "#FFFFFF", 0.9),
@@ -86,6 +108,11 @@ export function createColor(color: string): string {
   return str
 }
 
+/**
+ * @description: HSB格式颜色 转 RGB格式颜色
+ * @param {HSB} hsb
+ * @return {RGB} rgb
+ */
 export function HSBToRGB(hsb: HSB): RGB {
   let rgb = {
     r: 0,
@@ -139,6 +166,11 @@ export function HSBToRGB(hsb: HSB): RGB {
   return { r: Math.round(rgb.r), g: Math.round(rgb.g), b: Math.round(rgb.b) }
 }
 
+/**
+ * @description: RGB格式颜色 转 HSB 格式颜色
+ * @param {RGB} rgb
+ * @return {*} hsb
+ */
 export function RGBToHSB(rgb: RGB): HSB {
   let hsb = { h: 0, s: 0, b: 0 }
   let min = Math.min(rgb.r, rgb.g, rgb.b)
@@ -155,9 +187,17 @@ export function RGBToHSB(rgb: RGB): HSB {
   if (hsb.h < 0) hsb.h += 360
   hsb.s *= 100 / 255
   hsb.b *= 100 / 255
+  hsb.h = Math.round(hsb.h)
+  hsb.s = Math.round(hsb.s)
+  hsb.b = Math.round(hsb.b)
   return hsb
 }
 
+/**
+ * @description: RGB格式颜色 转 HEX 格式颜色
+ * @param {RGB} rgb
+ * @return {string} hex
+ */
 export function RGBToHEX(rgb: RGB) {
   let hex = [rgb.r.toString(16), rgb.g.toString(16), rgb.b.toString(16)]
   hex.map(function (str, i) {
@@ -168,6 +208,11 @@ export function RGBToHEX(rgb: RGB) {
   return "#" + hex.join("")
 }
 
+/**
+ * @description: HEX格式颜色 转 RGB格式颜色
+ * @param {string} hex
+ * @return {RGB} rgb
+ */
 export function HEXToRGB(color: string): RGB {
   let rgb = {
     r: 0,

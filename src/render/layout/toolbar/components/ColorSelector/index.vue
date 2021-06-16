@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 13:51:44
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-15 16:58:48
+ * @LastEditTime: 2021-06-16 11:57:16
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -20,15 +20,13 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref, computed, reactive, watch } from "vue"
+import { defineComponent, onMounted, ref, Ref, computed, reactive, watch, nextTick } from "vue"
 import { createColor, HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from "@/utils/color"
-import { ipcRenderer } from "electron"
 import { useStore } from "@/store/index"
+import { setColor } from "@/utils/control"
 
 export default defineComponent({
   name: "ColorSelector",
-  props: {},
-  emits: [],
   setup() {
     const colorBox: Ref<HTMLElement | null> = ref(null)
     const slideBar: Ref<HTMLElement | null> = ref(null)
@@ -37,6 +35,7 @@ export default defineComponent({
     const slide: Ref<number> = ref(0)
     const slideWidth: Ref<number> = ref(0)
     const store = useStore()
+    let isInit = false
 
     let hsb: HSB = reactive({
       h: 0,
@@ -49,28 +48,17 @@ export default defineComponent({
       y: 0,
     })
 
-    watch(slide, (v) => {
-      let x: number = parseFloat((v / slideWidth.value).toFixed(2))
-      hsb.h = Math.round(360 * x)
-    })
-
-    watch(point, (v) => {
-      const { x, y } = v
-      let width: number = colorBox.value?.offsetWidth as number
-      let height: number = colorBox.value?.offsetHeight as number
-      hsb.s = Math.round((100 * x) / width)
-      hsb.b = Math.round((100 * (height - y)) / height)
-    })
-
-    watch(hsb, (v) => {
-      console.log(v)
-      let str: string = createColor(RGBToHEX(HSBToRGB(hsb)))
-      ipcRenderer.send("set-config", {
-        key: "theme",
-        value: RGBToHEX(HSBToRGB(hsb)),
-      })
-      document.querySelector(":root")?.setAttribute("style", str)
-    })
+    watch(
+      hsb,
+      (v) => {
+        if (!isInit) return
+        let str: string = createColor(RGBToHEX(HSBToRGB(v)))
+        store.commit("setTheme", RGBToHEX(HSBToRGB(v)))
+        setColor({ key: "theme", value: RGBToHEX(HSBToRGB(v)) })
+        document.querySelector(":root")?.setAttribute("style", str)
+      },
+      { deep: true },
+    )
 
     const pointStyle = computed(() => `top: ${point.y}px; left: ${point.x}px`)
 
@@ -87,6 +75,11 @@ export default defineComponent({
     const pointMove = (ev: MouseEvent) => {
       point.x = ev.offsetX
       point.y = ev.offsetY
+      let width: number = colorBox.value?.offsetWidth as number
+      let height: number = colorBox.value?.offsetHeight as number
+
+      hsb.s = Math.round((100 * point.x) / width)
+      hsb.b = Math.round((100 * (height - point.y)) / height)
 
       document.onmousemove = (mouseEv: MouseEvent) => {
         let left: number = colorBox.value?.getBoundingClientRect().x as number
@@ -95,7 +88,8 @@ export default defineComponent({
         let minY: number = Math.min(mouseEv.pageY - top, Number(colorBox.value?.offsetHeight))
         point.x = Math.max(0, minX)
         point.y = Math.max(0, minY)
-
+        hsb.s = Math.round((100 * point.x) / width)
+        hsb.b = Math.round((100 * (height - point.y)) / height)
         mouseEv.preventDefault()
       }
 
@@ -106,11 +100,16 @@ export default defineComponent({
 
     const slideMove = (ev: MouseEvent) => {
       slide.value = ev.offsetX
+      let x: number = parseFloat((slide.value / slideWidth.value).toFixed(2))
+
+      hsb.h = Math.round(360 * x)
 
       document.onmousemove = (mouseEv: MouseEvent) => {
         let left: number = slideBar.value?.getBoundingClientRect().x as number
         let min: number = Math.min(mouseEv.pageX - left, Number(slideBar.value?.offsetWidth))
         slide.value = Math.max(0, min)
+        x = parseFloat((slide.value / slideWidth.value).toFixed(2))
+        hsb.h = Math.round(360 * x)
         mouseEv.preventDefault()
       }
 
@@ -120,11 +119,25 @@ export default defineComponent({
       }
     }
 
+    const initSlideAndPoint = () => {
+      hsb.h = RGBToHSB(HEXToRGB(store.getters.getTheme)).h
+      hsb.s = RGBToHSB(HEXToRGB(store.getters.getTheme)).s
+      hsb.b = RGBToHSB(HEXToRGB(store.getters.getTheme)).b
+      slide.value = Math.round((hsb.h / 360) * slideWidth.value)
+      point.x = Math.round((hsb.s * (colorBox.value?.offsetWidth as number)) / 100)
+      point.y =
+        (colorBox.value?.offsetHeight as number) -
+        Math.round((hsb.b * (colorBox.value?.offsetHeight as number)) / 100)
+      nextTick(() => {
+        isInit = true
+      })
+    }
+
     onMounted(() => {
       width.value = colorBox.value?.offsetWidth as number
       height.value = colorBox.value?.offsetHeight as number
       slideWidth.value = slideBar.value?.offsetWidth as number
-      hsb = RGBToHSB(HEXToRGB(store.getters.getTheme))
+      initSlideAndPoint()
     })
 
     return {
@@ -141,7 +154,6 @@ export default defineComponent({
 })
 </script>
 <style lang="scss" scoped>
-@import "@/styles/_handle.scss";
 .bg-canvas {
   height: 100%;
   width: 100%;
@@ -180,7 +192,6 @@ export default defineComponent({
   }
 
   .control-box {
-    height: 50px;
     padding: 5px 0;
 
     .slide-bar {

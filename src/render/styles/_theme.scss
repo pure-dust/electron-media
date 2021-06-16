@@ -1,5 +1,7 @@
 :root {
   --theme-color: #3195ff;
+  --bg-light-color: #d1e7ff;
+  --bg-dark-color: #011831;
   --primary-color: #3195ff;
   --primary-hover-color: #4ea3ff;
   --font-dark-color: #ffffff;
@@ -15,6 +17,8 @@
 $theme: (
   primary: var(--primary-color),
   primary-hover: var(--primary-hover-color),
+  bg-light-color: var(--bg-light-color),
+  bg-dark-color: var(--bg-dark-color),
   font-dark-color: var(--font-dark-color),
   font-light-color: var(--font-light-color),
   border-dark-color: var(--border-dark-color),
