@@ -2,24 +2,37 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:44:18
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-16 17:50:41
+ * @LastEditTime: 2021-06-17 16:45:37
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="card-container animate"></div>
+  <div class="card-container animate" :style="style"></div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { defineComponent, toRefs, PropType, computed } from 'vue';
 export default defineComponent({
   name: '',
   components: {},
   props: {
     option: {
-      type: Object,
+      type: Object as PropType<CardOption>,
     },
   },
-  setup() {},
+  setup(prop, _) {
+    const { option } = toRefs(prop);
+
+    const style = computed(() => {
+      let style = {
+        height: option?.value?.height + 'px',
+      };
+      return style;
+    });
+
+    return {
+      style,
+    };
+  },
 });
 </script>
 <style lang="scss" scoped>
@@ -28,7 +41,6 @@ export default defineComponent({
 .card-container {
   width: 100%;
   height: 100%;
-  min-height: 145px;
   @include background('primary');
   cursor: pointer;
 

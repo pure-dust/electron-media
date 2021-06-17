@@ -1,22 +1,27 @@
+
 interface Window {
   /** 关闭预加载动画 */
-  ClosePreloadLoading: () => void
+  ClosePreloadLoading: () => void;
   /** 运行时环境 */
-  APP_ENV: "development" | "production"
+  APP_ENV: 'development' | 'production';
 }
 
-type Nullable<T> = T | null
+type Nullable<T> = T | null;
+
+interface CardOption {
+  height: number;
+}
 
 interface SysTemConfig {
-  [key: string]: string
-  theme: string
+  [key: string]: string;
+  theme: string;
 }
 
 interface ConfigItem extends Index {
-  key: string
-  value: string
+  key: string;
+  value: string;
 }
 
 interface Index {
-  [key: string]: string
+  [key: string]: string;
 }
