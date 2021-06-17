@@ -2,11 +2,16 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-17 17:49:05
+ * @LastEditTime: 2021-06-17 17:59:08
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-
+/**
+ * @description: 阻止事件一定时间内多次触发
+ * @param {Function} fn
+ * @param {number} circle
+ * @return {Function}
+ */
 export function timing(fn: Function, circle: number) {
   let startTime = +new Date();
   let timestamp;
@@ -20,6 +25,11 @@ export function timing(fn: Function, circle: number) {
   };
 }
 
+/**
+ * @description: 生成三次贝塞尔曲线方程
+ * @param {*} 控制点坐标
+ * @return {*}
+ */
 export class Cubic {
   px1: number;
   px2: number;
