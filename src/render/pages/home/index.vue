@@ -2,12 +2,12 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-17 17:30:31
+ * @LastEditTime: 2021-06-17 17:46:34
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="app-main col-fill" ref="scrollBox" @mousewheel="onMouseWheel">
+  <div class="app-main col-fill" ref="scrollBox" @mousewheel.capture="onMouseWheel">
     <Card
       v-for="(item, i) in cardList"
       :key="i"

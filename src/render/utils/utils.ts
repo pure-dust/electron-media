@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-17 16:15:06
+ * @LastEditTime: 2021-06-17 17:49:05
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -21,12 +21,12 @@ export function timing(fn: Function, circle: number) {
 }
 
 export class Cubic {
-  px3: number;
-  px2: number;
   px1: number;
-  py3: number;
-  py2: number;
+  px2: number;
+  px3: number;
   py1: number;
+  py2: number;
+  py3: number;
   epsilon: number = 1e-7;
 
   constructor(a: number, b: number, c: number, d: number) {
