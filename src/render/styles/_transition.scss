@@ -21,3 +21,57 @@
   transform: translateY(10px);
   opacity: 0;
 }
+
+.left-enter-from {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+.left-enter-active {
+  transition: all 0.3s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.left-enter-to {
+  transform: translateX(0);
+  opacity: 1;
+}
+
+.left-leave-from {
+  transform: translateX(0);
+  opacity: 1;
+}
+.left-leave-active {
+  transition: all 0.3s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.left-leave-to {
+  transform: translateX(-100%);
+  opacity: 0;
+}
+
+.card-enter-from {
+  transform-origin: center;
+  transform: scale(0.5);
+  opacity: 0;
+}
+.card-enter-active {
+  transform-origin: center;
+  transition: all 0.5s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.card-enter-to {
+  transform-origin: center;
+  transform: scale(1);
+  opacity: 1;
+}
+
+.card-leave-from {
+  transform-origin: center;
+  transform: scale(1);
+  opacity: 1;
+}
+.card-leave-active {
+  transform-origin: center;
+  transition: all 0.5s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.card-leave-to {
+  transform-origin: center;
+  transform: scale(2);
+  opacity: 0;
+}

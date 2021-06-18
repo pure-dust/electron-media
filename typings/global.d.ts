@@ -8,10 +8,6 @@ interface Window {
 
 type Nullable<T> = T | null;
 
-interface CardOption {
-  height: number;
-}
-
 interface SysTemConfig {
   [key: string]: string;
   theme: string;

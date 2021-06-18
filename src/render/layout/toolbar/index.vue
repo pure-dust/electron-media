@@ -2,15 +2,17 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 09:03:50
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-16 17:05:51
+ * @LastEditTime: 2021-06-18 17:49:28
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
   <div class="toolbar-container animate" @mousedown.self="onMouseDown" @mouseup="windowMove(false)">
-    <div class="color-bar"></div>
+    <transition name="left">
+      <span class="text-box back animate" v-if="back" @click="backToHome">返回</span>
+    </transition>
     <div class="fun-box flex">
-      <span class="text-box animate"> mini </span>
+      <span class="text-box mini animate"> mini </span>
       <span class="icon-box animate" @click.self="open" ref="btn">
         <svg class="icon" aria-hidden="true">
           <use xlink:href="#icon-ic_skin" />
@@ -40,8 +42,10 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted } from 'vue';
+import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
 import { windowMove, minScreen, fixWindow, closeWindow } from '@/utils/control';
+import { useRouter } from 'vue-router';
+import { useStore } from '@/store/index';
 
 import ColorSelector from './components/ColorSelector/index.vue';
 export default defineComponent({
@@ -49,13 +53,25 @@ export default defineComponent({
   components: { ColorSelector },
   props: {},
   setup() {
-    let colorPanel = ref(false);
+    const colorPanel = ref(false);
     const btn: Ref<HTMLElement | null> = ref(null);
-    let isFixed = ref(false);
+    const store = useStore();
+    const isFixed = ref(false);
+    const router = useRouter();
 
     const open = () => {
       colorPanel.value = !colorPanel.value;
     };
+
+    const backToHome = () => {
+      router.push({
+        path: '/',
+      });
+    };
+
+    const back = computed(() => {
+      return store.getters.getBack;
+    });
 
     const onMouseDown = (e: MouseEvent) => {
       if (
@@ -91,12 +107,13 @@ export default defineComponent({
       minScreen,
       fixedScreen,
       isFixed,
+      back,
+      backToHome,
     };
   },
 });
 </script>
 <style lang="scss" scoped>
-@import '@/styles/_handle.scss';
 $height: 30px;
 .toolbar-container {
   @include background('primary');
@@ -107,30 +124,25 @@ $height: 30px;
   box-shadow: 0 1px 2px themed('border-light-color');
   position: relative;
   z-index: 999;
+  overflow: hidden;
 
-  .color-bar {
-    margin-left: auto;
-    height: 100%;
-    position: relative;
+  .back {
+    font-family: Zcoo;
+    font-size: 14px;
   }
 
   .fun-box {
+    margin-left: auto;
     align-items: center;
     height: 100%;
 
-    .fixed {
-      background: themed('primary-hover');
+    .mini {
+      line-height: $height - 2;
+      font-family: Dance;
     }
 
-    .text-box {
-      font-family: Dance;
-      height: 100%;
-      padding: 0 10px;
-      text-align: center;
-      line-height: $height - 2;
-      @include bg-hover('primary');
-      cursor: pointer;
-      color: #ffffff;
+    .fixed {
+      background: themed('primary-hover');
     }
 
     .icon-box {
@@ -159,6 +171,16 @@ $height: 30px;
       padding: 5px;
       box-shadow: 0 2px 8px themed('border-dark-color');
     }
+  }
+
+  .text-box {
+    height: 100%;
+    padding: 0 10px;
+    text-align: center;
+    line-height: $height - 2;
+    @include bg-hover('primary');
+    cursor: pointer;
+    color: #ffffff;
   }
 }
 </style>

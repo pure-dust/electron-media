@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-17 17:59:08
+ * @LastEditTime: 2021-06-18 09:01:08
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -12,7 +12,7 @@
  * @param {number} circle
  * @return {Function}
  */
-export function timing(fn: Function, circle: number) {
+export function timing(fn: Function, circle: number): Function {
   let startTime = +new Date();
   let timestamp;
   return function () {

@@ -2,8 +2,11 @@
   --theme-color: #3195ff;
   --bg-light-color: #d1e7ff;
   --bg-dark-color: #011831;
+
   --primary-color: #3195ff;
   --primary-hover-color: #4ea3ff;
+  --primary-light-color: #4ea3ff;
+
   --font-dark-color: #ffffff;
   --font-light-color: #ffffff;
   --border-dark-color: #333333;
@@ -17,6 +20,7 @@
 $theme: (
   primary: var(--primary-color),
   primary-hover: var(--primary-hover-color),
+  primary-light: var(--primary-light-color),
   bg-light-color: var(--bg-light-color),
   bg-dark-color: var(--bg-dark-color),
   font-dark-color: var(--font-dark-color),

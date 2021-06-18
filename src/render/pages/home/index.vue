@@ -2,20 +2,17 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-17 17:46:34
+ * @LastEditTime: 2021-06-18 17:49:01
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="app-main col-fill" ref="scrollBox" @mousewheel.capture="onMouseWheel">
-    <Card
-      v-for="(item, i) in cardList"
-      :key="i"
-      v-enter-ani:[scrollInstance]
-      :option="{ height: height }"
-    />
+  <div class="col-fill flex-col">
+    <div class="app-main col-fill" ref="scrollBox" @mousewheel="onMouseWheel">
+      <Card v-for="(item, i) in cardList" :key="i" v-enter-ani:[scrollInstance] :option="item" />
+    </div>
+    <div class="space-block"></div>
   </div>
-  <div class="space-block"></div>
 </template>
 <script lang="ts">
 import { defineComponent, ref, Ref, computed, onMounted } from 'vue';
@@ -38,8 +35,9 @@ export default defineComponent({
 
     const onMouseWheel = timing((e: WheelEvent) => {
       let dom = e.target as HTMLElement;
+      let bottomHeight = dom.scrollTop + dom.offsetHeight;
       if (
-        (e.deltaY > 0 && dom.scrollTop + dom.offsetHeight >= dom.scrollHeight) ||
+        (e.deltaY > 0 && bottomHeight >= dom.scrollHeight) ||
         (e.deltaY < 0 && dom.scrollTop <= 0)
       )
         return;
@@ -48,6 +46,7 @@ export default defineComponent({
       let clock: NodeJS.Timeout | null = null;
       let t = 0;
       let origin: number = dom.scrollTop;
+      dom.setAttribute('data-scroll', '');
       clock = setInterval(() => {
         t += 1 / 100;
         let rate = Math.round(cubic.solve(t) * 100) / 100;
@@ -55,6 +54,9 @@ export default defineComponent({
           rate = 1;
           clearInterval(clock as NodeJS.Timeout);
           clock = null;
+          // setTimeout(() => {
+          dom.removeAttribute('data-scroll');
+          // }, 500);
         }
         dom.scrollTop = origin + rate * interval;
       }, 10);
@@ -62,8 +64,8 @@ export default defineComponent({
         dom.scrollTop = 0;
       }
       if (
-        Math.abs(dom.scrollTop + dom.offsetHeight - dom.scrollHeight) < 10 &&
-        Math.abs(dom.scrollTop + dom.offsetHeight - dom.scrollHeight) > 0
+        Math.abs(bottomHeight - dom.scrollHeight) < 10 &&
+        Math.abs(bottomHeight - dom.scrollHeight) > 0
       ) {
         dom.scrollTop = dom.scrollHeight;
       }
@@ -71,9 +73,22 @@ export default defineComponent({
     }, 1000);
 
     onMounted(() => {
-      cardList.value = [1, 2, 3, 4, 5, 6, 7];
       height.value = scrollBox.value?.offsetHeight as number;
       height.value = (height.value - 40) / 2;
+      cardList.value = [
+        {
+          height: height.value,
+          name: 'kl日历',
+          intro: '一个小巧灵活的小日历,一个小巧灵活的小日历,一个小巧灵活的小日历',
+          icon: 'icon-ic_calendar_add',
+          path: '/calendar',
+        },
+        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
+        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
+        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
+        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
+        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
+      ];
     });
     return {
       cardList,
@@ -86,21 +101,32 @@ export default defineComponent({
 });
 </script>
 <style lang="scss" scoped>
-@import '@/styles/_handle.scss';
+$padding: 20px;
 .app-main {
   display: grid;
-  padding: 20px;
-  grid-template-columns: repeat(2, auto);
+  padding: $padding;
+  grid-template-columns: repeat(2, calc(50% - #{$padding} / 2));
   grid-template-rows: auto auto;
   overflow: hidden auto;
-  gap: 20px;
+  gap: $padding;
+  transition: all 0.5s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+  color: rgba(0, 0, 0, 0);
 
   &::-webkit-scrollbar {
-    width: 0;
+    width: 8px;
     background: transparent;
   }
+
+  &::-webkit-scrollbar-thumb {
+    width: 8px;
+    box-shadow: inset 0 0 0 8px;
+  }
+}
+
+.app-main[data-scroll] {
+  color: themed('primary');
 }
 .space-block {
-  height: 20px;
+  height: $padding;
 }
 </style>
