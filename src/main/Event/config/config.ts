@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 11:22:32
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-16 17:36:44
+ * @LastEditTime: 2021-06-18 17:54:57
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -18,8 +18,11 @@ export class ConfigLoader {
 
   static _instance: ConfigLoader | null;
   static getInstance(): ConfigLoader {
-    if (!this._instance) return new ConfigLoader();
-    else return this._instance;
+    if (!this._instance) {
+      let configLoader = new ConfigLoader();
+      this._instance = configLoader;
+      return configLoader;
+    } else return this._instance;
   }
 
   constructor() {

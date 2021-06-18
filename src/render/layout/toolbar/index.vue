@@ -124,7 +124,6 @@ $height: 30px;
   box-shadow: 0 1px 2px themed('border-light-color');
   position: relative;
   z-index: 999;
-  overflow: hidden;
 
   .back {
     font-family: Zcoo;

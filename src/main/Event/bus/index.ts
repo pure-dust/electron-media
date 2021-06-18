@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 15:03:00
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-16 17:35:29
+ * @LastEditTime: 2021-06-18 17:56:56
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -10,7 +10,7 @@ import { ipcMain, app, BrowserWindow, IpcMainEvent } from 'electron';
 import { ConfigLoader } from '../config/config';
 
 const EventBus = (win: BrowserWindow) => {
-  let conf = new ConfigLoader();
+  let conf = ConfigLoader.getInstance();
   conf.configInit();
 
   ipcMain.on('get-config', (event: IpcMainEvent, message?: string) => {
