@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:49:01
+ * @LastEditTime: 2021-06-21 09:18:35
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -33,43 +33,42 @@ export default defineComponent({
       return scrollBox.value;
     });
 
-    const onMouseWheel = timing((e: WheelEvent) => {
+    const onMouseWheel = timing((e: WheelEvent, auto: boolean) => {
       let dom = e.target as HTMLElement;
       let bottomHeight = dom.scrollTop + dom.offsetHeight;
       if (
         (e.deltaY > 0 && bottomHeight >= dom.scrollHeight) ||
         (e.deltaY < 0 && dom.scrollTop <= 0)
       )
-        return;
-      let dir = Math.abs(e.deltaY) / e.deltaY;
-      let interval = height.value * dir + 20 * dir;
-      let clock: NodeJS.Timeout | null = null;
-      let t = 0;
-      let origin: number = dom.scrollTop;
-      dom.setAttribute('data-scroll', '');
-      clock = setInterval(() => {
-        t += 1 / 100;
-        let rate = Math.round(cubic.solve(t) * 100) / 100;
-        if (rate >= 1) {
-          rate = 1;
-          clearInterval(clock as NodeJS.Timeout);
-          clock = null;
-          // setTimeout(() => {
-          dom.removeAttribute('data-scroll');
-          // }, 500);
+        return auto;
+      if (!auto) {
+        let dir = Math.abs(e.deltaY) / e.deltaY;
+        let interval = height.value * dir + 20 * dir;
+        let clock: NodeJS.Timeout | null = null;
+        let t = 0;
+        let origin: number = dom.scrollTop;
+        dom.setAttribute('data-scroll', '');
+        clock = setInterval(() => {
+          t += 1 / 100;
+          let rate = Math.round(cubic.solve(t) * 100) / 100;
+          if (rate >= 1) {
+            rate = 1;
+            clearInterval(clock as NodeJS.Timeout);
+            clock = null;
+            dom.removeAttribute('data-scroll');
+          }
+          dom.scrollTop = origin + rate * interval;
+        }, 10);
+        if (Math.abs(dom.scrollTop) < 10 && Math.abs(dom.scrollTop) > 0) {
+          dom.scrollTop = 0;
         }
-        dom.scrollTop = origin + rate * interval;
-      }, 10);
-      if (Math.abs(dom.scrollTop) < 10 && Math.abs(dom.scrollTop) > 0) {
-        dom.scrollTop = 0;
+        if (
+          Math.abs(bottomHeight - dom.scrollHeight) < 10 &&
+          Math.abs(bottomHeight - dom.scrollHeight) > 0
+        ) {
+          dom.scrollTop = dom.scrollHeight;
+        }
       }
-      if (
-        Math.abs(bottomHeight - dom.scrollHeight) < 10 &&
-        Math.abs(bottomHeight - dom.scrollHeight) > 0
-      ) {
-        dom.scrollTop = dom.scrollHeight;
-      }
-      e.preventDefault();
     }, 1000);
 
     onMounted(() => {

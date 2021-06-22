@@ -7,6 +7,8 @@
   --primary-hover-color: #4ea3ff;
   --primary-light-color: #4ea3ff;
 
+  --disabled-color: #aaaaaa;
+
   --font-dark-color: #ffffff;
   --font-light-color: #ffffff;
   --border-dark-color: #333333;
@@ -21,6 +23,7 @@ $theme: (
   primary: var(--primary-color),
   primary-hover: var(--primary-hover-color),
   primary-light: var(--primary-light-color),
+  disabled: var(--disabled-color),
   bg-light-color: var(--bg-light-color),
   bg-dark-color: var(--bg-dark-color),
   font-dark-color: var(--font-dark-color),
