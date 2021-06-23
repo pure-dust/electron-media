@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:49:01
+ * @LastEditTime: 2021-06-20 03:56:23
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -36,11 +36,6 @@ export default defineComponent({
     const onMouseWheel = timing((e: WheelEvent) => {
       let dom = e.target as HTMLElement;
       let bottomHeight = dom.scrollTop + dom.offsetHeight;
-      if (
-        (e.deltaY > 0 && bottomHeight >= dom.scrollHeight) ||
-        (e.deltaY < 0 && dom.scrollTop <= 0)
-      )
-        return;
       let dir = Math.abs(e.deltaY) / e.deltaY;
       let interval = height.value * dir + 20 * dir;
       let clock: NodeJS.Timeout | null = null;
@@ -54,9 +49,7 @@ export default defineComponent({
           rate = 1;
           clearInterval(clock as NodeJS.Timeout);
           clock = null;
-          // setTimeout(() => {
           dom.removeAttribute('data-scroll');
-          // }, 500);
         }
         dom.scrollTop = origin + rate * interval;
       }, 10);
@@ -69,7 +62,6 @@ export default defineComponent({
       ) {
         dom.scrollTop = dom.scrollHeight;
       }
-      e.preventDefault();
     }, 1000);
 
     onMounted(() => {
