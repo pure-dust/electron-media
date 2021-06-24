@@ -11,11 +11,16 @@ type colorType = {
   [key: string]: string;
   '--theme-color': string;
   '--primary-color': string;
-  '--disabled-color': string;
+  '--primary-hover-color': string;
   '--primary-light-color': string;
+  '--success-color': string;
+  '--success-hover-color': string;
+  '--success-light-color': string;
+  '--disabled-color': string;
+  '--disabled-hover-color': string;
+  '--disabled-light-color': string;
   '--bg-light-color': string;
   '--bg-dark-color': string;
-  '--primary-hover-color': string;
   '--font-dark-color': string;
   '--font-light-color': string;
   '--border-dark-color': string;
@@ -92,14 +97,21 @@ function LightenDarkenColor(col: string, amt: number): string {
  * @return {string} 根元素颜色定义代码
  */
 export function createColor(color: string): string {
+  let success = colourBlend(color, '#00ff00', 0.6);
+  let disabled = colourBlend(color, '#AAAAAA', 0.7);
   let theme: colorType = {
     '--theme-color': color,
     '--primary-color': color,
-    '--disabled-color': colourBlend(color, '#AAAAAA', 0.7),
+    '--primary-hover-color': colourBlend(color, '#FFFFFF', 0.2),
     '--primary-light-color': LightenDarkenColor(color, 50),
+    '--success-color': colourBlend(color, '#00ff00', 0.6),
+    '--success-hover-color': colourBlend(success, '#FFFFFF', 0.2),
+    '--success-light-color': LightenDarkenColor(success, 50),
+    '--disabled-color': disabled,
+    '--disabled-hover-color': colourBlend(disabled, '#FFFFFF', 0.2),
+    '--disabled-light-color': LightenDarkenColor(disabled, 50),
     '--bg-light-color': colourBlend(color, '#FFFFFF', 0.95),
     '--bg-dark-color': colourBlend(color, '#000000', 0.8),
-    '--primary-hover-color': colourBlend(color, '#FFFFFF', 0.2),
     '--font-dark-color': colourBlend(color, '#000000', 0.7),
     '--font-light-color': colourBlend(color, '#FFFFFF', 0.9),
     '--border-dark-color': LightenDarkenColor(colourBlend(color, '#000000', 0.9), 50),

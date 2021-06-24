@@ -7,7 +7,13 @@
   --primary-hover-color: #4ea3ff;
   --primary-light-color: #4ea3ff;
 
+  --success-color: #02c453;
+  --success-hover-color: #1ae16d;
+  --success-light-color: #1ae16d;
+
   --disabled-color: #aaaaaa;
+  --disabled-hover-color: #aaaaaa;
+  --disabled-light-color: #aaaaaa;
 
   --font-dark-color: #ffffff;
   --font-light-color: #ffffff;
@@ -23,7 +29,12 @@ $theme: (
   primary: var(--primary-color),
   primary-hover: var(--primary-hover-color),
   primary-light: var(--primary-light-color),
+  success: var(--success-color),
+  success-hover: var(--success-hover-color),
+  success-light: var(--success-light-color),
   disabled: var(--disabled-color),
+  disabled-hover: var(--disabled-hover-color),
+  disabled-light: var(--disabled-light-color),
   bg-light-color: var(--bg-light-color),
   bg-dark-color: var(--bg-dark-color),
   font-dark-color: var(--font-dark-color),

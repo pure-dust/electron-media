@@ -1,6 +1,7 @@
 import { BrowserWindow, app } from 'electron';
 const path = require('path');
 const isDevelopment = process.env;
+import '../../server/main.js';
 
 import menuEvent from './Event/Menu/index';
 import eventBus from './Event/bus/index';

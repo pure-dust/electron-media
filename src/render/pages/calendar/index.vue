@@ -19,7 +19,7 @@
         class="calendar-date flex-col animate"
         v-for="(item, i) in date"
         :key="i"
-        :class="calendarClass(item.current)"
+        :class="calendarClass(item)"
       >
         <p>{{ item.date }}</p>
         <p>{{ item.week }}</p>
@@ -29,7 +29,8 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
-import { Calenar, CalenarType } from '@/utils/utils';
+import { Calenar, CalenarType } from '@/utils/calendar';
+import _ from 'lodash';
 import Icon from '@/components/Icon/index.vue';
 export default defineComponent({
   name: 'Calendar',
@@ -44,8 +45,13 @@ export default defineComponent({
       date.value = calendar.getCalendar();
     });
 
-    const calendarClass = (current: boolean) => {
-      return current ? '' : 'disabled-date';
+    const calendarClass = (data: CalenarType) => {
+      let classArr = [];
+      if (data.current) classArr.push('current-date');
+      else classArr.push('disabled-date');
+      if (_.findIndex([0, 6], (el) => el == data.day) > -1 && data.current)
+        classArr.push('rest-date');
+      return classArr.join(' ');
     };
 
     const nextMonth = () => {
@@ -101,7 +107,6 @@ $padding: 10px;
   }
 
   .calendar-inner {
-    @include background('primary');
     display: grid;
     grid-template-columns: repeat(7, auto);
     grid-template-rows: auto auto;
@@ -120,8 +125,6 @@ $padding: 10px;
       font-family: Zcoo;
       padding-bottom: 10px;
 
-      @include bg-hover('primary');
-
       & > p:nth-child(1) {
         @include font-size('large');
         font-family: Baloo Regular;
@@ -134,6 +137,7 @@ $padding: 10px;
       @include font-color('light');
       @include font-size('small');
       @include border('light');
+      @include background('primary');
       margin-left: -1px;
       margin-top: -1px;
       overflow: hidden;
@@ -142,13 +146,19 @@ $padding: 10px;
       padding: 12px 0;
     }
 
+    .current-date {
+      @include bg-hover('primary');
+      @include background('primary');
+    }
+
     .disabled-date {
       @include background('disabled');
-      cursor: default;
+      @include bg-hover('disabled');
+    }
 
-      &:hover {
-        @include background('disabled');
-      }
+    .rest-date {
+      @include background('success');
+      @include bg-hover('success');
     }
   }
 }
