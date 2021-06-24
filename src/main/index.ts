@@ -17,7 +17,7 @@ function getLoadURL() {
 app.on('ready', async () => {
   win = new BrowserWindow({
     width: 540,
-    height: 360,
+    height: 400,
     resizable: false,
     frame: false,
     transparent: true,

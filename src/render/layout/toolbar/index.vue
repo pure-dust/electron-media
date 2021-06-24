@@ -2,14 +2,14 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 09:03:50
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-22 13:56:22
+ * @LastEditTime: 2021-06-23 14:07:42
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
   <div class="toolbar-container animate" @mousedown.self="onMouseDown" @mouseup="windowMove(false)">
     <transition name="left">
-      <span class="text-box back animate" v-if="back" @click="backToHome">返回</span>
+      <span class="text-box back animate" v-if="back" @click.stop.capture="backToHome">返回</span>
     </transition>
     <div class="fun-box flex">
       <span class="text-box mini animate"> mini </span>
@@ -121,7 +121,7 @@ $height: 30px;
   display: flex;
   align-items: center;
   user-select: none;
-  box-shadow: 0 1px 2px themed('border-light-color');
+  // box-shadow: 0 1px 2px themed('border-light-color');
   position: relative;
   z-index: 999;
 

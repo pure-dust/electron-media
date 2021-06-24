@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-22 18:04:25
+ * @LastEditTime: 2021-06-23 09:24:29
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -82,9 +82,11 @@ export class Cubic {
 
 export interface CalenarType {
   [key: string]: any;
-  day: number;
-  week: string;
+  year: string | number;
+  month: string | number;
   date: string | number;
+  week: string;
+  day: number;
   current: boolean;
 }
 export class Calenar {
@@ -111,8 +113,6 @@ export class Calenar {
       0: '星期天',
     };
     let currentDate = new Array<CalenarType>();
-    let day = this.preview.getDay();
-    let date = this.preview.getDate();
     let month = this.preview.getMonth();
     let year = this.preview.getFullYear();
     let curNum = new Date(year, month + 1, 0).getDate();
@@ -120,9 +120,11 @@ export class Calenar {
     for (let i = 1; i <= curNum; i++) {
       let week = new Date(year, month, i).getDay();
       currentDate.push({
-        week: dateMap[week],
-        day: week,
+        year: year,
+        month: month + 1,
         date: i,
+        day: week,
+        week: dateMap[week],
         current: true,
       });
     }
@@ -130,9 +132,11 @@ export class Calenar {
       let preNum = new Date(year, month, 0).getDate();
       let preDate = new Date(year, month - 1, preNum + i - currentDate[0].day);
       currentDate.unshift({
+        year: preDate.getFullYear(),
+        month: preDate.getMonth() + 1,
+        date: preNum + i - currentDate[0].day,
         week: dateMap[preDate.getDay()],
         day: preDate.getDay(),
-        date: preNum + i - currentDate[0].day,
         current: false,
       });
     }
@@ -140,9 +144,11 @@ export class Calenar {
     for (let i = currentDate[len - 1].day == 0 ? 7 : currentDate[len - 1].day; i < 7; i++) {
       let nextDate = new Date(year, month + 1, i - currentDate[len - 1].day + 1);
       currentDate.push({
+        year: nextDate.getFullYear(),
+        month: nextDate.getMonth() + 1,
+        date: i - currentDate[len - 1].day + 1,
         week: dateMap[nextDate.getDay()],
         day: nextDate.getDay(),
-        date: i - currentDate[len - 1].day + 1,
         current: false,
       });
     }

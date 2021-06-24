@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 10:05:23
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-22 17:58:54
+ * @LastEditTime: 2021-06-23 09:15:04
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -95,7 +95,7 @@ export function createColor(color: string): string {
   let theme: colorType = {
     '--theme-color': color,
     '--primary-color': color,
-    '--disabled-color': colourBlend(color, '#CCCCCC', 0.5),
+    '--disabled-color': colourBlend(color, '#AAAAAA', 0.7),
     '--primary-light-color': LightenDarkenColor(color, 50),
     '--bg-light-color': colourBlend(color, '#FFFFFF', 0.95),
     '--bg-dark-color': colourBlend(color, '#000000', 0.8),

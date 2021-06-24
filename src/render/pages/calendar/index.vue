@@ -2,21 +2,19 @@
  * @Author: Lixiao2
  * @Date: 2021-06-18 11:11:47
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-22 18:07:03
+ * @LastEditTime: 2021-06-23 14:14:55
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
   <div class="col-fill calendar-container flex-col">
-    <div class="calendar-tool flex">
-      <span class="icon-box">
-        <svg>
-          <use xlink:href="#icon-ic_horn_left" />
-        </svg>
-      </span>
-      <div @click="nextMonth">下一月</div>
+    <div class="calendar-tool flex animate">
+      <Icon @click="preMonth" width="30px" icon="#icon-ic_arrow_left" hover />
+      <div class="tool-box row-fill flex"></div>
+      <Icon @click="nextMonth" width="30px" icon="#icon-ic_arrow_right" hover />
     </div>
     <div class="calendar-inner col-fill">
+      <div class="calendar-header" v-for="(item, i) in dateMap" :key="i">{{ item }}</div>
       <div
         class="calendar-date flex-col animate"
         v-for="(item, i) in date"
@@ -32,14 +30,15 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
 import { Calenar, CalenarType } from '@/utils/utils';
+import Icon from '@/components/Icon/index.vue';
 export default defineComponent({
   name: 'Calendar',
-  components: {},
+  components: { Icon },
   props: {},
   setup() {
     const calendar = new Calenar();
     const date: Ref<Array<CalenarType>> = ref([]);
-
+    const dateMap = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
     onMounted(() => {
       calendar.setDate(new Date('2021/6/20'));
       date.value = calendar.getCalendar();
@@ -55,7 +54,7 @@ export default defineComponent({
     };
 
     const preMonth = () => {
-      calendar.getNext();
+      calendar.getPreious();
       date.value = calendar.getCalendar();
     };
 
@@ -64,6 +63,7 @@ export default defineComponent({
       calendarClass,
       nextMonth,
       preMonth,
+      dateMap,
     };
   },
 });
@@ -71,12 +71,33 @@ export default defineComponent({
 <style lang="scss" scoped>
 $padding: 10px;
 .calendar-container {
-  padding: 0 $padding $padding;
+  padding: $padding;
+  position: relative;
 
   .calendar-tool {
     height: 30px;
     margin-bottom: 10px;
     @include background('primary');
+    position: absolute;
+    width: 100%;
+    left: 0;
+    top: -30px;
+    opacity: 0;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      height: 10px;
+      width: 100%;
+      top: 100%;
+    }
+
+    &:hover {
+      top: 0;
+      opacity: 1;
+      box-shadow: 0 1px 5px themed('bg-dark-color');
+    }
   }
 
   .calendar-inner {
@@ -86,12 +107,13 @@ $padding: 10px;
     grid-template-rows: auto auto;
 
     .calendar-date {
+      user-select: none;
       @include font-color('light');
       @include font-size('small');
+      @include border('light');
       align-items: center;
       justify-content: space-around;
       cursor: pointer;
-      @include border('light');
       margin-left: -1px;
       margin-top: -1px;
       overflow: hidden;
@@ -108,6 +130,18 @@ $padding: 10px;
       }
     }
 
+    .calendar-header {
+      @include font-color('light');
+      @include font-size('small');
+      @include border('light');
+      margin-left: -1px;
+      margin-top: -1px;
+      overflow: hidden;
+      font-family: Zcoo;
+      text-align: center;
+      padding: 12px 0;
+    }
+
     .disabled-date {
       @include background('disabled');
       cursor: default;
@@ -116,15 +150,6 @@ $padding: 10px;
         @include background('disabled');
       }
     }
-  }
-
-  .icon-box {
-    height: 100%;
-    width: 32px;
-    text-align: center;
-    line-height: 30px;
-    cursor: pointer;
-    position: relative;
   }
 }
 </style>
