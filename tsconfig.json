@@ -19,5 +19,5 @@
     },
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src", "typings"]
+  "include": ["server","src", "typings"]
 }

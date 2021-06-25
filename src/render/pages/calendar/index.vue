@@ -28,7 +28,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref } from 'vue';
+import {
+  defineComponent,
+  onMounted,
+  ref,
+  Ref,
+  getCurrentInstance,
+  ComponentInternalInstance,
+} from 'vue';
 import { Calenar, CalenarType } from '@/utils/calendar';
 import _ from 'lodash';
 import Icon from '@/components/Icon/index.vue';
@@ -39,6 +46,8 @@ export default defineComponent({
   setup() {
     const calendar = new Calenar();
     const date: Ref<Array<CalenarType>> = ref([]);
+    const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+
     const dateMap = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
     onMounted(() => {
       calendar.setDate(new Date('2021/6/20'));

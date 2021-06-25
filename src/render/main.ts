@@ -1,4 +1,7 @@
 import { createApp } from 'vue';
+import { AxiosInstance } from 'axios';
+
+import http from '../request';
 
 import { perload } from '@/utils/preload';
 import Store, { key } from '@/store';
@@ -13,8 +16,16 @@ import './styles/index.scss';
 import '@/assets/iconfont/iconfont.js';
 import '@/assets/font/font.scss';
 
+declare module '@vue/runtime-core' {
+  interface ComponentCustomProperties {
+    $http: AxiosInstance;
+  }
+}
+
 perload().then(() => {
   const app = createApp(App);
+  app.config.globalProperties.$http = http;
+
   app.use(Store, key);
   app.use(router);
   app.directive('click-wave', ClickWave);

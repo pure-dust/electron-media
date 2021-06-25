@@ -1,6 +1,5 @@
 import path from 'path'
 import acorn from 'acorn'
-import fs from 'fs'
 import { Plugin as VitePlugin } from 'vite'
 import { extensions } from './utils'
 

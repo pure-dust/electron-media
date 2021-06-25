@@ -1,9 +1,14 @@
-const files = require.context('.', false, /\.js$/);
-interface ServiceType {
-  [key: string]: any;
+const files = require.context('.', false, /\.ts$/);
+
+interface ServiceItem {
+  [key: string]: Function;
 }
 
-const modules: ServiceType = {};
+interface Service {
+  [key: string]: ServiceItem;
+}
+
+const modules: Service = {};
 
 files.keys().forEach((key) => {
   if (key === './index.ts') return;

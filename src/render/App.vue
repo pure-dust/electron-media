@@ -17,7 +17,7 @@ export default defineComponent({
     onMounted(() => {
       document.querySelector(":root")?.setAttribute("style", str)
     })
-
+    
     return {
       windowMove,
     }

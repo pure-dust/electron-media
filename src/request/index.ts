@@ -1,14 +1,10 @@
 import axios, { AxiosRequestConfig, Method } from 'axios';
-import qs from 'qs';
 import _ from 'lodash';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REQUEST_BASE_API || '/rm/api',
+  baseURL: process.env.REQUEST_BASE_API,
   withCredentials: true,
   timeout: 1000 * 60 * 10,
-  paramsSerializer(params) {
-    return qs.stringify(params, { indices: false });
-  },
 });
 
 function axiosRequest(

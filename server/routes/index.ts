@@ -1,15 +1,19 @@
-import { Express } from 'express';
+import Router from 'koa-router';
+const router = new Router();
 
-const files = require.context('.', false, /\.js$/);
-const modules = {};
+const files = require.context('.', false, /\.ts$/);
+interface RouterObj {
+  [key: string]: Router;
+}
+const modules: RouterObj = {};
 
 files.keys().forEach((key) => {
-  if (key === './index.js') return;
-  modules[key.replace(/(\.\/|\.js)/g, '')] = files(key).default;
+  if (key === './index.ts') return;
+  modules[key.replace(/(\.\/|\.ts)/g, '')] = files(key).default;
 });
 
-export default (app: Express) => {
-  for (const key in modules) {
-    app.use(`/${key}`, modules[key]);
-  }
-};
+for (const key in modules) {
+  router.use(`/${key}`, modules[key].routes(), modules[key].allowedMethods());
+}
+
+export default router;

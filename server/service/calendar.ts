@@ -1,6 +1,5 @@
 export default {
   getDate(params) {
-    console.log(params);
-    return 1;
+    return params;
   },
 };

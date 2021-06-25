@@ -1,4 +1,3 @@
-
 interface Window {
   /** 关闭预加载动画 */
   ClosePreloadLoading: () => void;

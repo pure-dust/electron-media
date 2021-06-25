@@ -1,10 +1,10 @@
-import express from 'express';
-const router = express.Router();
+import Router from 'koa-router';
+const router = new Router();
 import controller from '../controller';
 
 /* GET home page. */
-router.get('/', function (req, res, next) {
-  res.json(controller.calendar.getDate(req.query));
+router.get('/getDate', async (ctx) => {
+  ctx.body = controller.calendar.getDate(ctx.query);
 });
 
 export default router;

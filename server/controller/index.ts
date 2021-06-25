@@ -1,4 +1,4 @@
-const files = require.context('.', false, /\.js$/);
+const files = require.context('.', false, /\.ts$/);
 interface ControllerType {
   [key: string]: any;
 }
