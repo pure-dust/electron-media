@@ -1,6 +1,6 @@
 import service from '../service/index';
 export default {
-  getDate(params) {
-    return service.calendar.getDate(params);
+  async getDate(params: GetDateParams) {
+    return await service.calendar.getDate(params);
   },
 };

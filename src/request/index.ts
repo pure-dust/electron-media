@@ -3,7 +3,7 @@ import _ from 'lodash';
 
 const axiosInstance = axios.create({
   baseURL: process.env.REQUEST_BASE_API,
-  withCredentials: true,
+  // withCredentials: true,
   timeout: 1000 * 60 * 10,
 });
 
