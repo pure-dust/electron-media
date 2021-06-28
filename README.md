@@ -1,6 +1,6 @@
 # electron-vue-vite-webpack
 
-`Electron` + `vue3` + `vite2` + `webpack5` + `ant-design-vue2` intergration
+`Electron` + `vue3` + `vite2` + `webpack5` intergration
 
 ## What it to use
 
