@@ -11,6 +11,13 @@ export default defineConfig(({ /* development | production */ mode }) => ({
   base: '/',
   server: {
     port: +process.env.PORT,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3355',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
   },
   resolve: {
     alias: {

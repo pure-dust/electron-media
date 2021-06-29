@@ -42,7 +42,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
+import { defineComponent, ref, Ref, onMounted, computed , watch} from 'vue';
 import { windowMove, minScreen, fixWindow, closeWindow } from '@/utils/control';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store/index';
@@ -58,6 +58,7 @@ export default defineComponent({
     const store = useStore();
     const isFixed = ref(false);
     const router = useRouter();
+
 
     const open = () => {
       colorPanel.value = !colorPanel.value;

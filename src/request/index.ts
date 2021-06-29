@@ -1,11 +1,60 @@
-import axios, { AxiosRequestConfig, Method } from 'axios';
+import axios, { AxiosRequestConfig, Method, AxiosInstance, AxiosResponse, Canceler } from 'axios';
 import _ from 'lodash';
 
 const axiosInstance = axios.create({
-  baseURL: process.env.REQUEST_BASE_API,
-  // withCredentials: true,
+  baseURL: '/api',
   timeout: 1000 * 60 * 10,
 });
+
+interface MapValue {
+  result: Object;
+  lastTime: number;
+}
+
+type CacheMap = Map<string, MapValue>;
+
+const cacheMap: CacheMap = new Map();
+interface CacheOption extends AxiosRequestConfig {
+  cache?: boolean;
+  time?: number;
+}
+
+axiosInstance.interceptors.request.use((config) => {
+  let c = config as CacheOption;
+  let cancel: Canceler;
+  config.cancelToken = new axios.CancelToken((c) => (cancel = c));
+  if (c.cache) {
+    let key = c.url + JSON.stringify(c.params);
+    let cache = cacheMap.get(key);
+    let cur = new Date().getTime();
+    if (!cache?.lastTime) return config;
+    if ((cache && cur - cache.lastTime < cache.lastTime) || (cache && c.time === 0)) {
+      //@ts-ignore
+      cancel(JSON.stringify(cache.result));
+    }
+  }
+  return config;
+});
+
+axiosInstance.interceptors.response.use(
+  (response) => {
+    let c = response.config as CacheOption;
+    if (c.cache) {
+      let key = c.url + JSON.stringify(c.params);
+      cacheMap.set(key, {
+        lastTime: new Date().getTime(),
+        result: response,
+      });
+    }
+    return response;
+  },
+  (err) => {
+    if (axios.isCancel(err)) {
+      return Promise.resolve(JSON.parse(err.message));
+    }
+    return Promise.reject(err);
+  },
+);
 
 function axiosRequest(
   method: Method,
@@ -23,25 +72,28 @@ function axiosRequest(
   };
 
   return axiosInstance(axiosConfig)
-    .then((res) => ({
-      data: res.data,
-      res,
-    }))
+    .then((res) => res)
     .catch((error) => {
       throw error;
     });
 }
 
-export default {
+const instance: CusAxiosInstance = {
   axiosInstance,
-  get: (url: string, params?: any, config?: AxiosRequestConfig) =>
-    axiosRequest('GET', url, params, null, config),
-  delete: (url: string, data?: any, config?: AxiosRequestConfig) =>
-    axiosRequest('DELETE', url, null, data, config),
-  post: (url: string, data?: any, config?: AxiosRequestConfig) =>
-    axiosRequest('POST', url, null, data, config),
-  patch: (url: string, data?: any, config?: AxiosRequestConfig) =>
-    axiosRequest('PATCH', url, null, data, config),
-  put: (url: string, data?: any, config?: AxiosRequestConfig) =>
-    axiosRequest('PUT', url, null, data, config),
+  get: (url: string, params?: any, config?: CacheOption) => axiosRequest('GET', url, params, null, config),
+  delete: (url: string, data?: any, config?: CacheOption) => axiosRequest('DELETE', url, null, data, config),
+  post: (url: string, data?: any, config?: CacheOption) => axiosRequest('POST', url, null, data, config),
+  patch: (url: string, data?: any, config?: CacheOption) => axiosRequest('PATCH', url, null, data, config),
+  put: (url: string, data?: any, config?: CacheOption) => axiosRequest('PUT', url, null, data, config),
 };
+
+export default instance;
+
+export interface CusAxiosInstance {
+  axiosInstance: AxiosInstance;
+  get(url: string, params?: any, config?: CacheOption): Promise<AxiosResponse<any>>;
+  delete: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
+  post: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
+  patch: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
+  put: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
+}

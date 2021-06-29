@@ -19,6 +19,18 @@ const routes: Array<RouteRecordRaw> = [
     path: '/calendar',
     name: 'Calendar',
     component: () => import('@/pages/calendar/index.vue'),
+    children: [
+      {
+        path: 'single',
+        name: 'single',
+        component: () => import('@/pages/calendar/singleDate/index.vue'),
+      },
+    ],
+  },
+  {
+    path: '/account',
+    name: 'account',
+    component: () => import('@/pages/account/index.vue'),
   },
 ];
 

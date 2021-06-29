@@ -1,3 +1,3 @@
 interface GetDateParams {
-  [key: string]: any;
+  date: string
 }

@@ -6,6 +6,7 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
+import { RouteRecord } from 'vue-router';
 import { GetterTree, MutationTree, ActionTree } from 'vuex';
 
 export interface NoticeStateType {

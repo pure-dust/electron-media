@@ -1,5 +1,5 @@
 import { createApp } from 'vue';
-import { AxiosInstance } from 'axios';
+import { CusAxiosInstance } from '../request';
 
 import http from '../request';
 
@@ -18,7 +18,7 @@ import '@/assets/font/font.scss';
 
 declare module '@vue/runtime-core' {
   interface ComponentCustomProperties {
-    $http: AxiosInstance;
+    $http: CusAxiosInstance;
   }
 }
 

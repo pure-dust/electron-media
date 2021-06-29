@@ -1,15 +1,15 @@
-@import "./_theme.scss";
+@import './_theme.scss';
 
 @function themed($key) {
   @return map-get($theme, $key);
 }
 
 @mixin background($color) {
-  @if $color == "light" {
-    background-color: themed("bg-" + $color + "-color");
+  @if $color == 'light' {
+    background-color: themed('bg-' + $color + '-color');
   }
-  @if $color == "dark" {
-    background-color: themed("bg-" + $color + "-color");
+  @if $color == 'dark' {
+    background-color: themed('bg-' + $color + '-color');
   } @else {
     background-color: themed($color);
   }
@@ -21,24 +21,31 @@
 
 @mixin bg-hover($color) {
   &:hover {
-    background-color: themed($color + "-hover");
+    background-color: themed($color + '-hover');
   }
 }
 
 @mixin border($color) {
-  border: 1px solid themed("border-" + $color + "-color");
+  border: 1px solid themed('border-' + $color + '-color');
 }
 
 @mixin text-hover($color) {
   &:hover {
-    color: themed($color + "-hover");
+    color: themed($color + '-hover');
   }
 }
 
 @mixin font-color($color) {
-  color: themed("font-" + $color + "-color");
+  @if $color == 'light' {
+    color: themed('font-' + $color + '-color');
+  }
+  @if $color == 'dark' {
+    color: themed('font-' + $color + '-color');
+  } @else {
+    color: themed($color);
+  }
 }
 
 @mixin font-size($size) {
-  font-size: themed($size + "-size");
+  font-size: themed($size + '-size');
 }

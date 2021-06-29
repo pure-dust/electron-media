@@ -13,7 +13,7 @@
       <div class="tool-box row-fill flex"></div>
       <Icon @click="nextMonth" width="30px" icon="#icon-ic_arrow_right" hover />
     </div>
-    <div class="calendar-inner col-fill">
+    <div class="calendar-inner col-fill" @mouseover="getDate">
       <div class="calendar-header" v-for="(item, i) in dateMap" :key="i">{{ item }}</div>
       <div
         class="calendar-date flex-col animate"
@@ -22,7 +22,7 @@
         :class="calendarClass(item)"
       >
         <p>{{ item.date }}</p>
-        <p>{{ item.week }}</p>
+        <p>{{ item.festivals.length > 0 ? item.festivals[0] : item.lunar }}</p>
       </div>
     </div>
   </div>
@@ -56,6 +56,7 @@ export default defineComponent({
 
     const calendarClass = (data: CalenarType) => {
       let classArr = [];
+      if (data.now) classArr.push('now-date');
       if (data.current) classArr.push('current-date');
       else classArr.push('disabled-date');
       if (_.findIndex([0, 6], (el) => el == data.day) > -1 && data.current)
@@ -73,12 +74,15 @@ export default defineComponent({
       date.value = calendar.getCalendar();
     };
 
+    const getDate = (e: MouseEvent) => {};
+
     return {
       date,
       calendarClass,
       nextMonth,
       preMonth,
       dateMap,
+      getDate,
     };
   },
 });
@@ -120,28 +124,6 @@ $padding: 10px;
     grid-template-columns: repeat(7, auto);
     grid-template-rows: auto auto;
 
-    .calendar-date {
-      user-select: none;
-      @include font-color('light');
-      @include font-size('small');
-      @include border('light');
-      align-items: center;
-      justify-content: space-around;
-      cursor: pointer;
-      margin-left: -1px;
-      margin-top: -1px;
-      overflow: hidden;
-      font-family: Zcoo;
-      padding-bottom: 10px;
-
-      & > p:nth-child(1) {
-        @include font-size('large');
-        font-family: Baloo Regular;
-        height: 0;
-        flex: 1;
-      }
-    }
-
     .calendar-header {
       @include font-color('light');
       @include font-size('small');
@@ -153,6 +135,29 @@ $padding: 10px;
       font-family: Zcoo;
       text-align: center;
       padding: 12px 0;
+    }
+
+    .calendar-date {
+      position: relative;
+      user-select: none;
+      overflow: hidden;
+      @include font-color('light');
+      @include font-size('small');
+      @include border('light');
+      align-items: center;
+      justify-content: space-around;
+      cursor: pointer;
+      margin-left: -1px;
+      margin-top: -1px;
+      font-family: Zcoo;
+      padding-bottom: 10px;
+
+      & > p:nth-child(1) {
+        @include font-size('large');
+        font-family: Baloo Regular;
+        height: 0;
+        flex: 1;
+      }
     }
 
     .current-date {
@@ -168,6 +173,16 @@ $padding: 10px;
     .rest-date {
       @include background('success');
       @include bg-hover('success');
+    }
+
+    .now-date {
+      background: repeating-linear-gradient(
+        -45deg,
+        themed('primary'),
+        themed('primary'),
+        themed('primary-hover'),
+        themed('primary-hover') 10%
+      );
     }
   }
 }

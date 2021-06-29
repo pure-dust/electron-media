@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "15112683",
+      "name": "账本",
+      "font_class": "zhangben",
+      "unicode": "e604",
+      "unicode_decimal": 58884
+    },
+    {
       "icon_id": "22276961",
       "name": "icon_skin",
       "font_class": "ic_skin",
