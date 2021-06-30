@@ -9,34 +9,30 @@
 <template>
   <div class="col-fill calendar-container flex-col">
     <div class="calendar-tool flex animate">
-      <Icon @click="preMonth" width="30px" icon="#icon-ic_arrow_left" hover />
+      <Icon @on-click="preMonth" width="30px" icon="icon-ic_arrow_left" hover />
       <div class="tool-box row-fill flex"></div>
-      <Icon @click="nextMonth" width="30px" icon="#icon-ic_arrow_right" hover />
+      <Icon @on-click="nextMonth" width="30px" icon="icon-ic_arrow_right" hover />
     </div>
-    <div class="calendar-inner col-fill" @mouseover="getDate">
+    <div class="calendar-inner zcoo col-fill" @mouseover="getDate" @click="toDetailCard">
       <div class="calendar-header" v-for="(item, i) in dateMap" :key="i">{{ item }}</div>
       <div
         class="calendar-date flex-col animate"
         v-for="(item, i) in date"
+        :data-index="i"
         :key="i"
         :class="calendarClass(item)"
       >
-        <p>{{ item.date }}</p>
-        <p>{{ item.festivals.length > 0 ? item.festivals[0] : item.lunar }}</p>
+        <p class="baloo">{{ item.date }}</p>
+        <p>{{ item.festivals.length > 0 ? item.festivals[0] : item.lunarDate }}</p>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import {
-  defineComponent,
-  onMounted,
-  ref,
-  Ref,
-  getCurrentInstance,
-  ComponentInternalInstance,
-} from 'vue';
+import { defineComponent, onMounted, ref, Ref } from 'vue';
 import { Calenar, CalenarType } from '@/utils/calendar';
+import { useRouter } from 'vue-router';
+import { useStore } from '@/store';
 import _ from 'lodash';
 import Icon from '@/components/Icon/index.vue';
 export default defineComponent({
@@ -46,11 +42,13 @@ export default defineComponent({
   setup() {
     const calendar = new Calenar();
     const date: Ref<Array<CalenarType>> = ref([]);
-    const { proxy } = getCurrentInstance() as ComponentInternalInstance;
+    const router = useRouter();
+    const store = useStore();
 
     const dateMap = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
     onMounted(() => {
-      calendar.setDate(new Date('2021/6/20'));
+      let cacheDate = store.getters.getCurrentDate ? store.getters.getCurrentDate : new Date();
+      calendar.setDate(cacheDate);
       date.value = calendar.getCalendar();
     });
 
@@ -59,22 +57,43 @@ export default defineComponent({
       if (data.now) classArr.push('now-date');
       if (data.current) classArr.push('current-date');
       else classArr.push('disabled-date');
-      if (_.findIndex([0, 6], (el) => el == data.day) > -1 && data.current)
-        classArr.push('rest-date');
+      if (data.rest && data.current) classArr.push('rest-date');
       return classArr.join(' ');
     };
 
     const nextMonth = () => {
       calendar.getNext();
       date.value = calendar.getCalendar();
+      store.commit('setCurrentDate', calendar.getCurrent());
     };
 
     const preMonth = () => {
       calendar.getPreious();
       date.value = calendar.getCalendar();
+      store.commit('setCurrentDate', calendar.getCurrent());
     };
 
     const getDate = (e: MouseEvent) => {};
+
+    const toDetailCard = (e: MouseEvent) => {
+      let parent = e.currentTarget as HTMLElement;
+      let cur = e.target as HTMLElement;
+      let index = cur.dataset.index;
+      while (
+        (cur.dataset.index === undefined || cur.dataset.index === null) &&
+        parent.contains(cur)
+      ) {
+        cur = cur.parentElement as HTMLElement;
+        index = cur?.dataset?.index;
+      }
+      if (index !== undefined && index !== null) {
+        let data = date.value[parseInt(index)];
+        store.commit('setCardInfo', data);
+        router.push({
+          name: 'Single',
+        });
+      }
+    };
 
     return {
       date,
@@ -83,6 +102,7 @@ export default defineComponent({
       preMonth,
       dateMap,
       getDate,
+      toDetailCard,
     };
   },
 });
@@ -132,7 +152,6 @@ $padding: 10px;
       margin-left: -1px;
       margin-top: -1px;
       overflow: hidden;
-      font-family: Zcoo;
       text-align: center;
       padding: 12px 0;
     }
@@ -149,12 +168,10 @@ $padding: 10px;
       cursor: pointer;
       margin-left: -1px;
       margin-top: -1px;
-      font-family: Zcoo;
       padding-bottom: 10px;
 
       & > p:nth-child(1) {
         @include font-size('large');
-        font-family: Baloo Regular;
         height: 0;
         flex: 1;
       }

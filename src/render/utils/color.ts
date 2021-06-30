@@ -9,22 +9,22 @@
 
 type colorType = {
   [key: string]: string;
-  '--theme-color': string;
-  '--primary-color': string;
-  '--primary-hover-color': string;
-  '--primary-light-color': string;
-  '--success-color': string;
-  '--success-hover-color': string;
-  '--success-light-color': string;
-  '--disabled-color': string;
-  '--disabled-hover-color': string;
-  '--disabled-light-color': string;
-  '--bg-light-color': string;
-  '--bg-dark-color': string;
-  '--font-dark-color': string;
-  '--font-light-color': string;
-  '--border-dark-color': string;
-  '--border-light-color': string;
+  '--theme': string;
+  '--primary': string;
+  '--primary-hover': string;
+  '--primary-light': string;
+  '--success': string;
+  '--success-hover': string;
+  '--success-light': string;
+  '--disabled': string;
+  '--disabled-hover': string;
+  '--disabled-light': string;
+  '--bg-light': string;
+  '--bg-dark': string;
+  '--font-dark': string;
+  '--font-light': string;
+  '--border-dark': string;
+  '--border-light': string;
 };
 
 export interface RGB {
@@ -100,22 +100,22 @@ export function createColor(color: string): string {
   let success = colourBlend(color, '#00ff00', 0.6);
   let disabled = colourBlend(color, '#AAAAAA', 0.7);
   let theme: colorType = {
-    '--theme-color': color,
-    '--primary-color': color,
-    '--primary-hover-color': colourBlend(color, '#FFFFFF', 0.2),
-    '--primary-light-color': LightenDarkenColor(color, 50),
-    '--success-color': colourBlend(color, '#00ff00', 0.6),
-    '--success-hover-color': colourBlend(success, '#FFFFFF', 0.2),
-    '--success-light-color': LightenDarkenColor(success, 50),
-    '--disabled-color': disabled,
-    '--disabled-hover-color': colourBlend(disabled, '#FFFFFF', 0.2),
-    '--disabled-light-color': LightenDarkenColor(disabled, 50),
-    '--bg-light-color': colourBlend(color, '#FFFFFF', 0.95),
-    '--bg-dark-color': colourBlend(color, '#000000', 0.8),
-    '--font-dark-color': colourBlend(color, '#000000', 0.7),
-    '--font-light-color': colourBlend(color, '#FFFFFF', 0.9),
-    '--border-dark-color': LightenDarkenColor(colourBlend(color, '#000000', 0.9), 50),
-    '--border-light-color': LightenDarkenColor(colourBlend(color, '#FFFFFF', 0.9), -30),
+    '--theme': color,
+    '--primary': color,
+    '--primary-hover': colourBlend(color, '#FFFFFF', 0.2),
+    '--primary-light': LightenDarkenColor(color, 50),
+    '--success': colourBlend(color, '#00ff00', 0.6),
+    '--success-hover': colourBlend(success, '#FFFFFF', 0.2),
+    '--success-light': LightenDarkenColor(success, 50),
+    '--disabled': disabled,
+    '--disabled-hover': colourBlend(disabled, '#FFFFFF', 0.2),
+    '--disabled-light': LightenDarkenColor(disabled, 50),
+    '--bg-light': colourBlend(color, '#FFFFFF', 0.95),
+    '--bg-dark': colourBlend(color, '#000000', 0.8),
+    '--font-dark': colourBlend(color, '#000000', 0.7),
+    '--font-light': colourBlend(color, '#FFFFFF', 0.9),
+    '--border-dark': LightenDarkenColor(colourBlend(color, '#000000', 0.9), 50),
+    '--border-light': LightenDarkenColor(colourBlend(color, '#FFFFFF', 0.9), -30),
   };
   let str: string = '';
   for (const key in theme) {

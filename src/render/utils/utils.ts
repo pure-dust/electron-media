@@ -80,4 +80,12 @@ export class Cubic {
   }
 }
 
+/**
+ * @description: 生成三次贝塞尔曲线方程
+ * @param {string} 变量名
+ * @return {string} css变量值
+ */
 
+export function themed(key: string) {
+  return getComputedStyle(document.documentElement).getPropertyValue(`--${key}`);
+}

@@ -1,9 +1,5 @@
 const files = require.context('.', false, /\.ts$/);
-interface ControllerType {
-  [key: string]: any;
-}
-
-const modules: ControllerType = {};
+const modules: Index = {};
 
 files.keys().forEach((key) => {
   if (key === './index.ts') return;

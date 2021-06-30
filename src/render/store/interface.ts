@@ -8,10 +8,12 @@
  */
 import { ThemeStateType } from './module/theme';
 import { NoticeStateType } from './module/notice';
+import { CanlendarStateType } from './module/calendar';
 
 export interface RootTypes {}
 
 export default interface AllStateType {
   theme: ThemeStateType;
   notice: NoticeStateType;
+  calendar: CanlendarStateType;
 }

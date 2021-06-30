@@ -7,18 +7,22 @@
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="icon-box" :class="iconClass" :style="iconStyle">
-    <svg>
-      <use :xlink:href="icon" />
+  <div class="icon-box" :class="iconClass" :style="iconStyle" @click.self="onClick">
+    <svg :style="svgStyle">
+      <use :xlink:href="`#${icon}`" />
     </svg>
+    <slot></slot>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, computed } from 'vue';
+import { defineComponent, computed, PropType, toRefs } from 'vue';
 
+interface SvgStyleOption {
+  width: string;
+  height: string;
+}
 export default defineComponent({
   name: 'Icon',
-  components: {},
   props: {
     width: {
       type: String,
@@ -36,31 +40,50 @@ export default defineComponent({
       type: String,
       default: '#FFFFFF',
     },
+    animate: {
+      type: Boolean,
+      default: true,
+    },
     hover: {
       type: Boolean,
       default: false,
     },
+    svgStyle: {
+      type: Object as PropType<SvgStyleOption>,
+      default: {},
+    },
+    fixedHover: {
+      type: Boolean,
+      default: false,
+    },
   },
-  setup(prop) {
-    const { width, height, color, icon, hover } = prop;
+  setup(prop, { emit }) {
+    const { width, height, color, icon, animate, hover, fixedHover } = toRefs(prop);
 
     const iconStyle = computed(() => {
       return {
-        width,
-        height,
-        fill: color,
+        width: width.value,
+        height: height.value,
+        fill: color.value,
       };
     });
     const iconClass = computed(() => {
-      let classArr = []
-      if(hover) classArr.push("animate")
-      return classArr.join(" ")
-    })
+      let classArr = [];
+      if (animate.value) classArr.push('animate');
+      if (hover.value) classArr.push('hover');
+      if (fixedHover.value) classArr.push('fixed-hover');
+      return classArr.join(' ');
+    });
+
+    const onClick = () => {
+      emit('onClick');
+    };
 
     return {
       iconStyle,
       iconClass,
       icon,
+      onClick,
     };
   },
 });
@@ -70,7 +93,6 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   position: relative;
-  @include bg-hover('primary');
   display: flex;
   align-items: center;
   justify-content: center;
@@ -78,6 +100,15 @@ export default defineComponent({
   svg {
     width: 50%;
     height: 50%;
+    pointer-events: none;
   }
+}
+
+.hover {
+  @include bg-hover('primary');
+}
+
+.fixed-hover {
+  @include background('primary-hover');
 }
 </style>

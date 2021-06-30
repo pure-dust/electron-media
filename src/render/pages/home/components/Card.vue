@@ -7,21 +7,25 @@
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="card-container animate flex" :style="style" @click="linkTo">
+  <div class="card-container zcoo animate flex" :style="style" @click="linkTo">
     <div class="card-detail flex-col row-fill">
       <div class="card-title">{{ option.name }}</div>
       <div class="card-intro">{{ option.intro }}</div>
     </div>
     <div class="card-img">
-      <svg class="svg-box">
-        <use :xlink:href="`#${option.icon}`" />
-      </svg>
+      <Icon
+        :icon="option.icon"
+        :color="themed('primary-light')"
+        :hover="false"
+        :svg-style="{ height: '80px', width: '80px' }"
+      />
     </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, toRefs, PropType, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { themed } from '@/utils/utils';
 
 interface CardOption {
   height: number;
@@ -65,6 +69,7 @@ export default defineComponent({
       option,
       intro,
       linkTo,
+      themed,
     };
   },
 });
@@ -75,7 +80,6 @@ export default defineComponent({
   height: 100%;
   cursor: pointer;
   padding: 20px;
-  font-family: Zcoo;
   @include background('primary');
   @include font-color('light');
   transform-origin: center 100%;
@@ -87,13 +91,9 @@ export default defineComponent({
   }
 
   .card-intro {
+    @include ellipsis(3);
     font-size: 12px;
     line-height: 16px;
-    display: -webkit-box;
-    -webkit-box-orient: vertical;
-    -webkit-line-clamp: 3;
-    overflow: hidden;
-    text-overflow: ellipsis;
     letter-spacing: 1px;
   }
 
@@ -110,7 +110,7 @@ export default defineComponent({
 
   &:hover {
     transform: scale(1.03);
-    box-shadow: 0 0 10px 5px themed('border-light-color');
+    box-shadow: 0 0 10px 5px themed('border-light');
   }
 
   &:active {

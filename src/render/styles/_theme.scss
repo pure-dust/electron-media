@@ -1,24 +1,24 @@
 :root {
-  --theme-color: #3195ff;
-  --bg-light-color: #d1e7ff;
-  --bg-dark-color: #011831;
+  --theme: #3195ff;
+  --bg-light: #d1e7ff;
+  --bg-dark: #011831;
 
-  --primary-color: #3195ff;
-  --primary-hover-color: #4ea3ff;
-  --primary-light-color: #4ea3ff;
+  --primary: #3195ff;
+  --primary-hover: #4ea3ff;
+  --primary-light: #4ea3ff;
 
-  --success-color: #02c453;
-  --success-hover-color: #1ae16d;
-  --success-light-color: #1ae16d;
+  --success: #02c453;
+  --success-hover: #1ae16d;
+  --success-light: #1ae16d;
 
-  --disabled-color: #aaaaaa;
-  --disabled-hover-color: #aaaaaa;
-  --disabled-light-color: #aaaaaa;
+  --disabled: #aaaaaa;
+  --disabled-hover: #aaaaaa;
+  --disabled-light: #aaaaaa;
 
-  --font-dark-color: #ffffff;
-  --font-light-color: #ffffff;
-  --border-dark-color: #333333;
-  --border-light-color: #cccccc;
+  --font-dark: #ffffff;
+  --font-light: #ffffff;
+  --border-dark: #333333;
+  --border-light: #cccccc;
 
   --large-size: 18px;
   --middle-size: 14px;
@@ -26,21 +26,21 @@
 }
 
 $theme: (
-  primary: var(--primary-color),
-  primary-hover: var(--primary-hover-color),
-  primary-light: var(--primary-light-color),
-  success: var(--success-color),
-  success-hover: var(--success-hover-color),
-  success-light: var(--success-light-color),
-  disabled: var(--disabled-color),
-  disabled-hover: var(--disabled-hover-color),
-  disabled-light: var(--disabled-light-color),
-  bg-light-color: var(--bg-light-color),
-  bg-dark-color: var(--bg-dark-color),
-  font-dark-color: var(--font-dark-color),
-  font-light-color: var(--font-light-color),
-  border-dark-color: var(--border-dark-color),
-  border-light-color: var(--border-light-color),
+  primary: var(--primary),
+  primary-hover: var(--primary-hover),
+  primary-light: var(--primary-light),
+  success: var(--success),
+  success-hover: var(--success-hover),
+  success-light: var(--success-light),
+  disabled: var(--disabled),
+  disabled-hover: var(--disabled-hover),
+  disabled-light: var(--disabled-light),
+  bg-light: var(--bg-light),
+  bg-dark: var(--bg-dark),
+  font-dark: var(--font-dark),
+  font-light: var(--font-light),
+  border-dark: var(--border-dark),
+  border-light: var(--border-light),
   large-size: var(--large-size),
   middle-size: var(--middle-size),
   small-size: var(--small-size),

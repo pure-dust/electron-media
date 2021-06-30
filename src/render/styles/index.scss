@@ -16,31 +16,6 @@ body,
   position: relative;
 }
 
-.flex-col {
-  display: flex;
-  flex-direction: column;
-}
-
-.flex {
-  display: flex;
-}
-
-.col-fill {
-  height: 0;
-  flex: 1;
-  width: 100%;
-}
-
-.row-fill {
-  width: 0;
-  flex: 1;
-  height: 100%;
-}
-
-.animate {
-  transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
-}
-
 .icon {
   width: 1em;
   height: 1em;
@@ -52,3 +27,4 @@ body,
 @import './theme';
 @import './transition';
 @import './handle';
+@import './grid';

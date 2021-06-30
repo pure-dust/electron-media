@@ -1,23 +1,34 @@
-import { Solar } from 'lunar-typescript';
+import { Solar, Lunar } from 'lunar-typescript';
 import _ from 'lodash';
-export interface CalenarType {
-  [key: string]: any;
-  year: string | number;
-  month: string | number;
-  date: string | number;
-  week: string;
-  day: number;
-  current: boolean;
-  lunar: string;
-  festivals: Array<string>;
-  otherFestivals: Array<string>;
-  now?: boolean;
+
+interface CalenlarOptions {
+  cycle?: string;
+  lunar?: boolean;
+  holiday?: boolean;
+}
+export interface CalenarType extends Index {
+  year: string | number; //年
+  month: string | number; //月
+  date: string | number; //日
+  week: string; //礼拜
+  day: number; //礼拜索引
+  current: boolean; //当前月份?
+  lunarYear: string; //农历年
+  lunarMonth: string; //农历月
+  lunarDate: string; //农历日
+  starSign: string; //星座
+  festivals: Array<string>; //节假日
+  otherFestivals: Array<string>; //特殊日期
+  now: boolean; //当天?
+  yi: Array<string>; //宜
+  ji: Array<string>; //忌
+  rest: boolean; //休息日?
 }
 export class Calenar {
   private current: Date;
   private preview: Date;
 
-  constructor() {
+  constructor(options?: CalenlarOptions) {
     this.current = new Date();
     this.preview = new Date();
   }
@@ -51,10 +62,16 @@ export class Calenar {
       day: date.getDay(),
       week: dateMap[date.getDay()],
       current: this.isSameMonth(date, this.current),
-      lunar: this.getLunarDate(date),
+      lunarYear: this.getLunarYear(date),
+      lunarMonth: this.getLunarMonth(date),
+      lunarDate: this.getLunarDate(date),
+      starSign: this.getStarSign(date),
       festivals: this.getFestivals(date),
       otherFestivals: this.getOtherFestivals(date),
       now: this.isSameDate(new Date(), date),
+      yi: this.getDateYi(date),
+      ji: this.getDateJi(date),
+      rest: _.findIndex([0, 6], (el) => el == date.getDay()) > -1,
     };
   }
 
@@ -72,14 +89,17 @@ export class Calenar {
       let curDate = new Date(year, month, i);
       currentDate.push(this.createDateItem(curDate));
     }
-    for (let i = currentDate[0].day == 0 ? 7 : currentDate[0].day; i > 1; i--) {
+
+    let first = currentDate[0].day == 0 ? 7 : currentDate[0].day;
+    for (let i = first; i > 1; i--) {
       let preNum = new Date(year, month, 0).getDate();
-      let preDate = new Date(year, month - 1, preNum + i - currentDate[0].day);
+      let preDate = new Date(year, month - 1, preNum + i - first);
       currentDate.unshift(this.createDateItem(preDate));
     }
     let len = currentDate.length;
-    for (let i = currentDate[len - 1].day == 0 ? 7 : currentDate[len - 1].day; i < 7; i++) {
-      let nextDate = new Date(year, month + 1, i - currentDate[len - 1].day + 1);
+    first = currentDate[len - 1].day == 0 ? 7 : currentDate[len - 1].day;
+    for (let i = first; i < 7; i++) {
+      let nextDate = new Date(year, month + 1, i - first + 1);
       currentDate.push(this.createDateItem(nextDate));
     }
     return currentDate;
@@ -95,6 +115,10 @@ export class Calenar {
     let month = this.preview.getMonth();
     let year = this.preview.getFullYear();
     this.preview = new Date(year, month - 1, 1);
+  }
+
+  public getCurrent() {
+    return this.preview;
   }
 
   public getYear(): number {
@@ -121,6 +145,10 @@ export class Calenar {
     return Solar.fromDate(date).getLunar().getDayInChinese();
   }
 
+  public getStarSign(date: Date): string {
+    return Solar.fromDate(date).getXingZuo();
+  }
+
   public getFestivals(date: Date): Array<string> {
     return _.concat(
       Solar.fromDate(date).getFestivals(),
@@ -133,5 +161,13 @@ export class Calenar {
       Solar.fromDate(date).getOtherFestivals(),
       Solar.fromDate(date).getLunar().getOtherFestivals(),
     );
+  }
+
+  public getDateYi(date: Date): Array<string> {
+    return Lunar.fromDate(date).getDayYi();
+  }
+
+  public getDateJi(date: Date): Array<string> {
+    return Lunar.fromDate(date).getDayJi();
   }
 }

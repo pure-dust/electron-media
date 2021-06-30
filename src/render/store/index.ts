@@ -13,11 +13,13 @@ import moduleTypes, { RootTypes } from './interface';
 
 import ThemeModule from './module/theme';
 import NoticeModule from './module/notice';
+import CalendarModule from './module/calendar';
 
 export default createStore({
   modules: {
     theme: ThemeModule,
     notice: NoticeModule,
+    calendar: CalendarModule,
   },
 });
 

@@ -18,5 +18,5 @@ interface ConfigItem extends Index {
 }
 
 interface Index {
-  [key: string]: string;
+  [key: string]: any;
 }

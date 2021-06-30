@@ -9,42 +9,29 @@
 <template>
   <div class="toolbar-container animate" @mousedown.self="onMouseDown" @mouseup="windowMove(false)">
     <transition name="left">
-      <span class="text-box back animate" v-if="back" @click.stop.capture="backToHome">返回</span>
+      <span class="text-box back animate zcoo" v-if="back" @click.stop.capture="backToHome"
+        >返回</span
+      >
     </transition>
     <div class="fun-box flex">
-      <span class="text-box mini animate"> mini </span>
-      <span class="icon-box animate" @click.self="open" ref="btn">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-ic_skin" />
-        </svg>
+      <span class="text-box mini dance animate"> mini </span>
+      <Icon hover icon="icon-ic_skin" width="32px" @on-click="open" ref="btn">
         <transition name="cross">
           <div class="color-panel animate" v-if="colorPanel">
             <ColorSelector v-click-outside:[btn]="open" />
           </div>
         </transition>
-      </span>
-      <span class="icon-box animate" :class="{ fixed: isFixed }" @click="fixedScreen">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-ic_tack" />
-        </svg>
-      </span>
-      <span class="icon-box animate" @click="minScreen">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-ic_reduce" />
-        </svg>
-      </span>
-      <span class="icon-box animate" @click="closeWindow">
-        <svg class="icon" aria-hidden="true">
-          <use xlink:href="#icon-ic_cancel" />
-        </svg>
-      </span>
+      </Icon>
+      <Icon hover icon="icon-ic_tack" width="32px" @on-click="fixedScreen" :fixed-hover="isFixed" />
+      <Icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
+      <Icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, computed , watch} from 'vue';
+import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
 import { windowMove, minScreen, fixWindow, closeWindow } from '@/utils/control';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from '@/store/index';
 
 import ColorSelector from './components/ColorSelector/index.vue';
@@ -58,16 +45,14 @@ export default defineComponent({
     const store = useStore();
     const isFixed = ref(false);
     const router = useRouter();
-
+    const route = useRoute();
 
     const open = () => {
       colorPanel.value = !colorPanel.value;
     };
 
     const backToHome = () => {
-      router.push({
-        path: '/',
-      });
+      router.push({ name: route.meta?.parent as string });
     };
 
     const back = computed(() => {
@@ -122,12 +107,10 @@ $height: 30px;
   display: flex;
   align-items: center;
   user-select: none;
-  // box-shadow: 0 1px 2px themed('border-light-color');
   position: relative;
   z-index: 999;
 
   .back {
-    font-family: Zcoo;
     font-size: 14px;
   }
 
@@ -138,34 +121,17 @@ $height: 30px;
 
     .mini {
       line-height: $height - 2;
-      font-family: Dance;
     }
 
     .fixed {
       background: themed('primary-hover');
     }
 
-    .icon-box {
-      height: 100%;
-      width: 32px;
-      text-align: center;
-      line-height: $height;
-      @include bg-hover('primary');
-      cursor: pointer;
-      position: relative;
-
-      .icon {
-        fill: #ffffff;
-        width: 14px;
-        pointer-events: none;
-      }
-    }
-
     .color-panel {
       @include background('primary');
       position: absolute;
       left: -64px;
-      // top: calc(100% + 1px);
+      top: 100%;
       width: 160px;
       height: 120px;
       padding: 5px;
