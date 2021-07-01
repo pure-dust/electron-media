@@ -70,12 +70,34 @@
   transform: scale(1);
   opacity: 1;
 }
+
 .card-leave-active {
   transform-origin: center;
   transition: all 0.5s cubic-bezier(0.54, 0.27, 0.6, 0.86);
 }
+
 .card-leave-to {
   transform-origin: center;
   transform: scale(2);
+  opacity: 0;
+}
+
+.fade-enter-from {
+  opacity: 0;
+}
+.fade-enter-active {
+  transition: all 0.2s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.fade-enter-to {
+  opacity: 1;
+}
+
+.fade-leave-from {
+  opacity: 1;
+}
+.fade-leave-active {
+  transition: all 0.2s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.fade-leave-to {
   opacity: 0;
 }

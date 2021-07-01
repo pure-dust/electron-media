@@ -108,7 +108,7 @@ $height: 30px;
   align-items: center;
   user-select: none;
   position: relative;
-  z-index: 999;
+  z-index: 100;
 
   .back {
     font-size: 14px;
