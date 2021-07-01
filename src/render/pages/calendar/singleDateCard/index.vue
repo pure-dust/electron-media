@@ -15,30 +15,35 @@
             <p>{{ dateInfo.lunarMonth }}月</p>
           </div>
         </div>
-        <div class="festivals-lunar col-fill flex-col zcoo">
-          <p class="ellipsis">{{ holiday }}</p>
-          <p class="ellipsis">{{ festivals }}</p>
-          <p>今日宜忌:</p>
-          <p>宜: {{ yi }}</p>
-          <p>忌: {{ ji }}</p>
+        <div class="festivals-lunar flex-col col-fill zcoo">
+          <div class="flex-col festivals-inner">
+            <p class="ellipsis">{{ holiday }}</p>
+            <p class="ellipsis">{{ festivals }}</p>
+            <p>今日宜忌:</p>
+            <p>宜: {{ yi }}</p>
+            <p>忌: {{ ji }}</p>
+          </div>
         </div>
       </div>
       <div class="row-fill schedule zcoo flex-col">
         <p class="schedule-title zcoo">今日日程安排</p>
-        <div class="col-fill"></div>
+        <div class="col-fill">
+          <Schedule />
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 import { useStore } from '@/store';
 import { CalenarType } from '@/utils/calendar';
-import { useRouter, useRoute } from 'vue-router';
-import _ from 'lodash';
+import Schedule from '@/components/Schedule/index.vue';
+
 export default defineComponent({
   name: 'SingleDateCard',
-  components: {},
+  components: { Schedule },
   props: {},
   setup() {
     const store = useStore();
@@ -48,7 +53,7 @@ export default defineComponent({
     const holiday = computed(() => {
       let copy = dateInfo.value as CalenarType;
       return copy?.festivals?.length > 0
-        ? '法定节假日: ' + copy.festivals.join(',')
+        ? '节日: ' + copy.festivals.join(',')
         : copy.rest
         ? '快乐休息日: 今天可要好好休息呢!'
         : '苦逼工作日: 今天也要好好工作哦!';
@@ -155,16 +160,16 @@ $padding: 10px;
         border-top: calc(#{$padding}/ 2) solid #ffffff;
         @include font-color(light);
         overflow: auto;
-        justify-content: space-around;
-        font-size: 14px;
-        line-height: 18px;
+
+        .festivals-inner {
+          justify-content: space-around;
+          font-size: 14px;
+          line-height: 18px;
+          flex: 1;
+        }
 
         &::-webkit-scrollbar {
           width: 0;
-        }
-
-        & > p {
-          min-height: 18px;
         }
       }
     }
@@ -176,6 +181,7 @@ $padding: 10px;
 
       &-title {
         font-size: 14px;
+        margin-bottom: $padding;
       }
     }
   }

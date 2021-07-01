@@ -12,11 +12,27 @@ interface SysTemConfig {
   theme: string;
 }
 
-interface ConfigItem extends Index {
+interface ConfigItem extends Index<string> {
   key: string;
   value: string;
 }
 
-interface Index {
-  [key: string]: any;
+interface Index<T> {
+  [key: string]: T;
+}
+
+type EventType = 'meeting' | 'travel' | 'normal';
+
+interface ScheduleType {
+  start: Date;
+  end: Date;
+  event: string;
+  type?: EventType;
+  special?: boolean;
+}
+
+interface AddScheduleOption {
+  hour: number;
+  start: number;
+  end: number;
 }

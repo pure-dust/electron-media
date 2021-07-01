@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "types": ["@types/lodash", "@types/webpack-env", "@types/koa", "@types/node"],
+    "types": ["@types/lodash", "@types/webpack-env", "@types/koa", "@types/node", "@types/nedb"],
     "module": "CommonJS",
     "moduleResolution": "node",
     "importHelpers": true,
@@ -19,5 +19,5 @@
     },
     "allowSyntheticDefaultImports": true
   },
-  "include": ["server","src", "typings"]
+  "include": ["server", "src", "typings", "database"]
 }

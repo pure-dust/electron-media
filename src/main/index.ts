@@ -3,6 +3,10 @@ const path = require('path');
 const isDevelopment = process.env;
 import '../../server/app.ts';
 
+import LocalDB from '../../database/main';
+
+const localDb = new LocalDB();
+
 import menuEvent from './Event/Menu/index';
 import eventBus from './Event/bus/index';
 import moveEvent from './Event/move/index';
