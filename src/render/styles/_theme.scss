@@ -4,6 +4,7 @@
   --bg-dark: #011831;
 
   --primary: #3195ff;
+  --primary-dark: #2a77ca;
   --primary-hover: #4ea3ff;
   --primary-light: #4ea3ff;
 
@@ -27,6 +28,7 @@
 
 $theme: (
   primary: var(--primary),
+  primary-dark: var(--primary-dark),
   primary-hover: var(--primary-hover),
   primary-light: var(--primary-light),
   success: var(--success),

@@ -13,7 +13,7 @@
       <div class="card-intro">{{ option.intro }}</div>
     </div>
     <div class="card-img">
-      <Icon
+      <kl-icon
         :icon="option.icon"
         :color="themed('primary-light')"
         :hover="false"

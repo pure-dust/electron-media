@@ -1,25 +1,35 @@
 <template>
   <div class="schedule-container">
     <time-slot v-for="i in 24" :key="i" :hour="i - 1" @on-slot-click="addNewSchedule"></time-slot>
-    <schedule-panel :visible="visible" @on-close="closeSchedule"></schedule-panel>
+    <kl-dialog :visible="visible" @on-close="closeSchedule" title="111">
+      <div class="schedule-item flex">
+        <kl-icon icon="icon-ic_document" width="30px" height="30px" />
+        <kl-input v-model="schedule.theme" placeholder="日程主题"></kl-input>
+      </div>
+    </kl-dialog>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import TimeSlot from './components/timeSlot.vue';
-import SchedulePanel from './components/schedulePanel.vue';
 export default defineComponent({
   name: 'Schedule',
-  components: { TimeSlot, SchedulePanel },
+  components: { TimeSlot },
   props: {},
   setup() {
     const addNewSchedule = (payload: AddScheduleOption) => {
       visible.value = true;
     };
 
+    const onClick = () => {};
+
+    const schedule = reactive({
+      theme: '',
+    });
+
     const closeSchedule = () => {
-      visible.value = false
-    }
+      visible.value = false;
+    };
 
     const visible = ref(false);
 
@@ -27,6 +37,7 @@ export default defineComponent({
       addNewSchedule,
       closeSchedule,
       visible,
+      schedule,
     };
   },
 });
@@ -43,20 +54,8 @@ export default defineComponent({
     width: 0;
   }
 
-  .hour-block {
-    height: 40px;
-    border-right: 1px solid themed(light-boder);
-    border-bottom: 1px solid themed(light-boder);
-    line-height: 40px;
-
-    &:first-child {
-      border-top: 1px solid themed(light-boder);
-    }
-
-    .hour {
-      width: 40px;
-      border-right: 1px solid themed(light-boder);
-    }
+  .schedule-item {
+    height: 30px;
   }
 }
 </style>

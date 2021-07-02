@@ -6,11 +6,14 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
+import { useDatabaseOption, useDatabaseType } from '@/utils/control';
+import LocalDB, { TableList } from '@root/database';
 import { ipcMain, app, BrowserWindow, IpcMainEvent } from 'electron';
 import { ConfigLoader } from '../config/config';
 
 const EventBus = (win: BrowserWindow) => {
-  let conf = ConfigLoader.getInstance();
+  const localDb = LocalDB.getInstance();
+  const conf = ConfigLoader.getInstance();
   conf.configInit();
 
   ipcMain.on('get-config', (event: IpcMainEvent, message?: string) => {
@@ -35,6 +38,31 @@ const EventBus = (win: BrowserWindow) => {
 
   ipcMain.on('close-window', () => {
     app.quit();
+  });
+
+  ipcMain.on('use-database', (event: IpcMainEvent, ...message) => {
+    const table = message[0] as TableList;
+    const type = message[1] as useDatabaseType;
+    const params = message[2] as useDatabaseOption;
+
+    const cb = (msg: any) => {
+      event.reply('database-cb', msg);
+    };
+
+    switch (type) {
+      case 'insert':
+        localDb.getTable(table).insert(params.data, cb);
+        break;
+      case 'find':
+        localDb.getTable(table).find(params.query, cb);
+        break;
+      case 'update':
+        localDb.getTable(table).update(params.query, params.data, params.update, cb);
+        break;
+      case 'remove':
+        localDb.getTable(table).remove(params.query, params.remove, cb);
+        break;
+    }
   });
 };
 

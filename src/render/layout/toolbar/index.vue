@@ -15,16 +15,16 @@
     </transition>
     <div class="fun-box flex">
       <span class="text-box mini dance animate"> mini </span>
-      <Icon hover icon="icon-ic_skin" width="32px" @on-click="open" ref="btn">
+      <kl-icon hover icon="icon-ic_skin" width="32px" @on-click="open" ref="btn">
         <transition name="cross">
           <div class="color-panel animate" v-if="colorPanel">
             <ColorSelector v-click-outside:[btn]="open" />
           </div>
         </transition>
-      </Icon>
-      <Icon hover icon="icon-ic_tack" width="32px" @on-click="fixedScreen" :fixed-hover="isFixed" />
-      <Icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
-      <Icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
+      </kl-icon>
+      <kl-icon hover icon="icon-ic_tack" width="32px" @on-click="fixedScreen" :fixed-hover="isFixed" />
+      <kl-icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
+      <kl-icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
     </div>
   </div>
 </template>

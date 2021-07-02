@@ -93,14 +93,16 @@ export default defineComponent({
   text-align: center;
   cursor: pointer;
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: inline-block;
 
   svg {
     width: 50%;
     height: 50%;
     pointer-events: none;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 }
 

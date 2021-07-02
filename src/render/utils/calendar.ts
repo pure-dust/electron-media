@@ -6,7 +6,7 @@ interface CalenlarOptions {
   lunar?: boolean;
   holiday?: boolean;
 }
-export interface CalenarType extends Index {
+export interface CalenarType extends Index<any> {
   year: string | number; //年
   month: string | number; //月
   date: string | number; //日
@@ -46,7 +46,7 @@ export class Calenar {
   }
 
   private createDateItem(date: Date): CalenarType {
-    let dateMap: Index = {
+    let dateMap: Index<string> = {
       1: '星期一',
       2: '星期二',
       3: '星期三',

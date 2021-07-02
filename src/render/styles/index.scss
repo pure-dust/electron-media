@@ -24,6 +24,12 @@ body,
   overflow: hidden;
 }
 
+input[type='text'] {
+  appearance: none;
+  outline: none;
+  border: none;
+}
+
 @import './theme';
 @import './transition';
 @import './handle';

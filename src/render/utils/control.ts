@@ -6,29 +6,50 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-import { ipcRenderer, IpcRendererEvent } from "electron"
+import { TableList } from '@root/database';
+import { CbFunc } from '@root/database/operation';
+import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { RemoveOptions, UpdateOptions } from 'nedb';
 
 export const setColor = (message: ConfigItem) => {
-  ipcRenderer.send("set-config", message)
-}
+  ipcRenderer.send('set-config', message);
+};
 
 export const windowMove = (canMove: boolean) => {
-  ipcRenderer.send("window-move-open", canMove)
-}
+  ipcRenderer.send('window-move-open', canMove);
+};
 
 export const minScreen = () => {
-  ipcRenderer.send("min-window")
-}
+  ipcRenderer.send('min-window');
+};
 
 export const fixWindow = (fixed?: boolean) => {
-  ipcRenderer.send("fix-window", fixed)
+  ipcRenderer.send('fix-window', fixed);
   return new Promise((resolve, reject) => {
-    ipcRenderer.on("get-fixed-window", (event: IpcRendererEvent, message: boolean) => {
-      resolve(message)
-    })
-  })
-}
+    ipcRenderer.on('get-fixed-window', (event: IpcRendererEvent, message: boolean) => {
+      resolve(message);
+    });
+  });
+};
 
 export const closeWindow = () => {
-  ipcRenderer.send("close-window")
+  ipcRenderer.send('close-window');
+};
+
+export type useDatabaseType = 'insert' | 'find' | 'update' | 'remove';
+
+export interface useDatabaseOption extends Object {
+  data?: any;
+  query?: any;
+  update?: UpdateOptions;
+  remove?: RemoveOptions
 }
+
+export const useDatabase = (table: TableList, type: useDatabaseType, params: useDatabaseOption) => {
+  ipcRenderer.send('use-database', table, type, params);
+  return new Promise((reslove, reject) => {
+    ipcRenderer.on('database-cb', (event: IpcRendererEvent, message: any) => {
+      reslove(message);
+    });
+  });
+};

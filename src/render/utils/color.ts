@@ -11,6 +11,7 @@ type colorType = {
   [key: string]: string;
   '--theme': string;
   '--primary': string;
+  '--primary-dark': string;
   '--primary-hover': string;
   '--primary-light': string;
   '--success': string;
@@ -102,6 +103,7 @@ export function createColor(color: string): string {
   let theme: colorType = {
     '--theme': color,
     '--primary': color,
+    '--primary-dark': colourBlend(color, '#000000', 0.1),
     '--primary-hover': colourBlend(color, '#FFFFFF', 0.2),
     '--primary-light': LightenDarkenColor(color, 50),
     '--success': colourBlend(color, '#00ff00', 0.6),

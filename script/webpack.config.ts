@@ -1,4 +1,4 @@
-import { join } from 'path';
+import { join,resolve } from 'path';
 import { readFileSync } from 'fs';
 import { Configuration, Stats, DefinePlugin } from 'webpack';
 import HtmlWebpackPlugin from 'html-webpack-plugin';
@@ -72,8 +72,14 @@ export const config = (env: typeof process.env.NODE_ENV, proc: 'main' | 'render'
               loader: 'sass-loader',
               options: {
                 sassOptions: {
-                  javascriptEnabled: true,
+                  javascriptEnabled: true
                 },
+              },
+            },
+            {
+              loader: 'sass-resources-loader',
+              options: {
+                resources: resolve(__dirname, '../src/render/styles/_handle.scss'),
               },
             },
           ],

@@ -64,7 +64,7 @@ export class ConfigLoader {
   }
 
   // 检查复杂类型是否为空--只检查第一层
-  private checkIsNull(item: Array<any> | (Object & Index)): boolean {
+  private checkIsNull(item: Array<any> | (Object & Index<any>)): boolean {
     if (Array.isArray(item)) {
       return item.filter((el) => this.checkSingle(el)).length > 0;
     } else if (Object.prototype.toString.call(item) == '[object Object]') {

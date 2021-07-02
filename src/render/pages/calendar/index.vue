@@ -9,9 +9,9 @@
 <template>
   <div class="col-fill calendar-container flex-col">
     <div class="calendar-tool flex animate">
-      <Icon @on-click="preMonth" width="30px" icon="icon-ic_arrow_left" hover />
+      <kl-icon @on-click="preMonth" width="30px" icon="icon-ic_arrow_left" hover />
       <div class="tool-box row-fill flex"></div>
-      <Icon @on-click="nextMonth" width="30px" icon="icon-ic_arrow_right" hover />
+      <kl-icon @on-click="nextMonth" width="30px" icon="icon-ic_arrow_right" hover />
     </div>
     <div class="calendar-inner zcoo col-fill" @mouseover="getDate" @click="toDetailCard">
       <div class="calendar-header" v-for="(item, i) in dateMap" :key="i">{{ item }}</div>
@@ -34,10 +34,8 @@ import { Calenar, CalenarType } from '@/utils/calendar';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store';
 import _ from 'lodash';
-import Icon from '@/components/Icon/index.vue';
 export default defineComponent({
   name: 'Calendar',
-  components: { Icon },
   props: {},
   setup() {
     const calendar = new Calenar();
