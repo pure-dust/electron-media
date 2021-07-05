@@ -101,3 +101,52 @@
 .fade-leave-to {
   opacity: 0;
 }
+
+.scale-top-enter-from {
+  transform-origin: center 0;
+  transform: scaleY(0);
+}
+.scale-top-enter-active {
+  transition: all 0.2s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.scale-top-enter-to {
+  transform-origin: center 0;
+  transform: scaleY(1);
+}
+
+.scale-top-leave-from {
+  transform-origin: center 0;
+  transform: scaleY(1);
+}
+.scale-top-leave-active {
+  transition: all 0.2s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.scale-top-leave-to {
+  transform-origin: center 0;
+  transform: scaleY(0);
+}
+
+.scale-bottom-enter-from {
+  transform-origin: center 100%;
+  transform: scaleY(0);
+}
+.scale-bottom-enter-active {
+  transition: all 0.2s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.scale-bottom-enter-to {
+  transform-origin: center 100%;
+  transform: scaleY(1);
+}
+
+.scale-bottom-leave-from {
+  transform-origin: center 100%;
+  transform: scaleY(1);
+}
+.scale-bottom-leave-active {
+  transition: all 0.2s cubic-bezier(0.54, 0.27, 0.6, 0.86);
+}
+.scale-bottom-leave-to {
+  transform-origin: center 100%;
+  transform: scaleY(0);
+}
+

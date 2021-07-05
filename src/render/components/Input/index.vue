@@ -1,28 +1,44 @@
 <template>
   <div class="kl-input">
     <input
+      v-if="type != 'textarea'"
       class="animate zcoo"
-      type="text"
+      :type="type"
       spellcheck="false"
       @input="updateInput"
       :placeholder="placeholder"
       :value="inputVal"
     />
+    <textarea
+      v-else
+      class="animate zcoo"
+      @input="updateInput"
+      :placeholder="placeholder"
+      :value="inputVal"
+      cols="30"
+      rows="10"
+    ></textarea>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, toRefs } from 'vue';
+import { defineComponent, ref, toRefs, onMounted, PropType } from 'vue';
+type inputType = 'text' | 'textarea';
 export default defineComponent({
   name: 'KLInput',
   props: {
-    modelValue: String,
+    modelValue: [String, Number],
     placeholder: {
-      type: String,
+      type: [String, Number],
+      default: '请输入',
+    },
+    type: {
+      type: String as PropType<inputType>,
+      default: 'text',
     },
   },
   setup(prop, { emit }) {
     const inputVal = ref(prop.modelValue);
-    const { placeholder } = toRefs(prop);
+    const { placeholder, type } = toRefs(prop);
 
     const updateInput = (e: KeyboardEvent) => {
       const val = (e.target as HTMLInputElement).value;
@@ -31,10 +47,15 @@ export default defineComponent({
       emit('update:modelValue', val);
     };
 
+    onMounted(() => {
+      inputVal.value = prop.modelValue;
+    });
+
     return {
       inputVal,
       updateInput,
       placeholder,
+      type,
     };
   },
 });
@@ -45,7 +66,8 @@ export default defineComponent({
   width: 100%;
   height: 100%;
 
-  input {
+  input,
+  textarea {
     min-height: 24px;
     display: block;
     width: 100%;
@@ -64,6 +86,24 @@ export default defineComponent({
 
     &::-webkit-input-placeholder {
       color: themed(disabled);
+    }
+  }
+
+  textarea {
+    outline: none;
+    resize: none;
+    min-height: 52px;
+    font-size: 13.3333px;
+    font-weight: 400;
+
+    &::-webkit-scrollbar {
+      width: 4px;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      width: 4px;
+      @include background(primary);
     }
   }
 }

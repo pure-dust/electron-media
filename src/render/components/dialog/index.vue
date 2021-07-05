@@ -1,14 +1,13 @@
 <template>
   <transition name="fade">
     <div class="kl-dialog flex-col" v-if="visible">
-      <div class="kl-dialog-header">
-        111
+      <div v-if="slots.header" class="kl-dialog-header">
         <slot name="header"> </slot>
       </div>
       <div class="kl-dialog-body col-fill">
         <slot></slot>
       </div>
-      <div class="kl-dialog-footer">
+      <div v-if="slots.footer" class="kl-dialog-footer">
         <slot name="footer"> </slot>
       </div>
     </div>
@@ -45,6 +44,7 @@ export default defineComponent({
       visible,
       title,
       onClose,
+      slots,
     };
   },
 });
@@ -60,17 +60,23 @@ export default defineComponent({
   width: 360px;
   height: 240px;
   box-shadow: 0 0 5px themed(bg-dark);
-  padding: 10px;
   overflow: hidden;
 
   &-header {
-    height: 20px;
+    padding: 10px;
   }
 
   &-body {
+    padding: 20px;
+    overflow: hidden auto;
+
+    &::-webkit-scrollbar {
+      width: 0;
+    }
   }
 
   &-footer {
+    padding: 10px;
   }
 }
 
