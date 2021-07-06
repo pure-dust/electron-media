@@ -15,7 +15,7 @@ export function getPositon(
     height: 0,
   };
 }
-
+// TODO
 function getWidth(target: ScheduleType, existedList: Array<ScheduleType>): number {
   return 0;
 }
