@@ -143,8 +143,8 @@ $padding: 10px;
     grid-template-rows: auto auto;
 
     .calendar-header {
-      @include font-color('light');
-      @include font-size('small');
+      @include color('light');
+      @include size('small');
       @include border('light');
       @include background('primary');
       margin-left: -1px;
@@ -158,8 +158,8 @@ $padding: 10px;
       position: relative;
       user-select: none;
       overflow: hidden;
-      @include font-color('light');
-      @include font-size('small');
+      @include color('light');
+      @include size('small');
       @include border('light');
       align-items: center;
       justify-content: space-around;
@@ -169,7 +169,7 @@ $padding: 10px;
       padding-bottom: 10px;
 
       & > p:nth-child(1) {
-        @include font-size('large');
+        @include size('large');
         height: 0;
         flex: 1;
       }

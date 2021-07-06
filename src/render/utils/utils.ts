@@ -6,6 +6,9 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
+
+import _ from 'lodash';
+
 /**
  * @description: 阻止事件一定时间内多次触发
  * @param {Function} fn
@@ -88,4 +91,19 @@ export class Cubic {
 
 export function themed(key: string) {
   return getComputedStyle(document.documentElement).getPropertyValue(`--${key}`);
+}
+
+/**
+ * @description: 重置源对象属性
+ * @param {target} 源对象
+ * @return {void}
+ */
+export function reset(target: Index<any>, init?: boolean) {
+  for (const key in target) {
+    if (Array.isArray(target[key])) target[key] = [];
+    else if (typeof target[key] === 'boolean') target[key] = init || false;
+    else if (typeof target[key] === 'string') target[key] = '';
+    else if (typeof target[key] === 'number') target[key] = 0;
+    else if (typeof target[key] === 'object') reset(target[key]);
+  }
 }

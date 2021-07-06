@@ -35,7 +35,7 @@
   }
 }
 
-@mixin font-color($color) {
+@mixin color($color) {
   @if $color == 'light' {
     color: themed('font-' + $color);
   }
@@ -46,7 +46,7 @@
   }
 }
 
-@mixin font-size($size) {
+@mixin size($size) {
   font-size: themed($size + '-size');
 }
 

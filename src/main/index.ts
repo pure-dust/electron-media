@@ -2,7 +2,6 @@ import { BrowserWindow, app } from 'electron';
 const path = require('path');
 const isDevelopment = process.env;
 
-process.env['ELECTRON_DISABLE_SECURITY_WARNINGS'] = 'true';
 import menuEvent from './Event/Menu/index';
 import eventBus from './Event/bus/index';
 import moveEvent from './Event/move/index';

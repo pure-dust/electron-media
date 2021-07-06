@@ -14,12 +14,27 @@ type colorType = {
   '--primary-dark': string;
   '--primary-hover': string;
   '--primary-light': string;
+
   '--success': string;
+  '--success-dark': string;
   '--success-hover': string;
   '--success-light': string;
+
+  '--warning': string;
+  '--warning-dark': string;
+  '--warning-hover': string;
+  '--warning-light': string;
+
+  '--error': string;
+  '--error-dark': string;
+  '--error-hover': string;
+  '--error-light': string;
+
   '--disabled': string;
+  '--disabled-dark': string;
   '--disabled-hover': string;
   '--disabled-light': string;
+
   '--bg-light': string;
   '--bg-dark': string;
   '--font-dark': string;
@@ -47,7 +62,7 @@ export interface HSB {
  * @param {number} color2 rate
  * @return {string} HEX color
  */
-function colourBlend(c1: string, c2: string, ratio: number): string {
+function colorBlend(c1: string, c2: string, ratio: number): string {
   ratio = Math.max(Math.min(Number(ratio), 1), 0);
   let r1 = parseInt(c1.substring(1, 3), 16);
   let g1 = parseInt(c1.substring(3, 5), 16);
@@ -98,26 +113,44 @@ function LightenDarkenColor(col: string, amt: number): string {
  * @return {string} 根元素颜色定义代码
  */
 export function createColor(color: string): string {
-  let success = colourBlend(color, '#00ff00', 0.6);
-  let disabled = colourBlend(color, '#AAAAAA', 0.7);
+  let success = colorBlend(color, '#09ca59', 0.9);
+  let disabled = colorBlend(color, '#cccccc', 0.7);
+  let warning = colorBlend(color, '#ffb700', 0.9);
+  let error = colorBlend(color, '#ff3f3f', 0.9);
   let theme: colorType = {
     '--theme': color,
-    '--primary': color,
-    '--primary-dark': colourBlend(color, '#000000', 0.1),
-    '--primary-hover': colourBlend(color, '#FFFFFF', 0.2),
+
+    '--primary': colorBlend(color, '#FFFFFF', 0.05),
+    '--primary-dark': colorBlend(color, '#000000', 0.1),
+    '--primary-hover': colorBlend(color, '#FFFFFF', 0.2),
     '--primary-light': LightenDarkenColor(color, 50),
-    '--success': colourBlend(color, '#00ff00', 0.6),
-    '--success-hover': colourBlend(success, '#FFFFFF', 0.2),
+
+    '--success': success,
+    '--success-dark': colorBlend(success, '#000000', 0.1),
+    '--success-hover': colorBlend(success, '#FFFFFF', 0.2),
     '--success-light': LightenDarkenColor(success, 50),
+
+    '--warning': warning,
+    '--warning-dark': colorBlend(warning, '#00ff00', 0.1),
+    '--warning-hover': colorBlend(warning, '#FFFFFF', 0.2),
+    '--warning-light': LightenDarkenColor(warning, 50),
+
+    '--error': error,
+    '--error-dark': colorBlend(error, '#00ff00', 0.1),
+    '--error-hover': colorBlend(error, '#FFFFFF', 0.2),
+    '--error-light': LightenDarkenColor(error, 50),
+
     '--disabled': disabled,
-    '--disabled-hover': colourBlend(disabled, '#FFFFFF', 0.2),
+    '--disabled-dark': colorBlend(disabled, '#000000', 0.1),
+    '--disabled-hover': colorBlend(disabled, '#FFFFFF', 0.2),
     '--disabled-light': LightenDarkenColor(disabled, 50),
-    '--bg-light': colourBlend(color, '#FFFFFF', 0.95),
-    '--bg-dark': colourBlend(color, '#000000', 0.8),
-    '--font-dark': colourBlend(color, '#000000', 0.7),
-    '--font-light': colourBlend(color, '#FFFFFF', 0.9),
-    '--border-dark': LightenDarkenColor(colourBlend(color, '#000000', 0.9), 50),
-    '--border-light': LightenDarkenColor(colourBlend(color, '#FFFFFF', 0.9), -30),
+
+    '--bg-light': colorBlend(color, '#FFFFFF', 0.95),
+    '--bg-dark': colorBlend(color, '#000000', 0.8),
+    '--font-dark': colorBlend(colorBlend(color, '#000000', 0.5), '#808080', 0.5),
+    '--font-light': colorBlend(color, '#FFFFFF', 0.9),
+    '--border-dark': LightenDarkenColor(colorBlend(color, '#000000', 0.9), 50),
+    '--border-light': LightenDarkenColor(colorBlend(color, '#FFFFFF', 0.9), -30),
   };
   let str: string = '';
   for (const key in theme) {

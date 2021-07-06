@@ -15,8 +15,7 @@
       @input="updateInput"
       :placeholder="placeholder"
       :value="inputVal"
-      cols="30"
-      rows="10"
+      rows="3"
     ></textarea>
   </div>
 </template>
@@ -24,7 +23,7 @@
 import { defineComponent, ref, toRefs, onMounted, PropType } from 'vue';
 type inputType = 'text' | 'textarea';
 export default defineComponent({
-  name: 'KLInput',
+  name: 'KlInput',
   props: {
     modelValue: [String, Number],
     placeholder: {
@@ -60,7 +59,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .kl-input {
   display: inline-block;
   width: 100%;

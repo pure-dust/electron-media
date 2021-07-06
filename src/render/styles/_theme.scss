@@ -8,11 +8,23 @@
   --primary-hover: #4ea3ff;
   --primary-light: #4ea3ff;
 
-  --success: #02c453;
+  --success: #09ca59;
+  --success-dark: #02c453;
   --success-hover: #1ae16d;
   --success-light: #1ae16d;
 
+  --warning: #ffb700;
+  --warning-dark: #ffa50e;
+  --warning-hover: #ffa50e;
+  --warning-light: #ffa50e;
+
+  --error: #ff3f3f;
+  --error-dark: #ffa50e;
+  --error-hover: #ffa50e;
+  --error-light: #ffa50e;
+
   --disabled: #aaaaaa;
+  --disabled-dark: #aaaaaa;
   --disabled-hover: #aaaaaa;
   --disabled-light: #aaaaaa;
 
@@ -32,9 +44,19 @@ $theme: (
   primary-hover: var(--primary-hover),
   primary-light: var(--primary-light),
   success: var(--success),
+  success-dark: var(--success-dark),
   success-hover: var(--success-hover),
   success-light: var(--success-light),
+  warning: var(--warning),
+  warning-dark: var(--warning-dark),
+  warning-hover: var(--warning-hover),
+  warning-light: var(--warning-light),
+  error: var(--error),
+  error-dark: var(--error-dark),
+  error-hover: var(--error-hover),
+  error-light: var(--error-light),
   disabled: var(--disabled),
+  disabled-dark: var(--disabled-dark),
   disabled-hover: var(--disabled-hover),
   disabled-light: var(--disabled-light),
   bg-light: var(--bg-light),

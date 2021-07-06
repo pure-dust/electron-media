@@ -1,6 +1,9 @@
 <template>
   <div class="schedule-container">
     <time-slot v-for="i in 24" :key="i" :hour="i - 1" @on-slot-click="addNewSchedule"></time-slot>
+    <div class="schedule-panel">
+      <schedule-item v-for="(item, i) in scheduleList"></schedule-item>
+    </div>
     <kl-dialog :visible="visible" @on-close="closeSchedule" title="111">
       <div class="schedule-item flex">
         <kl-icon icon="icon-ic_document" width="36px" height="28px" :svg-style="svgStyle" />
@@ -19,7 +22,7 @@
         <kl-select
           class="row-fill"
           :options="scheduleType"
-          v-model="schedule.end"
+          v-model="schedule.type"
           placeholder="日程类型"
         ></kl-select>
       </div>
@@ -27,18 +30,25 @@
         <kl-icon width="36px" height="28px" icon="icon-ic_edit_round" :svg-style="svgStyle" />
         <kl-input class="row-fill" type="textarea"></kl-input>
       </div>
+      <template #footer>
+        <kl-button type="primary" @click="submitSchedule">确定</kl-button>
+        <kl-button @click="closeSchedule">取消</kl-button>
+      </template>
     </kl-dialog>
   </div>
 </template>
 <script lang="ts">
 import { defineComponent, reactive, ref, onMounted, Ref } from 'vue';
-import TimeSlot from './components/timeSlot.vue';
 import { useStore } from '@/store';
 import { CalenarType } from '@/utils/calendar';
 import { SCHEDULE_SELECT } from '@/utils/constant';
+import { reset } from '@/utils/utils';
+
+import TimeSlot from './components/timeSlot.vue';
+import ScheduleItem from './components/scheduleItem.vue';
 export default defineComponent({
   name: 'Schedule',
-  components: { TimeSlot },
+  components: { TimeSlot, ScheduleItem },
   props: {},
   setup() {
     const store = useStore();
@@ -49,34 +59,47 @@ export default defineComponent({
       height: '18px',
     };
 
-    const schedule = reactive({
+    const schedule: ScheduleType = reactive({
       theme: '',
       start: '',
       end: '',
       type: '',
+      event: '',
     });
+
+    const scheduleList: Ref<Array<ScheduleListType>> = ref([]);
+
     const dateInfo: Ref<CalenarType | {}> = ref({});
 
+    const scheduleType = SCHEDULE_SELECT;
+
+    const time: Ref<Array<SelectOption>> = ref([]);
+
     const addNewSchedule = (payload: AddScheduleOption) => {
+      schedule.start = payload.start;
+      schedule.end = payload.end;
       visible.value = true;
     };
 
     const closeSchedule = () => {
+      reset(schedule);
       visible.value = false;
     };
 
-    const scheduleType = SCHEDULE_SELECT;
-
-    const time = [
-      { name: '3:30', value: '3:30' },
-      { name: '4:00', value: '4:00' },
-      { name: '4:30', value: '4:30' },
-      { name: '5:00', value: '5:00' },
-      { name: '5:30', value: '5:30' },
-    ];
+    const submitSchedule = () => {};
 
     onMounted(() => {
       dateInfo.value = store.getters.getCardInfo;
+      for (let i = 0; i < 24; i++) {
+        time.value.push({
+          name: i + ':00',
+          value: i + ':00',
+        });
+        time.value.push({
+          name: i + ':30',
+          value: i + ':30',
+        });
+      }
     });
 
     return {
@@ -87,6 +110,8 @@ export default defineComponent({
       time,
       scheduleType,
       svgStyle,
+      submitSchedule,
+      scheduleList,
     };
   },
 });
@@ -95,17 +120,29 @@ export default defineComponent({
 .schedule-container {
   height: 100%;
   width: 100%;
+  position: relative;
   overflow: hidden auto;
-  @include font-color(light);
-  @include font-size(small);
+  @include color(light);
+  @include size(small);
+
+  .schedule-panel {
+    position: absolute;
+    inset: 0;
+    left: 40px;
+    pointer-events: none;
+  }
 
   &::-webkit-scrollbar {
     width: 0;
   }
 
   .schedule-item {
-    height: 28px;
+    min-height: 28px;
     margin-bottom: 10px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 
   .split-line {

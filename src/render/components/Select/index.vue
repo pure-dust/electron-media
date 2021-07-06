@@ -5,7 +5,7 @@
       type="text"
       spellcheck="false"
       readonly="readonly"
-      @focus="inputFocus"
+      @click="inputClick"
       :placeholder="placeholder"
       :value="inputVal"
     />
@@ -14,6 +14,7 @@
       height="100%"
       width="30px"
       class="select-arrow"
+      :class="{ 'select-arrow-active': dropVisible }"
       :svg-style="{ width: '20px', height: '20px' }"
       :color="themed('primary')"
     ></kl-icon>
@@ -38,14 +39,10 @@
 <script lang="ts">
 import { defineComponent, PropType, Ref, ref, toRefs, onMounted, reactive } from 'vue';
 import { themed } from '@/utils/utils';
-
-interface SelectOption {
-  name: string;
-  value: string | number;
-}
+import _ from 'lodash';
 
 export default defineComponent({
-  name: 'KLSelect',
+  name: 'KlSelect',
   props: {
     modelValue: [String, Number],
     placeholder: {
@@ -72,12 +69,12 @@ export default defineComponent({
       bottom: '',
     });
 
-    const inputFocus = () => {
-      dropVisible.value = true;
-    };
-
     const inputBlur = () => {
       dropVisible.value = false;
+    };
+
+    const inputClick = () => {
+      dropVisible.value = !dropVisible.value;
     };
 
     const onItemClick = (item: SelectOption) => {
@@ -87,7 +84,8 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      inputVal.value = prop.modelValue;
+      inputVal.value = _.find(options.value, (el) => el.value === prop.modelValue)?.name;
+
       const ele = selectRef.value as HTMLElement;
 
       let mid = ele.getBoundingClientRect().top + ele.offsetHeight / 2;
@@ -110,18 +108,18 @@ export default defineComponent({
       placeholder,
       themed,
       dropVisible,
-      inputFocus,
       inputBlur,
       options,
       onItemClick,
       selectRef,
       dropStyle,
       tansitionName,
+      inputClick,
     };
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .kl-select {
   display: inline-block;
   height: 100%;
@@ -138,15 +136,11 @@ export default defineComponent({
     color: themed(primary);
     letter-spacing: 1px;
     text-decoration: none;
+    cursor: pointer;
 
     &:focus {
       border: 1px solid themed(primary-dark);
       box-shadow: 0 0 5px 2px themed(primary-hover);
-
-      & ~ .select-arrow {
-        transform-origin: center;
-        transform: rotate(180deg);
-      }
     }
 
     &::-webkit-input-placeholder {
@@ -158,6 +152,12 @@ export default defineComponent({
     position: absolute;
     right: 0;
     top: 0;
+    pointer-events: none;
+
+    &-active {
+      transform-origin: center;
+      transform: rotate(180deg);
+    }
   }
 }
 
@@ -170,7 +170,7 @@ export default defineComponent({
   z-index: 9999;
   overflow: hidden auto;
   box-shadow: 0 0 5px 1px themed(border-dark);
-  @include font-size(middle);
+  @include size(middle);
 
   &::-webkit-scrollbar {
     width: 8px;

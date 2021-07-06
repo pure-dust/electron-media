@@ -3,7 +3,6 @@ import { insert, find, update, remove, CbFunc } from './operation';
 import { join } from 'path';
 import { app } from 'electron';
 import Nedb from 'nedb';
-
 interface DBType extends Index<Nedb> {
   calendar: Nedb;
 }

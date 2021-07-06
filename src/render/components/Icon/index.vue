@@ -7,7 +7,7 @@
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="icon-box" :class="iconClass" :style="iconStyle" @click.self="onClick">
+  <div class="kl-icon" :class="iconClass" :style="iconStyle" @click.self="onClick">
     <svg :style="svgStyle">
       <use :xlink:href="`#${icon}`" />
     </svg>
@@ -22,7 +22,7 @@ interface SvgStyleOption {
   height: string;
 }
 export default defineComponent({
-  name: 'Icon',
+  name: 'KlIcon',
   props: {
     width: {
       type: String,
@@ -88,8 +88,8 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
-.icon-box {
+<style lang="scss">
+.kl-icon {
   text-align: center;
   cursor: pointer;
   position: relative;

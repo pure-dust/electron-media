@@ -4,7 +4,10 @@
       <div v-if="slots.header" class="kl-dialog-header">
         <slot name="header"> </slot>
       </div>
-      <div class="kl-dialog-body col-fill">
+      <div
+        class="kl-dialog-body col-fill"
+        :class="{ 'bottom-offset': slots.footer, 'top-offset': slots.header }"
+      >
         <slot></slot>
       </div>
       <div v-if="slots.footer" class="kl-dialog-footer">
@@ -21,7 +24,7 @@
 <script lang="ts">
 import { defineComponent, toRefs } from 'vue';
 export default defineComponent({
-  name: 'KLDialog',
+  name: 'KlDialog',
   emits: ['onClose'],
   props: {
     visible: {
@@ -49,7 +52,7 @@ export default defineComponent({
   },
 });
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
 .kl-dialog {
   @include background(primary);
   position: fixed;
@@ -75,8 +78,17 @@ export default defineComponent({
     }
   }
 
+  .bottom-offset {
+    padding-bottom: 0;
+  }
+
+  .top-offset {
+    padding-top: 0;
+  }
+
   &-footer {
     padding: 10px;
+    text-align: center;
   }
 }
 

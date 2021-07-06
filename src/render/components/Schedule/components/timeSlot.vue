@@ -14,10 +14,10 @@ export default defineComponent({
       required: true,
       type: Number,
     },
-    schedule: {
-      type: Array as PropType<Array<ScheduleType>>,
-      default: () => [],
-    },
+    // schedule: {
+    //   type: Array as PropType<Array<ScheduleType>>,
+    //   default: () => [],
+    // },
   },
   setup(prop, { emit }) {
     const slot: Ref<Array<number>> = ref([]);
@@ -33,8 +33,8 @@ export default defineComponent({
       let f = offsetY > height / 2;
       const payload: AddScheduleOption = {
         hour: prop.hour,
-        start: f ? 30 : 0,
-        end: f ? 60 : 30,
+        start: prop.hour + (f ? ':30' : ':00'),
+        end: f ? prop.hour + 1 + ':00' : prop.hour + ':30',
       };
       emit('onSlotClick', payload);
     };

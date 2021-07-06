@@ -1,31 +1,60 @@
 <template>
-  <div class="schedule-item-container"></div>
+  <div class="schedule-item-container" :style="style">
+    <p class="ellipsis">
+      {{ schedule.theme }}
+    </p>
+  </div>
 </template>
 <script lang="ts">
-import { defineComponent } from 'vue';
+import { computed, defineComponent, PropType, toRefs } from 'vue';
 export default defineComponent({
   name: '',
   emits: ['onClick'],
   components: {},
   props: {
-    top: {
-      type: Number,
-    },
-    left: {
-      type: Number,
-    },
-    heigh: {
-      type: Number,
+    position: {
+      type: Object as PropType<SchedulePosType>,
+      default: () => ({}),
     },
     schedule: {
-      type: Object,
+      type: Object as PropType<ScheduleType>,
     },
   },
-  setup() {},
+  setup(prop) {
+    const { position, schedule } = toRefs(prop);
+    const style = computed(() => {
+      return {
+        top: position.value.top + 'px',
+        left: position.value.left + 'px',
+        width: position.value.width + 'px',
+        height: position.value.height + 'px',
+      };
+    });
+
+    return {
+      schedule,
+      style,
+    };
+  },
 });
 </script>
 <style lang="scss" scoped>
 .schedule-item-container {
   position: absolute;
+  padding-left: 5px;
+  pointer-events: all;
+  @include size(small);
+  @include color(light);
+
+  &::before {
+    content: '';
+    display: block;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    border-radius: 2px;
+    @include background(success);
+  }
 }
 </style>

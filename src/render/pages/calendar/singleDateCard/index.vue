@@ -99,7 +99,7 @@ $padding: 10px;
 .calendar-container {
   padding: $padding;
   position: relative;
-  @include font-color(light);
+  @include color(light);
 
   p::selection {
     background: #ffffff;
@@ -158,7 +158,7 @@ $padding: 10px;
       .festivals-lunar {
         padding: $padding;
         border-top: calc(#{$padding}/ 2) solid #ffffff;
-        @include font-color(light);
+        @include color(light);
         overflow: auto;
 
         .festivals-inner {

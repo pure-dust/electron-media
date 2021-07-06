@@ -81,7 +81,7 @@ export default defineComponent({
   cursor: pointer;
   padding: 20px;
   @include background('primary');
-  @include font-color('light');
+  @include color('light');
   transform-origin: center 100%;
   user-select: none;
 
