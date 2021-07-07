@@ -2,7 +2,11 @@
   <div class="schedule-container">
     <time-slot v-for="i in 24" :key="i" :hour="i - 1" @on-slot-click="addNewSchedule"></time-slot>
     <div class="schedule-panel">
-      <schedule-item v-for="(item, i) in scheduleList"></schedule-item>
+      <schedule-item
+        v-for="(item, i) in schedulePosList"
+        :position="item.position"
+        :schedule="item.schedule"
+      ></schedule-item>
     </div>
     <kl-dialog :visible="visible" @on-close="closeSchedule" title="111">
       <div class="schedule-item flex">
@@ -28,7 +32,7 @@
       </div>
       <div class="schedule-item flex">
         <kl-icon width="36px" height="28px" icon="icon-ic_edit_round" :svg-style="svgStyle" />
-        <kl-input class="row-fill" type="textarea"></kl-input>
+        <kl-input class="row-fill" type="textarea" v-model="schedule.event"></kl-input>
       </div>
       <template #footer>
         <kl-button type="primary" @click="submitSchedule">确定</kl-button>
@@ -43,7 +47,9 @@ import { useStore } from '@/store';
 import { CalenarType } from '@/utils/calendar';
 import { SCHEDULE_SELECT } from '@/utils/constant';
 import { reset } from '@/utils/utils';
-
+import { getPositon, getWidth, getLeft } from './utils';
+import { useDatabase } from '@/utils/control';
+import _ from 'lodash';
 import TimeSlot from './components/timeSlot.vue';
 import ScheduleItem from './components/scheduleItem.vue';
 export default defineComponent({
@@ -67,7 +73,9 @@ export default defineComponent({
       event: '',
     });
 
-    const scheduleList: Ref<Array<ScheduleListType>> = ref([]);
+    const scheduleList: Ref<Array<ScheduleType>> = ref([]);
+
+    const schedulePosList: Ref<Array<ScheduleListType>> = ref([]);
 
     const dateInfo: Ref<CalenarType | {}> = ref({});
 
@@ -86,7 +94,27 @@ export default defineComponent({
       visible.value = false;
     };
 
-    const submitSchedule = () => {};
+    const submitSchedule = () => {
+      let t = getPositon(schedule, schedulePosList.value);
+
+      useDatabase('calendar', 'insert', {
+        data: { ...schedule },
+      }).then((res) => {
+        let r = res as unknown as ScheduleType;
+        scheduleList.value.push({ ...schedule, _id: r._id });
+        schedulePosList.value.push({
+          schedule: { ...schedule, _id: r._id },
+          position: t,
+        });
+        _.map(schedulePosList.value, (el) => {
+          if (el.schedule._id === r._id) return;
+          el.position.width = getWidth(el.schedule, schedulePosList.value, 160);
+          el.position.left = getLeft(el.schedule, schedulePosList.value, 160, true);
+        });
+        reset(schedule);
+        visible.value = false;
+      });
+    };
 
     onMounted(() => {
       dateInfo.value = store.getters.getCardInfo;
@@ -112,6 +140,7 @@ export default defineComponent({
       svgStyle,
       submitSchedule,
       scheduleList,
+      schedulePosList,
     };
   },
 });
@@ -129,6 +158,7 @@ export default defineComponent({
     position: absolute;
     inset: 0;
     left: 40px;
+    width: 160px;
     pointer-events: none;
   }
 

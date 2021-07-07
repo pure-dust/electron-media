@@ -14,10 +14,6 @@ export default defineComponent({
       required: true,
       type: Number,
     },
-    // schedule: {
-    //   type: Array as PropType<Array<ScheduleType>>,
-    //   default: () => [],
-    // },
   },
   setup(prop, { emit }) {
     const slot: Ref<Array<number>> = ref([]);

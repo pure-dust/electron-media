@@ -1,5 +1,5 @@
 <template>
-  <div class="schedule-item-container" :style="style">
+  <div class="schedule-item-container flex" :style="style">
     <p class="ellipsis">
       {{ schedule.theme }}
     </p>
@@ -30,7 +30,6 @@ export default defineComponent({
         height: position.value.height + 'px',
       };
     });
-
     return {
       schedule,
       style,
@@ -44,11 +43,16 @@ export default defineComponent({
   padding-left: 5px;
   pointer-events: all;
   @include size(small);
-  @include color(light);
+  @include color(primary);
+  @include background(bg-light);
+  border: 1px solid themed(success);
+  border-radius: 3px;
+  align-items: center;
 
   &::before {
     content: '';
     display: block;
+    position: absolute;
     left: 0;
     top: 0;
     height: 100%;
