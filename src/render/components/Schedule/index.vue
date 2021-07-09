@@ -106,7 +106,7 @@ export default defineComponent({
           schedule: { ...schedule, _id: r._id },
           position: t,
         });
-        _.map(schedulePosList.value, (el) => {
+        _.forEach(schedulePosList.value, (el) => {
           if (el.schedule._id === r._id) return;
           el.position.width = getWidth(el.schedule, schedulePosList.value, 160);
           el.position.left = getLeft(el.schedule, schedulePosList.value, 160, true);

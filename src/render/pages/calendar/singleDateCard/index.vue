@@ -48,32 +48,45 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-    const dateInfo: Ref<CalenarType | {}> = ref({});
+    const dateInfo: Ref<CalenarType> = ref({
+      year: 0,
+      month: 0,
+      date: 0,
+      week: '',
+      day: 0,
+      current: false,
+      lunarYear: '',
+      lunarMonth: '',
+      lunarDate: '',
+      starSign: '',
+      festivals: [],
+      otherFestivals: [],
+      now: false,
+      yi: [],
+      ji: [],
+      rest: false,
+    });
 
     const holiday = computed(() => {
-      let copy = dateInfo.value as CalenarType;
-      return copy?.festivals?.length > 0
-        ? '节日: ' + copy.festivals.join(',')
-        : copy.rest
+      return dateInfo.value?.festivals?.length > 0
+        ? '节日: ' + dateInfo.value.festivals.join(',')
+        : dateInfo.value.rest
         ? '快乐休息日: 今天可要好好休息呢!'
         : '苦逼工作日: 今天也要好好工作哦!';
     });
 
     const festivals = computed(() => {
-      let copy = dateInfo.value as CalenarType;
-      return copy?.otherFestivals?.length > 0
-        ? '特殊的一天: ' + copy.otherFestivals.join(',')
+      return dateInfo.value?.otherFestivals?.length > 0
+        ? '特殊的一天: ' + dateInfo.value.otherFestivals.join(',')
         : '平平无奇的一天: 今天也要充满元气哦!';
     });
 
     const yi = computed(() => {
-      let copy = dateInfo.value as CalenarType;
-      return copy?.yi?.join('、');
+      return dateInfo.value?.yi?.join('、');
     });
 
     const ji = computed(() => {
-      let copy = dateInfo.value as CalenarType;
-      return copy?.ji?.join('、');
+      return  dateInfo.value?.ji?.join('、');
     });
 
     onMounted(() => {

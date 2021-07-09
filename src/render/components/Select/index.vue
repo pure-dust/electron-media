@@ -4,7 +4,7 @@
       class="animate zcoo"
       type="text"
       spellcheck="false"
-      readonly="readonly"
+      :readonly="true"
       @click="inputClick"
       :placeholder="placeholder"
       :value="inputVal"
@@ -46,7 +46,7 @@ export default defineComponent({
   props: {
     modelValue: [String, Number],
     placeholder: {
-      type: [String, Number],
+      type: [String],
       default: '请选择',
     },
     options: {

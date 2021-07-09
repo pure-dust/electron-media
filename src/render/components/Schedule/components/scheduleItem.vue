@@ -18,6 +18,7 @@ export default defineComponent({
     },
     schedule: {
       type: Object as PropType<ScheduleType>,
+      default: () => ({}),
     },
   },
   setup(prop) {

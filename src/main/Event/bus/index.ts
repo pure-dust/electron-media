@@ -41,27 +41,31 @@ const EventBus = (win: BrowserWindow) => {
   });
 
   ipcMain.on('use-database', (event: IpcMainEvent, ...message) => {
-    const table = message[0] as TableList;
-    const type = message[1] as useDatabaseType;
-    const params = message[2] as useDatabaseOption;
+    try {
+      const table = message[0] as TableList;
+      const type = message[1] as useDatabaseType;
+      const params = message[2] as useDatabaseOption;
 
-    const cb = (msg: any) => {
-      event.reply('database-cb', msg);
-    };
+      const cb = (msg: any) => {
+        event.reply('database-cb', msg);
+      };
 
-    switch (type) {
-      case 'insert':
-        localDb.getTable(table).insert(params.data, cb);
-        break;
-      case 'find':
-        localDb.getTable(table).find(params.query, cb);
-        break;
-      case 'update':
-        localDb.getTable(table).update(params.query, params.data, params.update, cb);
-        break;
-      case 'remove':
-        localDb.getTable(table).remove(params.query, params.remove, cb);
-        break;
+      switch (type) {
+        case 'insert':
+          localDb.getTable(table).insert(params.data, cb);
+          break;
+        case 'find':
+          localDb.getTable(table).find(params.query, cb);
+          break;
+        case 'update':
+          localDb.getTable(table).update(params.query, params.data, params.update, cb);
+          break;
+        case 'remove':
+          localDb.getTable(table).remove(params.query, params.remove, cb);
+          break;
+      }
+    } catch (error) {
+      event.reply('database-cb', error);
     }
   });
 };

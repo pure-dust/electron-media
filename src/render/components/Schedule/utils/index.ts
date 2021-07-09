@@ -3,6 +3,11 @@ import _ from 'lodash';
  * @description 生成日程卡片坐标与大小
  * @param target 目标日程数据
  */
+interface LeftAndWidth {
+  x: number,
+  
+}
+
 export function getPositon(
   target: ScheduleType,
   existedList: Array<ScheduleListType>,
@@ -59,15 +64,28 @@ export function getLeft(
   return overlopList.length * w;
 }
 
+export function getLeftAndWidth(
+  target: ScheduleType,
+  existedList: Array<ScheduleListType>,
+  width: number,
+  exclude?: boolean,
+) {}
+
 export function getWidth(
   target: ScheduleType,
   existedList: Array<ScheduleListType>,
   width: number,
+  exclude?: boolean,
 ): number {
   const overlopList = [];
   _.forEach(existedList, (el) => {
     if (isOverlap(target, el.schedule)) overlopList.push(el);
   });
+  if (exclude) {
+  } else {
+    let length = overlopList.length + 1;
+    return Math.floor(width / length);
+  }
   let length = overlopList.length + 1;
   return Math.floor(width / length);
 }
