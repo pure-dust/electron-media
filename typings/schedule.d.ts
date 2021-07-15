@@ -1,6 +1,6 @@
 type EventType = 'meeting' | 'travel' | 'normal' | '';
 
-interface ScheduleType {
+interface Schedule {
   _id?: string;
   theme: string;
   start: string;
@@ -10,7 +10,7 @@ interface ScheduleType {
   special?: boolean;
 }
 
-interface SchedulePosType {
+interface SchedulePos {
   top: number;
   left: number;
   height: number;
@@ -28,7 +28,7 @@ interface SelectOption {
   value: string | number;
 }
 
-interface ScheduleListType {
-  position: SchedulePosType;
-  schedule: ScheduleType;
+interface ScheduleCard {
+  position: SchedulePos;
+  schedule: Schedule;
 }

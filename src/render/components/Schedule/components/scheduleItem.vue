@@ -1,5 +1,5 @@
 <template>
-  <div class="schedule-item-container flex" :style="style">
+  <div class="schedule-item-container flex" :style="style" @click="onClick">
     <p class="ellipsis">
       {{ schedule.theme }}
     </p>
@@ -13,15 +13,15 @@ export default defineComponent({
   components: {},
   props: {
     position: {
-      type: Object as PropType<SchedulePosType>,
+      type: Object as PropType<SchedulePos>,
       default: () => ({}),
     },
     schedule: {
-      type: Object as PropType<ScheduleType>,
+      type: Object as PropType<Schedule>,
       default: () => ({}),
     },
   },
-  setup(prop) {
+  setup(prop, { emit }) {
     const { position, schedule } = toRefs(prop);
     const style = computed(() => {
       return {
@@ -31,9 +31,14 @@ export default defineComponent({
         height: position.value.height + 'px',
       };
     });
+
+    const onClick = (ev: MouseEvent) => {
+      emit('onClick', ev);
+    };
     return {
       schedule,
       style,
+      onClick,
     };
   },
 });
@@ -49,6 +54,7 @@ export default defineComponent({
   border: 1px solid themed(success);
   border-radius: 3px;
   align-items: center;
+  cursor: pointer;
 
   &::before {
     content: '';

@@ -1,109 +1,202 @@
 import _ from 'lodash';
-/**
- * @description 生成日程卡片坐标与大小
- * @param target 目标日程数据
- */
-interface LeftAndWidth {
-  x: number,
-  
+
+interface ScheduleOption {
+  lineHeight: number;
+  lineWidth: number;
 }
 
-export function getPositon(
-  target: ScheduleType,
-  existedList: Array<ScheduleListType>,
-  height: number = 40,
-  width: number = 160,
-): SchedulePosType {
-  const { start, end } = target;
-
-  return {
-    top: getTop(start, height),
-    left: getLeft(target, existedList, width),
-    width: getWidth(target, existedList, width),
-    height: getHeight(start, end),
+export class ScheduleGenerator {
+  config: ScheduleOption = {
+    lineHeight: 40,
+    lineWidth: 160,
   };
-}
+  private scheduleList: Schedule[] = [];
+  private scheduleCardList: ScheduleCard[] = [];
 
-function getTop(start: string, height: number): number {
-  let time = start.split(':');
-  return parseInt(time[0]) * height + (time[1] === '00' ? 0 : height / 2);
-}
+  constructor(options?: ScheduleOption) {
+    this.config = Object.assign(this.config, options);
+  }
 
-export function getLeft(
-  target: ScheduleType,
-  existedList: Array<ScheduleListType>,
-  width: number,
-  exclude?: boolean,
-): number {
-  const overlopList: Array<ScheduleListType> = [];
-  if (exclude) {
-    let index = _.findIndex(existedList, (el) => el.schedule._id === target._id);
-    _.forEach(_.slice(existedList, 0, index), (el) => {
-      if (isOverlap(target, el.schedule)) overlopList.push(el);
-    });
-  } else {
-    _.forEach(existedList, (el) => {
-      if (isOverlap(target, el.schedule)) overlopList.push(el);
-    });
-    let t = _.sortBy(overlopList, (v) => {
-      return parseInt(v.schedule.start.replace(':', ''));
-    });
-    if (t.length === 1) {
-      if (t[0].position.left > 0) return 0;
+  private craeteSchedule(): ScheduleCard[] {
+    this.scheduleCardList = [];
+    let { scheduleList: list } = this;
+    for (let i = 0; i < list.length; i++) {
+      this.scheduleCardList.push({
+        position: this.getPos(list[i]),
+        schedule: list[i],
+      });
+      this.scheduleCardList.forEach((el) => {
+        this.changeWidth(el);
+      });
+      this.scheduleCardList.forEach((el) => {
+        this.changeLeft(el);
+      });
     }
+
+    return this.scheduleCardList;
+  }
+
+  private changeWidth(card: ScheduleCard) {
+    const { lineWidth } = this.config;
+    let overlap: ScheduleCard[] = [];
+    _.forEach(this.scheduleCardList, (el) => {
+      this.isOverlap(card.schedule, el.schedule) && overlap.push(el);
+    });
+    overlap = _.sortBy(overlap, (el) => el.position.left);
     let i = 0;
-    while (i < t.length - 1) {
-      if (t[i].position.left > 0) return 0;
-      else if (t[i].position.left + t[i].position.width < t[i + 1].position.left) {
-        return t[i].position.left + t[i].position.width;
+    const len = overlap.length;
+    if (len > 0 && card.position.left >= this.getRight(overlap[len - 1])) {
+      card.position.width = lineWidth - this.getRight(overlap[len - 1]);
+      return;
+    }
+    while (i < len) {
+      const t = overlap[i].position;
+      const c = card.position;
+      let index = _.findIndex(this.scheduleCardList, (el) => el.schedule._id === card.schedule._id);
+      if (c.left < t.left && c.left + c.width > t.left) {
+        if (index > -1) {
+          this.scheduleCardList[index].position.width = t.left - c.left;
+          return;
+        }
       }
       i++;
     }
   }
-  let w = getWidth(target, existedList, width);
-  return overlopList.length * w;
-}
 
-export function getLeftAndWidth(
-  target: ScheduleType,
-  existedList: Array<ScheduleListType>,
-  width: number,
-  exclude?: boolean,
-) {}
-
-export function getWidth(
-  target: ScheduleType,
-  existedList: Array<ScheduleListType>,
-  width: number,
-  exclude?: boolean,
-): number {
-  const overlopList = [];
-  _.forEach(existedList, (el) => {
-    if (isOverlap(target, el.schedule)) overlopList.push(el);
-  });
-  if (exclude) {
-  } else {
-    let length = overlopList.length + 1;
-    return Math.floor(width / length);
+  private changeLeft(card: ScheduleCard) {
+    let overlap: ScheduleCard[] = [];
+    _.forEach(this.scheduleCardList, (el) => {
+      this.isOverlap(card.schedule, el.schedule) && overlap.push(el);
+    });
+    overlap = _.sortBy(overlap, (el) => el.position.left);
+    let i = 0;
+    while (i < overlap.length) {
+      const t = overlap[i].position;
+      const c = card.position;
+      let index = _.findIndex(this.scheduleCardList, (el) => el.schedule._id === card.schedule._id);
+      if (
+        c.left > t.left + t.width &&
+        ((overlap[i + 1] && this.getRight(overlap[i + 1]) > c.left + c.width) || !overlap[i + 1])
+      ) {
+        this.scheduleCardList[index].position.left = t.left + t.width;
+      }
+      i++;
+    }
   }
-  let length = overlopList.length + 1;
-  return Math.floor(width / length);
-}
 
-function getHeight(start: string, end: string): number {
-  let startTime = start.split(':');
-  let endTime = end.split(':');
-  let hour = parseInt(end[0]) - parseInt(start[0]);
-  let height = hour * 40;
-  if (startTime[1] == '30') height -= 20;
-  if (endTime[1] == '30') height += 20;
-  return height - 1;
-}
+  private getPos(t: Schedule): SchedulePos {
+    const { lineWidth } = this.config;
+    const { scheduleCardList: list } = this;
+    let overlap: ScheduleCard[] = [];
+    let left = 0;
+    let width = 0;
 
-function isOverlap(target: ScheduleType, source: ScheduleType): boolean {
-  let t_start = parseInt(target.start.split(':').join(''));
-  let t_end = parseInt(target.end.split(':').join(''));
-  let s_start = parseInt(source.start.split(':').join(''));
-  let s_end = parseInt(source.end.split(':').join(''));
-  return !(t_end <= s_start || t_start >= s_end) && target._id !== source._id;
+    _.forEach(list, (el) => {
+      this.isOverlap(t, el.schedule) && overlap.push(el);
+    });
+    overlap = _.sortBy(overlap, (el) => el.position.left);
+
+    const len = overlap.length;
+
+    if (len > 0) {
+      if (overlap[0].position.left > 0) {
+        left = 0;
+        width = overlap[0].position.left;
+      } else {
+        let i = 0;
+        let needChange: ScheduleCard[] = [];
+        while (i < len - 1) {
+          needChange.push(overlap[i]);
+          let sign = this.getRight(overlap[i]);
+          if (sign < overlap[i + 1].position.left) {
+            left = sign;
+            width = overlap[i + 1].position.left - sign;
+            return {
+              top: this.getTop(t),
+              left: left,
+              width: width,
+              height: this.getHeight(t),
+            };
+          }
+          i++;
+        }
+        needChange.push(overlap[i]);
+        let last = needChange[needChange.length - 1];
+        if (this.getRight(last) < lineWidth) {
+          left = this.getRight(last);
+          width = lineWidth - left;
+        } else {
+          width = lineWidth / (len + 1);
+          left = width * len;
+          needChange.forEach((el, i) => {
+            let index = _.findIndex(
+              this.scheduleCardList,
+              (item) => item.schedule._id === el.schedule._id,
+            );
+            if (index > -1) {
+              this.scheduleCardList[index].position.left = width * i;
+            }
+          });
+        }
+      }
+    } else {
+      left = 0;
+      width = lineWidth;
+    }
+
+    return {
+      top: this.getTop(t),
+      left: left,
+      width: width,
+      height: this.getHeight(t),
+    };
+  }
+
+  private isOverlap(t: Schedule, s: Schedule) {
+    let t_start = parseInt(t.start.replace(':', ''));
+    let t_end = parseInt(t.end.replace(':', ''));
+    let s_start = parseInt(s.start.replace(':', ''));
+    let s_end = parseInt(s.end.replace(':', ''));
+    return !(t_end <= s_start || t_start >= s_end) && t._id !== s._id;
+  }
+
+  private getTop(t: Schedule): number {
+    const { lineHeight } = this.config;
+    let time = t.start.split(':');
+    return parseInt(time[0]) * lineHeight + (time[1] === '00' ? 0 : lineHeight / 2);
+  }
+
+  private getRight(t: ScheduleCard): number {
+    return t.position.left + t.position.width;
+  }
+
+  private getHeight(t: Schedule): number {
+    const { lineHeight } = this.config;
+    let startTime = t.start.split(':');
+    let endTime = t.end.split(':');
+    let hour = parseInt(t.end[0]) - parseInt(t.start[0]);
+    let height = hour * lineHeight;
+    if (startTime[1] == '30') height -= lineHeight / 2;
+    if (endTime[1] == '30') height += lineHeight / 2;
+    return height;
+  }
+
+  public setList(list: Schedule[]): ScheduleCard[] {
+    this.scheduleList = list;
+    return this.craeteSchedule();
+  }
+
+  public getList(): ScheduleCard[] {
+    return this.scheduleCardList;
+  }
+
+  public add(schedule: Schedule): ScheduleCard[] {
+    this.scheduleList.push(schedule);
+    return this.craeteSchedule();
+  }
+
+  public remove(id: string): ScheduleCard[] {
+    _.remove(this.scheduleList, (el) => el._id === id);
+    return this.craeteSchedule();
+  }
 }
