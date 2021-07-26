@@ -24,19 +24,10 @@ export class ScheduleGenerator {
       let card = new Card(list[i]);
       this.cardList.push(card);
     }
-    this.cardList = this.sortCard();
     this.cardList.forEach((el) => {
       el.udpate(this.cardList);
     });
     return this.cardList.map((el) => el.getCard());
-  }
-
-  private sortCard(): Card[] {
-    let list = this.cardList;
-    list = list.sort((a, b) => {
-      return b.length - a.length;
-    });
-    return list;
   }
 
   public setList(list: Schedule[]): ScheduleCard[] {
@@ -108,30 +99,61 @@ class Card {
     return hour * 60 + minutes;
   }
 
-  private updateWidth() {
-    let { lineWidth } = this.config;
-    let i = 0;
-    const len = this.maxOverlap.length;
-    this.maxOverlap.forEach((el) => {
-      if (el._isFixed) {
-        lineWidth -= el.width;
-        i++;
-      }
-    });
-    this.width = lineWidth / (len - i + 1);
+  private getRight(): number {
+    return this.left + this.width;
   }
 
   private updateLeft() {
-    this.maxOverlap.push(this);
+    const { maxOverlap: list } = this;
+    let index = _.findIndex(list, (el) => el.schedule._id === this.schedule._id);
     let len = 0;
-    for (let i = 0; i < this.maxOverlap.length; i++) {
-      if (this.maxOverlap[i].schedule._id !== this.schedule._id) {
-        len += this.maxOverlap[i].width;
+    let i = 0;
+    if (list[i].left !== 0) {
+      this.left = 0;
+      return;
+    }
+    while (i < index - 1) {
+      if (list[i].getRight() < list[i + 1].left) {
+        this.left = list[i].getRight();
+        return;
+      }
+      i++;
+    }
+    for (i = 0; i < list.length; i++) {
+      if (list[i].schedule._id !== this.schedule._id) {
+        len += list[i].width;
       } else {
         break;
       }
     }
     this.left = len;
+  }
+
+  private updateWidth() {
+    let { lineWidth } = this.config;
+    const { maxOverlap: list } = this;
+    let index = _.findIndex(list, (el) => el.schedule._id === this.schedule._id);
+    let i = 0;
+    if (list[i].left !== 0) {
+      this.width = list[i].left;
+      return;
+    }
+    while (i < index - 1) {
+      if (list[i].getRight() < list[i + 1].left) {
+        this.width = list[i + 1].left - list[i].getRight();
+        return;
+      }
+      i++;
+    }
+    i = 0;
+    const len = list.length;
+    list.forEach((el) => {
+      if (el._isFixed && el.schedule._id !== this.schedule._id) {
+        lineWidth -= el.width;
+        i++;
+      }
+    });
+    this.width = lineWidth / (len - i);
   }
 
   private getMaxOverlap(): Card[] {
@@ -140,7 +162,6 @@ class Card {
     _.forEach(this.cardList, (el) => {
       isOverlap(this.schedule, el.schedule) && overlap.push(el);
     });
-    overlap = _.sortBy(overlap, (el) => el.left);
     if (overlap.length === 0) {
       children.push([]);
     }
@@ -181,16 +202,15 @@ class Card {
         i = j;
       }
     }
-    return children[i].sort((a, b) => {
-      return b.length - a.length;
-    });
+    children[i].push(this);
+    return children[i];
   }
 
   public udpate(list: Card[]) {
     this.cardList = list;
     this.maxOverlap = this.getMaxOverlap();
-    this.updateWidth();
     this.updateLeft();
+    this.updateWidth();
   }
 
   public getCard(): ScheduleCard {

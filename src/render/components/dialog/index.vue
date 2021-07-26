@@ -56,7 +56,8 @@ export default defineComponent({
 .kl-dialog {
   @include background(primary);
   position: fixed;
-  left: 50%;
+  // left: 50%;
+  left: 25%;
   top: 50%;
   transform: translate(-50%, -50%);
   z-index: 300;

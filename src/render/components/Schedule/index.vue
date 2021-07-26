@@ -102,7 +102,7 @@ export default defineComponent({
     };
 
     const onClick = (sc: Schedule) => {
-      Object.assign(schedule, sc)
+      Object.assign(schedule, sc);
       visible.value = true;
     };
 
@@ -131,7 +131,7 @@ export default defineComponent({
       submitSchedule,
       scheduleCardList,
       onClick,
-      sg
+      sg,
     };
   },
 });
