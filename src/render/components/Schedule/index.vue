@@ -131,6 +131,7 @@ export default defineComponent({
       submitSchedule,
       scheduleCardList,
       onClick,
+      sg
     };
   },
 });

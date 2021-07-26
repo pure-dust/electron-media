@@ -1,5 +1,4 @@
-interface SysTemConfig {
-  [key: string]: string;
+interface SysTemConfig extends Index<string> {
   theme: string;
 }
 

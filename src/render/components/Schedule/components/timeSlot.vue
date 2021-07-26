@@ -48,6 +48,7 @@ export default defineComponent({
   border-right: 1px solid themed(light-boder);
   border-bottom: 1px solid themed(light-boder);
   line-height: 40px;
+  user-select: none;
 
   &:first-child {
     border-top: 1px solid themed(light-boder);
