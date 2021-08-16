@@ -12,3 +12,8 @@ type Nullable<T> = T | null;
 interface Index<T> {
   [key: string]: T;
 }
+
+interface NedbCbParams {
+  status: 'error' | 'success';
+  message: Error | any;
+}

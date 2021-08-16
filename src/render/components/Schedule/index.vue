@@ -60,6 +60,7 @@ export default defineComponent({
   props: {},
   setup() {
     const store = useStore();
+    const cardInfo = store.state.calendar.cardInfo;
     const visible = ref(false);
     const svgStyle = {
       width: '18px',
@@ -74,11 +75,10 @@ export default defineComponent({
     });
     const scheduleCardList: Ref<Array<ScheduleCard>> = ref([]);
     const scheduleList: Ref<Array<Schedule>> = ref([]);
-    const dateInfo: Ref<CalenarType | {}> = ref({});
     const time: Ref<Array<SelectOption>> = ref([]);
     const scheduleType = SCHEDULE_SELECT;
+
     const sg = new ScheduleGenerator();
-    sg.setList(scheduleList.value);
 
     const addNewSchedule = (payload: AddScheduleOption) => {
       schedule.start = payload.start;
@@ -93,7 +93,7 @@ export default defineComponent({
 
     const submitSchedule = () => {
       useDatabase('calendar', 'insert', {
-        data: { ...schedule },
+        data: { ...schedule, date: cardInfo?.dateTime },
       }).then((res) => {
         let r = res as unknown as Schedule;
         scheduleCardList.value = sg.add(r);
@@ -107,7 +107,6 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      dateInfo.value = store.getters.getCardInfo;
       for (let i = 0; i < 24; i++) {
         time.value.push({
           name: i + ':00',
@@ -118,6 +117,12 @@ export default defineComponent({
           value: i + ':30',
         });
       }
+      useDatabase('calendar', 'find', {
+        query: { date: cardInfo?.dateTime },
+      }).then((res) => {
+        scheduleList.value = res as Schedule[];
+        sg.setList(scheduleList.value);
+      });
     });
 
     return {

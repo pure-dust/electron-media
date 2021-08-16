@@ -42,14 +42,14 @@ export interface useDatabaseOption extends Object {
   data?: any;
   query?: any;
   update?: UpdateOptions;
-  remove?: RemoveOptions
+  remove?: RemoveOptions;
 }
 
 export const useDatabase = (table: TableList, type: useDatabaseType, params: useDatabaseOption) => {
   ipcRenderer.send('use-database', table, type, params);
   return new Promise((reslove, reject) => {
-    ipcRenderer.on('database-cb', (event: IpcRendererEvent, message: any) => {
-      reslove(message);
+    ipcRenderer.on('database-cb', (event: IpcRendererEvent, message: NedbCbParams) => {
+      message.status === 'success' ? reslove(message.message) : reject(message.message);
     });
   });
 };

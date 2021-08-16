@@ -1,5 +1,6 @@
 import { Solar, Lunar } from 'lunar-typescript';
 import _ from 'lodash';
+import { dateFormat } from './utils';
 
 interface CalenlarOptions {
   cycle?: string;
@@ -23,6 +24,7 @@ export interface CalenarType extends Index<any> {
   yi: Array<string>; //宜
   ji: Array<string>; //忌
   rest: boolean; //休息日?
+  dateTime: string;
 }
 export class Calenar {
   private current: Date;
@@ -72,6 +74,7 @@ export class Calenar {
       yi: this.getDateYi(date),
       ji: this.getDateJi(date),
       rest: _.findIndex([0, 6], (el) => el == date.getDay()) > -1,
+      dateTime: dateFormat(date),
     };
   }
 

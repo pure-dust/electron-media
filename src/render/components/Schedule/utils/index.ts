@@ -103,7 +103,7 @@ class Card {
     return this.left + this.width;
   }
 
-  private updateLeft() {
+  private getLeft() {
     const { maxOverlap: list } = this;
     let index = _.findIndex(list, (el) => el.schedule._id === this.schedule._id);
     let len = 0;
@@ -129,7 +129,7 @@ class Card {
     this.left = len;
   }
 
-  private updateWidth() {
+  private getWidth() {
     let { lineWidth } = this.config;
     const { maxOverlap: list } = this;
     let index = _.findIndex(list, (el) => el.schedule._id === this.schedule._id);
@@ -209,8 +209,8 @@ class Card {
   public udpate(list: Card[]) {
     this.cardList = list;
     this.maxOverlap = this.getMaxOverlap();
-    this.updateLeft();
-    this.updateWidth();
+    this.getLeft();
+    this.getWidth();
   }
 
   public getCard(): ScheduleCard {
