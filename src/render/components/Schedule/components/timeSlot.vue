@@ -1,27 +1,33 @@
 <template>
-  <div class="time-slot-container flex">
-    <span class="hour">{{ hour }}:00</span>
-    <div class="schedule-box row-fill" @click.self="onSlotClick"></div>
+  <div class="time-slot-container flex animate" @click="onSlotClick">
+    <span class="hour"></span>
+    <div class="schedule-box row-fill">
+      <schedule-card
+        v-for="sche in schedule"
+        @click.stop="onCardClick(sche)"
+        :schedule="sche"
+      ></schedule-card>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, ref, Ref, onMounted } from 'vue';
+import { defineComponent, PropType } from 'vue';
+import ScheduleCard from './scheduleCard.vue';
 
 export default defineComponent({
   name: 'TimeDlot',
+  components: { ScheduleCard },
   props: {
     hour: {
       required: true,
       type: Number,
     },
+    schedule: {
+      type: Array as PropType<Schedule[]>,
+    },
   },
+  emits: ['on-slot-click', 'on-card-click'],
   setup(prop, { emit }) {
-    const slot: Ref<Array<number>> = ref([]);
-
-    onMounted(() => {
-      slot.value = [prop.hour, prop.hour + 1];
-    });
-
     const onSlotClick = (e: MouseEvent) => {
       const dom = e.target as HTMLElement;
       const height = dom.offsetHeight;
@@ -30,14 +36,18 @@ export default defineComponent({
       const payload: AddScheduleOption = {
         hour: prop.hour,
         start: prop.hour + (f ? ':30' : ':00'),
-        end: f ? prop.hour + 1 + ':00' : prop.hour + ':30',
+        end: f ? (prop.hour + 1 === 24 ? '0' : prop.hour) + ':00' : prop.hour + ':30',
       };
-      emit('onSlotClick', payload);
+      emit('on-slot-click', payload);
+    };
+
+    const onCardClick = (sche: Schedule) => {
+      emit('on-card-click', sche);
     };
 
     return {
-      slot,
       onSlotClick,
+      onCardClick,
     };
   },
 });
@@ -45,22 +55,55 @@ export default defineComponent({
 <style lang="scss" scoped>
 .time-slot-container {
   height: 40px;
-  border-right: 1px solid themed(light-boder);
-  border-bottom: 1px solid themed(light-boder);
   line-height: 40px;
   user-select: none;
+  border-bottom: 1px solid themed(bg-light);
+  transform-origin: center;
+  cursor: pointer;
 
-  &:first-child {
-    border-top: 1px solid themed(light-boder);
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    box-shadow: inset 0 0 5px themed(bg-dark);
   }
 
   .hour {
-    width: 40px;
-    border-right: 1px solid themed(light-boder);
+    width: 20px;
+    position: relative;
+    background-image: linear-gradient(
+      to bottom,
+      themed(bg-light) calc(50% - 2px),
+      transparent calc(50% - 2px),
+      transparent calc(50% + 3px),
+      themed(bg-light) calc(50% + 3px)
+    );
+    background-repeat: no-repeat;
+    background-position: 100% 0;
+    background-size: 1px 100%;
+    pointer-events: none;
+
+    &::after {
+      content: '';
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 100%;
+      width: 4px;
+      height: 4px;
+      transform: translate(-50%, -50%);
+      border-radius: 50%;
+      border: 1px solid themed(bg-light);
+    }
   }
 
   .schedule-box {
-    cursor: pointer;
+    padding: 0 20px 0 10px;
+    display: grid;
+    grid-template-columns: auto auto;
+    justify-items: start;
+    align-items: center;
   }
 }
 </style>

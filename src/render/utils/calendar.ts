@@ -24,7 +24,7 @@ export interface CalenarType extends Index<any> {
   yi: Array<string>; //宜
   ji: Array<string>; //忌
   rest: boolean; //休息日?
-  dateTime: string;
+  dateTime: string; //年月日 yyyy-MM-dd
 }
 export class Calenar {
   private current: Date;

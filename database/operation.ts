@@ -1,6 +1,6 @@
 import Nedb, { RemoveOptions, UpdateOptions } from 'nedb';
 
-export type CbFunc = (msg: any) => void;
+export type CbFunc = (msg: NedbCbParams) => void;
 
 export function insert(db: Nedb) {
   return function (data: any, cb?: CbFunc) {

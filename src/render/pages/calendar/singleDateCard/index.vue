@@ -26,18 +26,25 @@
         </div>
       </div>
       <div class="row-fill schedule zcoo flex-col">
-        <p class="schedule-title zcoo">今日日程安排</p>
+        <p class="schedule-title zcoo">
+          <span>今日日程安排</span>
+          <span v-if="scheduleList.length > 0"> 今天有{{ ` ${scheduleList.length} ` }}个日程计划 </span>
+          <span v-else> 今天暂时没有日程计划哦 </span>
+        </p>
         <div class="col-fill">
-          <Schedule />
+          <Schedule @refresh="getSchedule" :list="scheduleList" />
         </div>
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
+import { defineComponent, ref, Ref, onMounted, computed, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import _ from 'lodash';
+
 import { useStore } from '@/store';
+import { useDatabase } from '@/utils/control';
 import { CalenarType } from '@/utils/calendar';
 import Schedule from '@/components/Schedule/index.vue';
 
@@ -65,7 +72,10 @@ export default defineComponent({
       yi: [],
       ji: [],
       rest: false,
+      dateTime: '',
     });
+
+    let scheduleList: Ref<Schedule[]> = ref([]);
 
     const holiday = computed(() => {
       return dateInfo.value?.festivals?.length > 0
@@ -86,15 +96,29 @@ export default defineComponent({
     });
 
     const ji = computed(() => {
-      return  dateInfo.value?.ji?.join('、');
+      return dateInfo.value?.ji?.join('、');
     });
 
+    const getSchedule = () => {
+      useDatabase('calendar', 'find', {
+        query: {
+          date: dateInfo.value.dateTime,
+        },
+      }).then((res) => {
+        scheduleList.value = res as Schedule[];
+      });
+    };
+
     onMounted(() => {
-      if (!store.getters.getCardInfo)
+      if (!store.getters.getCardInfo) {
         router.push({
           name: useRoute().meta.parent as string,
         });
-      else dateInfo.value = store.getters.getCardInfo;
+        return;
+      } else {
+        dateInfo.value = store.getters.getCardInfo;
+        getSchedule();
+      }
     });
 
     return {
@@ -103,6 +127,8 @@ export default defineComponent({
       festivals,
       yi,
       ji,
+      scheduleList,
+      getSchedule,
     };
   },
 });
@@ -195,6 +221,8 @@ $padding: 10px;
       &-title {
         font-size: 14px;
         margin-bottom: $padding;
+        display: flex;
+        justify-content: space-between;
       }
     }
   }

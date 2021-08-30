@@ -1,15 +1,12 @@
 <template>
   <div class="schedule-container">
-    <time-slot v-for="i in 24" :key="i" :hour="i - 1" @on-slot-click="addNewSchedule"></time-slot>
-    <div class="schedule-panel">
-      <schedule-item
-        v-for="item in scheduleCardList"
-        :position="item.position"
-        :schedule="item.schedule"
-        :key="item.schedule._id"
-        @on-click="onClick(item.schedule)"
-      ></schedule-item>
-    </div>
+    <time-slot
+      v-for="i in 24"
+      :hour="i - 1"
+      :schedule="splitItems[i - 1]"
+      @on-slot-click="addSchedule"
+      @on-card-click="editSchedule"
+    ></time-slot>
     <kl-dialog :visible="visible" @on-close="closeSchedule" title="111">
       <div class="schedule-item flex">
         <kl-icon icon="icon-ic_document" width="36px" height="28px" :svg-style="svgStyle" />
@@ -44,21 +41,21 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted, Ref } from 'vue';
+import { defineComponent, reactive, ref, onMounted, Ref, PropType, toRef, computed } from 'vue';
 import { useStore } from '@/store';
-import { CalenarType } from '@/utils/calendar';
 import { SCHEDULE_SELECT } from '@/utils/constant';
 import { reset } from '@/utils/utils';
-import { ScheduleGenerator } from './utils';
 import { useDatabase } from '@/utils/control';
 import _ from 'lodash';
 import TimeSlot from './components/timeSlot.vue';
-import ScheduleItem from './components/scheduleItem.vue';
 export default defineComponent({
   name: 'Schedule',
-  components: { TimeSlot, ScheduleItem },
-  props: {},
-  setup() {
+  components: { TimeSlot },
+  emits: ['refresh'],
+  props: {
+    list: Array as PropType<Schedule[]>,
+  },
+  setup(props, { emit }) {
     const store = useStore();
     const cardInfo = store.state.calendar.cardInfo;
     const visible = ref(false);
@@ -73,18 +70,26 @@ export default defineComponent({
       type: '',
       event: '',
     });
-    const scheduleCardList: Ref<Array<ScheduleCard>> = ref([]);
-    const scheduleList: Ref<Array<Schedule>> = ref([]);
+
     const time: Ref<Array<SelectOption>> = ref([]);
     const scheduleType = SCHEDULE_SELECT;
 
-    const sg = new ScheduleGenerator();
-
-    const addNewSchedule = (payload: AddScheduleOption) => {
+    const addSchedule = (payload: AddScheduleOption) => {
       schedule.start = payload.start;
       schedule.end = payload.end;
       visible.value = true;
     };
+
+    const splitItems = computed(() => {
+      let arr: Schedule[][] = new Array();
+      for (let i = 0; i < 24; i++) {
+        arr.push(new Array<Schedule>());
+      }
+      props.list?.forEach((el) => {
+        arr[parseInt(el.start.split(':')[0])].push(el);
+      });
+      return arr;
+    });
 
     const closeSchedule = () => {
       reset(schedule);
@@ -94,14 +99,13 @@ export default defineComponent({
     const submitSchedule = () => {
       useDatabase('calendar', 'insert', {
         data: { ...schedule, date: cardInfo?.dateTime },
-      }).then((res) => {
-        let r = res as unknown as Schedule;
-        scheduleCardList.value = sg.add(r);
+      }).then(() => {
+        emit('refresh');
         closeSchedule();
       });
     };
 
-    const onClick = (sc: Schedule) => {
+    const editSchedule = (sc: Schedule) => {
       Object.assign(schedule, sc);
       visible.value = true;
     };
@@ -117,16 +121,10 @@ export default defineComponent({
           value: i + ':30',
         });
       }
-      useDatabase('calendar', 'find', {
-        query: { date: cardInfo?.dateTime },
-      }).then((res) => {
-        scheduleList.value = res as Schedule[];
-        sg.setList(scheduleList.value);
-      });
     });
 
     return {
-      addNewSchedule,
+      addSchedule,
       closeSchedule,
       visible,
       schedule,
@@ -134,9 +132,8 @@ export default defineComponent({
       scheduleType,
       svgStyle,
       submitSchedule,
-      scheduleCardList,
-      onClick,
-      sg,
+      editSchedule,
+      splitItems,
     };
   },
 });
@@ -147,6 +144,8 @@ export default defineComponent({
   width: 100%;
   position: relative;
   overflow: hidden auto;
+  border: 2px solid themed(bg-light);
+  background: themed(primary);
   @include color(light);
   @include size(small);
 
