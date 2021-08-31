@@ -3,6 +3,7 @@ import { insert, find, update, remove, CbFunc } from './operation';
 import { join } from 'path';
 import { app } from 'electron';
 import Nedb from 'nedb';
+import { CondType } from '@/utils';
 interface DBType extends Index<Nedb> {
   calendar: Nedb;
 }
@@ -15,7 +16,7 @@ function getPath(path: string) {
 
 interface DBInstance extends Index<any> {
   insert: (data: any, cb?: CbFunc | undefined) => void;
-  find: (query: any, cb?: CbFunc | undefined) => void;
+  find: (query: any, cb?: CbFunc | undefined, cond?: CondType) => void;
   update: (
     query: string,
     data: any,
@@ -33,10 +34,12 @@ export default class LocalDB {
       calendar: new nedb({
         filename: getPath('/data/calendar.db'),
         autoload: true,
+        timestampData: true,
       }),
       account: new nedb({
         filename: getPath('/data/account.db'),
         autoload: true,
+        timestampData: true,
       }),
     };
   }

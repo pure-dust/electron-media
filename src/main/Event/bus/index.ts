@@ -55,7 +55,7 @@ const EventBus = (win: BrowserWindow) => {
           localDb.getTable(table).insert(params.data, cb);
           break;
         case 'find':
-          localDb.getTable(table).find(params.query, cb);
+          localDb.getTable(table).find(params.query, cb, params.cond);
           break;
         case 'update':
           localDb.getTable(table).update(params.query, params.data, params.update, cb);

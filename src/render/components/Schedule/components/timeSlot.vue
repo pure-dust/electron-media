@@ -1,11 +1,14 @@
 <template>
   <div class="time-slot-container flex animate" @click="onSlotClick">
-    <span class="hour"></span>
+    <span class="hour">
+      {{ hour }}
+    </span>
     <div class="schedule-box row-fill">
       <schedule-card
         v-for="sche in schedule"
-        @click.stop="onCardClick(sche)"
         :schedule="sche"
+        @on-close="onCardClose"
+        @click.stop="onCardClick(sche)"
       ></schedule-card>
     </div>
   </div>
@@ -26,7 +29,7 @@ export default defineComponent({
       type: Array as PropType<Schedule[]>,
     },
   },
-  emits: ['on-slot-click', 'on-card-click'],
+  emits: ['on-slot-click', 'on-card-click', 'on-card-close'],
   setup(prop, { emit }) {
     const onSlotClick = (e: MouseEvent) => {
       const dom = e.target as HTMLElement;
@@ -45,9 +48,14 @@ export default defineComponent({
       emit('on-card-click', sche);
     };
 
+    const onCardClose = (id: string) => {
+      emit('on-card-close', id);
+    };
+
     return {
       onSlotClick,
       onCardClick,
+      onCardClose,
     };
   },
 });
@@ -70,7 +78,7 @@ export default defineComponent({
   }
 
   .hour {
-    width: 20px;
+    width: 24px;
     position: relative;
     background-image: linear-gradient(
       to bottom,
@@ -83,6 +91,7 @@ export default defineComponent({
     background-position: 100% 0;
     background-size: 1px 100%;
     pointer-events: none;
+    text-align: center;
 
     &::after {
       content: '';
@@ -100,10 +109,10 @@ export default defineComponent({
 
   .schedule-box {
     padding: 0 20px 0 10px;
-    display: grid;
-    grid-template-columns: auto auto;
-    justify-items: start;
+    gap: 0 10px;
+    display: flex;
     align-items: center;
+    position: relative;
   }
 }
 </style>

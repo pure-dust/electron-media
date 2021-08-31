@@ -28,7 +28,9 @@
       <div class="row-fill schedule zcoo flex-col">
         <p class="schedule-title zcoo">
           <span>今日日程安排</span>
-          <span v-if="scheduleList.length > 0"> 今天有{{ ` ${scheduleList.length} ` }}个日程计划 </span>
+          <span v-if="scheduleList.length > 0">
+            今天有{{ ` ${scheduleList.length} ` }}个日程计划
+          </span>
           <span v-else> 今天暂时没有日程计划哦 </span>
         </p>
         <div class="col-fill">
@@ -103,6 +105,11 @@ export default defineComponent({
       useDatabase('calendar', 'find', {
         query: {
           date: dateInfo.value.dateTime,
+        },
+        cond: {
+          sort: {
+            createdAt: 1,
+          },
         },
       }).then((res) => {
         scheduleList.value = res as Schedule[];

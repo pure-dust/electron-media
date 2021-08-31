@@ -97,7 +97,7 @@ export function reset(target: Index<any>, init?: boolean) {
     if (Array.isArray(target[key])) target[key] = [];
     else if (typeof target[key] === 'boolean') target[key] = init || false;
     else if (typeof target[key] === 'string') target[key] = '';
-    else if (typeof target[key] === 'number') target[key] = 0;
+    else if (typeof target[key] === 'number') target[key] = null;
     else if (typeof target[key] === 'object') reset(target[key]);
   }
 }

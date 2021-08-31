@@ -7,7 +7,6 @@
  * @Email: 932184220@qq.com
  */
 import { TableList } from '@root/database';
-import { CbFunc } from '@root/database/operation';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { RemoveOptions, UpdateOptions } from 'nedb';
 
@@ -38,11 +37,24 @@ export const closeWindow = () => {
 
 export type useDatabaseType = 'insert' | 'find' | 'update' | 'remove';
 
+interface SortType extends Index<any> {
+  createdAt?: number;
+  updatedAt?: number;
+}
+
+export interface CondType extends Index<any> {
+  sort?: SortType; //排序
+  limit?: number; //分页限制
+  skip?: number; //跳过某个数据
+  projection?: Index<any>; //返回指定字段
+}
+
 export interface useDatabaseOption extends Object {
   data?: any;
   query?: any;
   update?: UpdateOptions;
   remove?: RemoveOptions;
+  cond?: CondType;
 }
 
 export const useDatabase = (table: TableList, type: useDatabaseType, params: useDatabaseOption) => {

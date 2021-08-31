@@ -1,6 +1,10 @@
+import { CondType } from '@/utils';
 import Nedb, { RemoveOptions, UpdateOptions } from 'nedb';
 
 export type CbFunc = (msg: NedbCbParams) => void;
+interface Cursor extends Nedb.Cursor<any> {
+  [key: string]: any;
+}
 
 export function insert(db: Nedb) {
   return function (data: any, cb?: CbFunc) {
@@ -15,8 +19,12 @@ export function insert(db: Nedb) {
 }
 
 export function find(db: Nedb) {
-  return function (query: any, cb?: CbFunc) {
-    db.find(query, (err: Error | null, message: any) => {
+  return function (query: any, cb?: CbFunc, cond?: CondType) {
+    let result = db.find(query) as Cursor;
+    for (const key in cond) {
+      result = result[key](cond[key]);
+    }
+    result.exec((err: Error | null, message: any) => {
       let msg: NedbCbParams = {
         status: err ? 'error' : 'success',
         message: err || message,

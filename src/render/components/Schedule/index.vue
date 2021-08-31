@@ -6,6 +6,7 @@
       :schedule="splitItems[i - 1]"
       @on-slot-click="addSchedule"
       @on-card-click="editSchedule"
+      @on-card-close="deleteSchedule"
     ></time-slot>
     <kl-dialog :visible="visible" @on-close="closeSchedule" title="111">
       <div class="schedule-item flex">
@@ -74,7 +75,10 @@ export default defineComponent({
     const time: Ref<Array<SelectOption>> = ref([]);
     const scheduleType = SCHEDULE_SELECT;
 
+    let submitType = 'add';
+
     const addSchedule = (payload: AddScheduleOption) => {
+      submitType = 'add';
       schedule.start = payload.start;
       schedule.end = payload.end;
       visible.value = true;
@@ -97,17 +101,48 @@ export default defineComponent({
     };
 
     const submitSchedule = () => {
-      useDatabase('calendar', 'insert', {
-        data: { ...schedule, date: cardInfo?.dateTime },
-      }).then(() => {
-        emit('refresh');
-        closeSchedule();
-      });
+      if (submitType === 'add') {
+        useDatabase('calendar', 'insert', {
+          data: { ...schedule, date: cardInfo?.dateTime },
+        }).then(() => {
+          emit('refresh');
+          closeSchedule();
+        });
+      } else if (submitType === 'edit') {
+        useDatabase('calendar', 'update', {
+          query: { _id: schedule._id },
+          data: {
+            $set: {
+              theme: schedule.theme,
+              start: schedule.start,
+              end: schedule.end,
+              type: schedule.type,
+              event: schedule.event,
+            },
+          },
+          update: {},
+        }).then(() => {
+          emit('refresh');
+          closeSchedule();
+        });
+      }
     };
 
     const editSchedule = (sc: Schedule) => {
+      submitType = 'edit';
       Object.assign(schedule, sc);
       visible.value = true;
+    };
+
+    const deleteSchedule = (id: string) => {
+      useDatabase('calendar', 'remove', {
+        query: {
+          _id: id,
+        },
+        remove: {},
+      }).then(() => {
+        emit('refresh');
+      });
     };
 
     onMounted(() => {
@@ -134,6 +169,7 @@ export default defineComponent({
       submitSchedule,
       editSchedule,
       splitItems,
+      deleteSchedule,
     };
   },
 });
@@ -145,6 +181,7 @@ export default defineComponent({
   position: relative;
   overflow: hidden auto;
   border: 2px solid themed(bg-light);
+  border-width: 2px 0;
   background: themed(primary);
   @include color(light);
   @include size(small);
