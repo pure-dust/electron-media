@@ -44,7 +44,7 @@
 <script lang="ts">
 import { defineComponent, reactive, ref, onMounted, Ref, PropType, toRef, computed } from 'vue';
 import { useStore } from '@/store';
-import { SCHEDULE_SELECT } from '@/utils/constant';
+import { SCHEDULE_SELECT } from '@/contants/constant';
 import { reset } from '@/utils/utils';
 import { useDatabase } from '@/utils/control';
 import _ from 'lodash';

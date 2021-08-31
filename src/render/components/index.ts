@@ -7,12 +7,6 @@ import { App } from 'vue';
 
 export default {
   install(app: App<Element>) {
-    // app.component('kl-dialog', KLDialog);
-    // app.component('kl-icon', KLIcon);
-    // app.component('kl-input', KLInput);
-    // app.component('kl-select', KLSelect);
-    // app.component('kl-button', KLButton);
-
     app.component(KLDialog.name, KLDialog);
     app.component(KLIcon.name, KLIcon);
     app.component(KLInput.name, KLInput);

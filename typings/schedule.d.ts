@@ -10,13 +10,6 @@ interface Schedule {
   special?: boolean;
 }
 
-interface SchedulePos {
-  top: number;
-  left: number;
-  height: number;
-  width: number;
-}
-
 interface AddScheduleOption {
   hour: number;
   start: string;
@@ -26,9 +19,4 @@ interface AddScheduleOption {
 interface SelectOption {
   name: string;
   value: string | number;
-}
-
-interface ScheduleCard {
-  position: SchedulePos;
-  schedule: Schedule;
 }

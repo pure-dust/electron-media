@@ -8,6 +8,7 @@
  */
 import { TableList } from '@root/database';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
+import { NotificationConstructorOptions } from 'electron/main';
 import { RemoveOptions, UpdateOptions } from 'nedb';
 
 export const setColor = (message: ConfigItem) => {
@@ -64,4 +65,8 @@ export const useDatabase = (table: TableList, type: useDatabaseType, params: use
       message.status === 'success' ? reslove(message.message) : reject(message.message);
     });
   });
+};
+
+export const notifyAction = (notice: NotificationConstructorOptions) => {
+  ipcRenderer.send('notice', notice);
 };

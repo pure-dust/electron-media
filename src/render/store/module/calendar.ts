@@ -1,14 +1,16 @@
 import { GetterTree, MutationTree, ActionTree } from 'vuex';
-import { CalenarType } from '@/utils/calendar';
+import { CalenarType, ScheduleMonitor, dateFormat } from '@/utils';
 
 export interface CanlendarStateType {
   cardInfo: CalenarType | null;
-  currentDate: Date | null
+  currentDate: Date | null;
+  monitor: ScheduleMonitor;
 }
 
 const state: CanlendarStateType = {
   cardInfo: null,
-  currentDate: null
+  currentDate: null,
+  monitor: new ScheduleMonitor(dateFormat(new Date())),
 };
 
 const mutations: MutationTree<CanlendarStateType> = {
@@ -17,6 +19,9 @@ const mutations: MutationTree<CanlendarStateType> = {
   },
   setCurrentDate(state, payload: Date) {
     state.currentDate = payload;
+  },
+  updateMonitor(state) {
+    state.monitor.update();
   },
 };
 

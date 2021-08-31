@@ -1,15 +1,15 @@
 <template>
-  <div class="schedule-card-container">
+  <div class="schedule-card-container" @click.stop="onCardClick">
     {{ schedule?.theme }}
-    <!-- <div class="shelter animate"></div> -->
     <i class="close-icon iconfont icon-ic_close animate" @click.stop="onCloseClick"></i>
   </div>
+  <transition class="schedule-card-container"> </transition>
 </template>
 <script lang="ts">
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
   name: 'ScheduleCard',
-  emits: ['on-close'],
+  emits: ['on-close', 'on-card-click'],
   props: {
     schedule: {
       type: Object as PropType<Schedule>,
@@ -20,8 +20,13 @@ export default defineComponent({
       emit('on-close', props.schedule?._id);
     };
 
+    const onCardClick = () => {
+      emit('on-card-click', props.schedule);
+    };
+
     return {
       onCloseClick,
+      onCardClick,
     };
   },
 });
@@ -49,26 +54,15 @@ export default defineComponent({
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    z-index: 999;
+    z-index: 100;
     .close-icon {
       right: 3px;
+      opacity: 1;
     }
-
-    .shelter {
-      opacity: 0.2;
-    }
-  }
-
-  .shelter {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    inset: 0;
-    background: themed(bg-dark);
-    opacity: 0;
   }
 
   .close-icon {
+    opacity: 0;
     color: themed(error-light);
     display: block;
     position: absolute;

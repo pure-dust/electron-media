@@ -1,4 +1,3 @@
-// import './schedule';
 
 interface Window {
   /** 关闭预加载动画 */

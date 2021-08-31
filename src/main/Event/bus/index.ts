@@ -8,7 +8,8 @@
  */
 import { useDatabaseOption, useDatabaseType } from '@/utils/control';
 import LocalDB, { TableList } from '@root/database';
-import { ipcMain, app, BrowserWindow, IpcMainEvent } from 'electron';
+import { ipcMain, app, BrowserWindow, IpcMainEvent, Notification } from 'electron';
+import { NotificationConstructorOptions } from 'electron/main';
 import { ConfigLoader } from '../config/config';
 
 const EventBus = (win: BrowserWindow) => {
@@ -67,6 +68,10 @@ const EventBus = (win: BrowserWindow) => {
     } catch (error) {
       event.reply('database-cb', error);
     }
+  });
+
+  ipcMain.on('notice', (event: IpcMainEvent, message: NotificationConstructorOptions) => {
+    new Notification(message).show();
   });
 };
 

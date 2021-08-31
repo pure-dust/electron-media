@@ -8,7 +8,7 @@
         v-for="sche in schedule"
         :schedule="sche"
         @on-close="onCardClose"
-        @click.stop="onCardClick(sche)"
+        @on-card-click="onCardClick"
       ></schedule-card>
     </div>
   </div>
