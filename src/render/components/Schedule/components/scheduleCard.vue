@@ -50,10 +50,10 @@ export default defineComponent({
   &:hover {
     box-shadow: 0 0 2px themed(bg-dark);
     position: absolute;
-    width: 90%;
+    width: calc(100% - 30px);
     top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    left: 10px;
+    transform: translateY(-50%);
     z-index: 100;
     .close-icon {
       right: 3px;

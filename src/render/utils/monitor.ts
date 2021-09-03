@@ -19,7 +19,7 @@ export class ScheduleMonitor {
     this._clock = setInterval(() => {
       this.setFirstNotice();
       this.setCurrentNotice();
-      // this.notify();
+      this.notify();
     }, 5000);
   }
 
@@ -58,7 +58,6 @@ export class ScheduleMonitor {
   }
 
   setFirstNotice() {
-    debugger
     this.needFirstNotice = [];
     let time = new Date().getTime();
     let tar = null;
@@ -67,7 +66,7 @@ export class ScheduleMonitor {
       let t = el.start.split(':');
       tar.setHours(parseInt(t[0]), parseInt(t[1]));
       tar = tar.getTime();
-      if (tar - time <= 5 * 60 * 1000 && !this.isFisrtNofity(el)) {
+      if (Math.abs(tar - time) <= 5 * 60 * 1000 && !this.isFisrtNofity(el)) {
         this.needFirstNotice.push(el);
       }
     });
@@ -82,7 +81,7 @@ export class ScheduleMonitor {
       let t = el.start.split(':');
       tar.setHours(parseInt(t[0]), parseInt(t[1]));
       tar = tar.getTime();
-      if ((tar - time <= 5 * 1000 || tar - time >= -5 * 1000) && !this.isCurNotify(el)) {
+      if (time - tar <= 5 * 1000 && time - tar >= -5 * 1000 && !this.isCurNotify(el)) {
         this.needCurNotice.push(el);
       }
     });

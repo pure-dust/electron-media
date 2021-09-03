@@ -106,6 +106,7 @@ export default defineComponent({
           data: { ...schedule, date: cardInfo?.dateTime },
         }).then(() => {
           emit('refresh');
+          store.commit('updateMonitor')
           closeSchedule();
         });
       } else if (submitType === 'edit') {
@@ -123,6 +124,7 @@ export default defineComponent({
           update: {},
         }).then(() => {
           emit('refresh');
+          store.commit('updateMonitor')
           closeSchedule();
         });
       }
