@@ -66,7 +66,7 @@ export class ScheduleMonitor {
       let t = el.start.split(':');
       tar.setHours(parseInt(t[0]), parseInt(t[1]));
       tar = tar.getTime();
-      if (Math.abs(tar - time) <= 5 * 60 * 1000 && !this.isFisrtNofity(el)) {
+      if (tar - time <= 0 && tar - time >= -5 * 60 * 1000 && !this.isFisrtNofity(el)) {
         this.needFirstNotice.push(el);
       }
     });
