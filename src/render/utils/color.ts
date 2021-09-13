@@ -6,7 +6,8 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-
+import store from '@/store/index';
+import { nanoid } from 'nanoid';
 type colorType = {
   [key: string]: string;
   '--theme': string;
@@ -274,4 +275,41 @@ export function HEXToRGB(color: string): RGB {
   rgb.g = parseInt(color.substring(3, 5), 16);
   rgb.b = parseInt(color.substring(5, 7), 16);
   return rgb;
+}
+
+export function setTheme(color: string) {
+  let handler = ThemeHanlder.getInstance();
+  let theme = createColor(color);
+  store.commit('setTheme', color);
+  document.querySelector(':root')?.setAttribute('style', theme);
+  handler.dispatch();
+}
+
+export class ThemeHanlder {
+  callBacks: Map<string, Function> = new Map();
+
+  static instance: ThemeHanlder;
+
+  constructor() {}
+
+  static getInstance() {
+    if (!this.instance) {
+      ThemeHanlder.instance = new ThemeHanlder();
+    }
+    return ThemeHanlder.instance;
+  }
+
+  watch(fn: Function): string {
+    const key = nanoid();
+    this.callBacks.set(key, fn);
+    return key;
+  }
+
+  destroyed(key: string) {
+    this.callBacks.delete(key);
+  }
+
+  dispatch() {
+    this.callBacks.forEach((fn) => fn());
+  }
 }

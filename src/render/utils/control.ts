@@ -11,7 +11,7 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { NotificationConstructorOptions } from 'electron/main';
 import { RemoveOptions, UpdateOptions } from 'nedb';
 
-export const setColor = (message: ConfigItem) => {
+export const setConfig = (message: ConfigItem) => {
   ipcRenderer.send('set-config', message);
 };
 

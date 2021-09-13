@@ -28,9 +28,9 @@ function createScrollHandler(
         el.setAttribute(
           'style',
           `transition: all .5s cubic-bezier(.32,.7,.47,.83);
-           position:relative;
-           top: 0;
-           opacity: 1;` + style,
+          position:relative;
+          top: 0;
+          opacity: 1;` + style,
         );
         setTimeout(() => {
           el.setAttribute('style', style);

@@ -16,11 +16,7 @@ export class ScheduleMonitor {
   }
 
   start() {
-    this._clock = setInterval(() => {
-      this.setFirstNotice();
-      this.setCurrentNotice();
-      this.notify();
-    }, 5000);
+    this._clock = setInterval(this.update, 5000);
   }
 
   update() {
@@ -35,6 +31,9 @@ export class ScheduleMonitor {
       },
     }).then((res) => {
       this.scheduleList = res as Schedule[];
+      this.setFirstNotice();
+      this.setCurrentNotice();
+      this.notify();
     });
   }
 

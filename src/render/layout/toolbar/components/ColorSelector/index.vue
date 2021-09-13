@@ -20,125 +20,124 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref, computed, reactive, watch, nextTick } from "vue"
-import { createColor, HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from "@/utils/color"
-import { useStore } from "@/store/index"
-import { setColor } from "@/utils/control"
+import { defineComponent, onMounted, ref, Ref, computed, reactive, watch, nextTick } from 'vue';
+import { HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from '@/utils/color';
+import { useStore } from '@/store/index';
+import { setConfig, setTheme } from '@/utils';
 
 export default defineComponent({
-  name: "ColorSelector",
+  name: 'ColorSelector',
   setup() {
-    const colorBox: Ref<HTMLElement | null> = ref(null)
-    const slideBar: Ref<HTMLElement | null> = ref(null)
-    const width: Ref<number> = ref(0)
-    const height: Ref<number> = ref(0)
-    const slide: Ref<number> = ref(0)
-    const slideWidth: Ref<number> = ref(0)
-    const store = useStore()
-    let isInit = false
+    const colorBox: Ref<HTMLElement | null> = ref(null);
+    const slideBar: Ref<HTMLElement | null> = ref(null);
+    const width: Ref<number> = ref(0);
+    const height: Ref<number> = ref(0);
+    const slide: Ref<number> = ref(0);
+    const slideWidth: Ref<number> = ref(0);
+    const store = useStore();
+    let isInit = false;
 
     let hsb: HSB = reactive({
       h: 0,
       s: 0,
       b: 0,
-    })
+    });
 
     const point = reactive({
       x: 0,
       y: 0,
-    })
+    });
 
     watch(
       hsb,
       (v) => {
-        if (!isInit) return
-        let str: string = createColor(RGBToHEX(HSBToRGB(v)))
-        store.commit("setTheme", RGBToHEX(HSBToRGB(v)))
-        setColor({ key: "theme", value: RGBToHEX(HSBToRGB(v)) })
-        document.querySelector(":root")?.setAttribute("style", str)
+        if (!isInit) return;
+        let str: string = RGBToHEX(HSBToRGB(v));
+        setConfig({ key: 'theme', value: RGBToHEX(HSBToRGB(v)) });
+        setTheme(str);
       },
       { deep: true },
-    )
+    );
 
-    const pointStyle = computed(() => `top: ${point.y}px; left: ${point.x}px`)
+    const pointStyle = computed(() => `top: ${point.y}px; left: ${point.x}px`);
 
     const bgStyle = computed(() => {
       let c: HSB = {
         h: hsb.h,
         s: 100,
         b: 100,
-      }
-      const { r, g, b } = HSBToRGB(c)
-      return `background: linear-gradient(to right, #ffffff, rgba(${r},${g},${b}))`
-    })
+      };
+      const { r, g, b } = HSBToRGB(c);
+      return `background: linear-gradient(to right, #ffffff, rgba(${r},${g},${b}))`;
+    });
 
     const pointMove = (ev: MouseEvent) => {
-      point.x = ev.offsetX
-      point.y = ev.offsetY
-      let width: number = colorBox.value?.offsetWidth as number
-      let height: number = colorBox.value?.offsetHeight as number
+      point.x = ev.offsetX;
+      point.y = ev.offsetY;
+      let width: number = colorBox.value?.offsetWidth as number;
+      let height: number = colorBox.value?.offsetHeight as number;
 
-      hsb.s = Math.round((100 * point.x) / width)
-      hsb.b = Math.round((100 * (height - point.y)) / height)
+      hsb.s = Math.round((100 * point.x) / width);
+      hsb.b = Math.round((100 * (height - point.y)) / height);
 
       document.onmousemove = (mouseEv: MouseEvent) => {
-        let left: number = colorBox.value?.getBoundingClientRect().x as number
-        let top: number = colorBox.value?.getBoundingClientRect().y as number
-        let minX: number = Math.min(mouseEv.pageX - left, Number(colorBox.value?.offsetWidth))
-        let minY: number = Math.min(mouseEv.pageY - top, Number(colorBox.value?.offsetHeight))
-        point.x = Math.max(0, minX)
-        point.y = Math.max(0, minY)
-        hsb.s = Math.round((100 * point.x) / width)
-        hsb.b = Math.round((100 * (height - point.y)) / height)
-        mouseEv.preventDefault()
-      }
+        let left: number = colorBox.value?.getBoundingClientRect().x as number;
+        let top: number = colorBox.value?.getBoundingClientRect().y as number;
+        let minX: number = Math.min(mouseEv.pageX - left, Number(colorBox.value?.offsetWidth));
+        let minY: number = Math.min(mouseEv.pageY - top, Number(colorBox.value?.offsetHeight));
+        point.x = Math.max(0, minX);
+        point.y = Math.max(0, minY);
+        hsb.s = Math.round((100 * point.x) / width);
+        hsb.b = Math.round((100 * (height - point.y)) / height);
+        mouseEv.preventDefault();
+      };
 
       document.onmouseup = () => {
-        document.onmousemove = null
-      }
-    }
+        document.onmousemove = null;
+      };
+    };
 
     const slideMove = (ev: MouseEvent) => {
-      slide.value = ev.offsetX
-      let x: number = parseFloat((slide.value / slideWidth.value).toFixed(2))
+      slide.value = ev.offsetX;
+      let x: number = parseFloat((slide.value / slideWidth.value).toFixed(2));
 
-      hsb.h = Math.round(360 * x)
+      hsb.h = Math.round(360 * x);
 
       document.onmousemove = (mouseEv: MouseEvent) => {
-        let left: number = slideBar.value?.getBoundingClientRect().x as number
-        let min: number = Math.min(mouseEv.pageX - left, Number(slideBar.value?.offsetWidth))
-        slide.value = Math.max(0, min)
-        x = parseFloat((slide.value / slideWidth.value).toFixed(2))
-        hsb.h = Math.round(360 * x)
-        mouseEv.preventDefault()
-      }
+        let left: number = slideBar.value?.getBoundingClientRect().x as number;
+        let min: number = Math.min(mouseEv.pageX - left, Number(slideBar.value?.offsetWidth));
+        slide.value = Math.max(0, min);
+        x = parseFloat((slide.value / slideWidth.value).toFixed(2));
+        hsb.h = Math.round(360 * x);
+        mouseEv.preventDefault();
+      };
 
       document.onmouseup = () => {
-        document.onmousemove = null
-        document.onmouseup = null
-      }
-    }
+        document.onmousemove = null;
+        document.onmouseup = null;
+      };
+    };
 
     const initSlideAndPoint = () => {
-      hsb.h = RGBToHSB(HEXToRGB(store.getters.getTheme)).h
-      hsb.s = RGBToHSB(HEXToRGB(store.getters.getTheme)).s
-      hsb.b = RGBToHSB(HEXToRGB(store.getters.getTheme)).b
-      slide.value = Math.round((hsb.h / 360) * slideWidth.value)
-      point.x = Math.round((hsb.s * (colorBox.value?.offsetWidth as number)) / 100)
+      hsb.h = RGBToHSB(HEXToRGB(store.getters.getTheme)).h;
+      hsb.s = RGBToHSB(HEXToRGB(store.getters.getTheme)).s;
+      hsb.b = RGBToHSB(HEXToRGB(store.getters.getTheme)).b;
+      slide.value = Math.round((hsb.h / 360) * slideWidth.value);
+      point.x = Math.round((hsb.s * (colorBox.value?.offsetWidth as number)) / 100);
       point.y =
         (colorBox.value?.offsetHeight as number) -
-        Math.round((hsb.b * (colorBox.value?.offsetHeight as number)) / 100)
+        Math.round((hsb.b * (colorBox.value?.offsetHeight as number)) / 100);
       nextTick(() => {
-        isInit = true
-      })
-    }
+        isInit = true;
+      });
+    };
 
     onMounted(() => {
-      width.value = colorBox.value?.offsetWidth as number
-      height.value = colorBox.value?.offsetHeight as number
-      slideWidth.value = slideBar.value?.offsetWidth as number
-      initSlideAndPoint()
-    })
+      width.value = colorBox.value?.offsetWidth as number;
+      height.value = colorBox.value?.offsetHeight as number;
+      slideWidth.value = slideBar.value?.offsetWidth as number;
+      initSlideAndPoint();
+    });
 
     return {
       colorBox,
@@ -149,9 +148,9 @@ export default defineComponent({
       slide,
       hsb,
       bgStyle,
-    }
+    };
   },
-})
+});
 </script>
 <style lang="scss" scoped>
 .bg-canvas {

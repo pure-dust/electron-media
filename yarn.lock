@@ -2973,6 +2973,11 @@ nanoid@^3.1.23:
   resolved "http://10.100.3.3:8081/repository/npm-group/nanoid/-/nanoid-3.1.23.tgz#f744086ce7c2bc47ee0a8472574d5c78e4183a81"
   integrity sha1-90QIbOfCvEfuCoRyV01ceOQYOoE=
 
+nanoid@^3.1.25:
+  version "3.1.25"
+  resolved "http://10.100.3.3:8081/repository/npm-group/nanoid/-/nanoid-3.1.25.tgz#09ca32747c0e543f0e1814b7d3793477f9c8e152"
+  integrity sha512-rdwtIXaXCLFAQbnfqDRnI6jaRHp9fTcYBjtFKE8eezcZ7LuLjhUaQGNeMXf1HmRoCH32CLz6XwX0TtxEOS/A3Q==
+
 nedb@^1.8.0:
   version "1.8.0"
   resolved "http://10.100.3.3:8081/repository/npm-group/nedb/-/nedb-1.8.0.tgz#0e3502cd82c004d5355a43c9e55577bd7bd91d88"

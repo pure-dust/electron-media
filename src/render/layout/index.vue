@@ -31,10 +31,6 @@ export default defineComponent({
     watchEffect(() => {
       store.commit('setBack', route.path != '/');
     });
-
-    return {
-      route,
-    };
   },
 });
 </script>

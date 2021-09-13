@@ -9,13 +9,13 @@
 <template>
   <div class="card-container zcoo animate flex" :style="style" @click="linkTo">
     <div class="card-detail flex-col row-fill">
-      <div class="card-title">{{ option.name }}</div>
-      <div class="card-intro">{{ option.intro }}</div>
+      <div class="card-title">{{ option?.name }}</div>
+      <div class="card-intro">{{ option?.intro }}</div>
     </div>
     <div class="card-img">
       <kl-icon
-        :icon="option.icon"
-        :color="themed('primary-light')"
+        :icon="option?.icon"
+        :color="iconColor"
         :hover="false"
         :svg-style="{ height: '80px', width: '80px' }"
       />
@@ -23,9 +23,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, PropType, computed } from 'vue';
+import { defineComponent, toRefs, PropType, computed, ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { themed } from '@/utils/utils';
+import { themed, ThemeHanlder } from '@/utils';
 
 interface CardOption {
   height: number;
@@ -52,10 +52,6 @@ export default defineComponent({
       return style;
     });
 
-    const intro = computed(() => {
-      return option?.value?.intro.split(/,|，/);
-    });
-
     const linkTo = () => {
       if (option?.value?.path) {
         router.push({
@@ -64,12 +60,19 @@ export default defineComponent({
       }
     };
 
+    let handler = ThemeHanlder.getInstance();
+
+    let iconColor = ref(themed('primary-light'));
+
+    handler.watch(() => {
+      iconColor.value = themed('primary-light');
+    });
+
     return {
       style,
       option,
-      intro,
       linkTo,
-      themed,
+      iconColor,
     };
   },
 });

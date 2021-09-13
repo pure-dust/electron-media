@@ -38,7 +38,6 @@ import ColorSelector from './components/ColorSelector/index.vue';
 export default defineComponent({
   name: 'ToolBar',
   components: { ColorSelector },
-  props: {},
   setup() {
     const colorPanel = ref(false);
     const btn: Ref<HTMLElement | null> = ref(null);
