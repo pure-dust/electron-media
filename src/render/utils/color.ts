@@ -276,15 +276,6 @@ export function HEXToRGB(color: string): RGB {
   rgb.b = parseInt(color.substring(5, 7), 16);
   return rgb;
 }
-
-export function setTheme(color: string) {
-  let handler = ThemeHanlder.getInstance();
-  let theme = createColor(color);
-  store.commit('setTheme', color);
-  document.querySelector(':root')?.setAttribute('style', theme);
-  handler.dispatch();
-}
-
 export class ThemeHanlder {
   callBacks: Map<string, Function> = new Map();
 
@@ -313,3 +304,14 @@ export class ThemeHanlder {
     this.callBacks.forEach((fn) => fn());
   }
 }
+
+export const handler = ThemeHanlder.getInstance();
+
+export function setTheme(color: string) {
+  let theme = createColor(color);
+  store.commit('setTheme', color);
+  document.querySelector(':root')?.setAttribute('style', theme);
+  handler.dispatch();
+}
+
+

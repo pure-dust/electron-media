@@ -23,9 +23,9 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, PropType, computed, ref } from 'vue';
+import { defineComponent, toRefs, PropType, computed, ref, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { themed, ThemeHanlder } from '@/utils';
+import { themed, handler } from '@/utils';
 
 interface CardOption {
   height: number;
@@ -60,13 +60,15 @@ export default defineComponent({
       }
     };
 
-    let handler = ThemeHanlder.getInstance();
-
     let iconColor = ref(themed('primary-light'));
 
-    handler.watch(() => {
+    let key = handler.watch(() => {
       iconColor.value = themed('primary-light');
     });
+
+    onUnmounted(() => {
+      handler.destroyed(key)
+    })
 
     return {
       style,

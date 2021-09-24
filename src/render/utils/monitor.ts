@@ -16,7 +16,9 @@ export class ScheduleMonitor {
   }
 
   start() {
-    this._clock = setInterval(this.update, 5000);
+    this._clock = setInterval(() => {
+      this.update();
+    }, 5000);
   }
 
   update() {
