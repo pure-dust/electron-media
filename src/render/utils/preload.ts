@@ -10,14 +10,16 @@ import { ipcRenderer } from 'electron';
 
 import Store from '@/store/index';
 
-const GET_THEME = 'theme';
-
 export function perload() {
   return new Promise((resolve, reject) => {
-    ipcRenderer.on(`did-config-load-${GET_THEME}`, (ev, message) => {
-      Store.commit('setTheme', message);
+    const callback = (ev: Electron.IpcRendererEvent, message: SystemConfig) => {
+      Store.commit('setTheme', message.theme);
+      Store.commit('setNovel', message.novel);
+      Store.commit('setLang', message.lang)
       resolve(null);
-    });
-    ipcRenderer.send('get-config', GET_THEME);
+      ipcRenderer.off(`get-config`, callback);
+    };
+    ipcRenderer.on(`get-config`, callback);
+    ipcRenderer.send('get-config');
   });
 }

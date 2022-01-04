@@ -25,6 +25,7 @@ declare module '@vue/runtime-core' {
 }
 
 perload().then(() => {
+  
   const app = createApp(App);
   app.config.globalProperties.$http = http;
   app.use(KLUI);

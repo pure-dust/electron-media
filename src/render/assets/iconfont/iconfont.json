@@ -6,6 +6,13 @@
   "description": "",
   "glyphs": [
     {
+      "icon_id": "8578533",
+      "name": "freshwater_fish",
+      "font_class": "fish",
+      "unicode": "e608",
+      "unicode_decimal": 58888
+    },
+    {
       "icon_id": "975388",
       "name": "类型",
       "font_class": "type",

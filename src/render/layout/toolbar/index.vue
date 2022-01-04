@@ -15,40 +15,38 @@
     </transition>
     <div class="fun-box flex">
       <span class="text-box mini dance animate"> mini </span>
-      <kl-icon hover icon="icon-ic_skin" width="32px" @on-click="open" ref="btn">
-        <transition name="cross">
-          <div class="color-panel animate" v-if="colorPanel">
-            <ColorSelector v-click-outside:[btn]="open" />
-          </div>
-        </transition>
-      </kl-icon>
-      <kl-icon hover icon="icon-ic_tack" width="32px" @on-click="fixedScreen" :fixed-hover="isFixed" />
+      <kl-color-selector :default-value="theme" v-model="theme" @on-change="themeChange">
+        <template #reference>
+          <kl-icon hover icon="icon-ic_skin" width="32px" />
+        </template>
+      </kl-color-selector>
+      <kl-icon
+        hover
+        icon="icon-ic_tack"
+        width="32px"
+        @on-click="fixedScreen"
+        :fixed-hover="isFixed"
+      />
       <kl-icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
       <kl-icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
+import { defineComponent, ref, onMounted, computed } from 'vue';
 import { windowMove, minScreen, fixWindow, closeWindow } from '@/utils/control';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from '@/store/index';
+import { setConfig, setTheme } from '@/utils';
 
-import ColorSelector from './components/ColorSelector/index.vue';
 export default defineComponent({
   name: 'ToolBar',
-  components: { ColorSelector },
   setup() {
-    const colorPanel = ref(false);
-    const btn: Ref<HTMLElement | null> = ref(null);
     const store = useStore();
     const isFixed = ref(false);
     const router = useRouter();
     const route = useRoute();
-
-    const open = () => {
-      colorPanel.value = !colorPanel.value;
-    };
+    const theme = ref(store.getters.getTheme.theme as string);
 
     const backToHome = () => {
       router.push({ name: route.meta?.parent as string });
@@ -76,6 +74,11 @@ export default defineComponent({
       });
     };
 
+    const themeChange = () => {
+      setConfig({ key: 'theme.theme', value: theme.value });
+      setTheme(theme.value);
+    };
+
     onMounted(() => {
       fixWindow().then((sign) => {
         isFixed.value = sign as boolean;
@@ -83,9 +86,6 @@ export default defineComponent({
     });
 
     return {
-      colorPanel,
-      open,
-      btn,
       onMouseDown,
       windowMove,
       closeWindow,
@@ -94,6 +94,8 @@ export default defineComponent({
       isFixed,
       back,
       backToHome,
+      theme,
+      themeChange,
     };
   },
 });
@@ -117,6 +119,9 @@ $height: 30px;
     margin-left: auto;
     align-items: center;
     height: 100%;
+    & > * {
+      flex: 1;
+    }
 
     .mini {
       line-height: $height - 2;
@@ -124,17 +129,6 @@ $height: 30px;
 
     .fixed {
       background: themed('primary-hover');
-    }
-
-    .color-panel {
-      @include background('primary');
-      position: absolute;
-      left: -64px;
-      top: 100%;
-      width: 160px;
-      height: 120px;
-      padding: 5px;
-      box-shadow: 0 2px 8px themed('border-dark-color');
     }
   }
 

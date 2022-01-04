@@ -53,6 +53,21 @@ const routes: Array<RouteRecordRaw> = [
       },
     ],
   },
+  {
+    path: "/fish",
+    name: "FishView",
+    component: () => import("@/pages/fish/view.vue"),
+    children: [
+      {
+        path: '/fish',
+        name: 'Fish',
+        component: () => import('@/pages/fish/index.vue'),
+        meta: {
+          parent: 'Home',
+        },
+      },
+    ],
+  }
 ];
 
 const router = createRouter({

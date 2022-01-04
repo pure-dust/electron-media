@@ -11,7 +11,7 @@ import { createStore, Store, useStore as baseStore } from 'vuex';
 
 import moduleTypes, { RootTypes } from './interface';
 
-import ThemeModule from './module/theme';
+import ThemeModule from './module/config';
 import NoticeModule from './module/notice';
 import CalendarModule from './module/calendar';
 

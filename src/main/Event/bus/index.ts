@@ -18,8 +18,7 @@ const EventBus = (win: BrowserWindow) => {
   conf.configInit();
 
   ipcMain.on('get-config', (event: IpcMainEvent, message?: string) => {
-    let replyEvent = 'did-config-load' + (message ? `-${message}` : '');
-    event.reply(replyEvent, conf.getUserConfig(message));
+    event.reply('get-config', conf.getUserConfig(message));
   });
 
   ipcMain.on('set-config', (event: IpcMainEvent, message: ConfigItem) => {

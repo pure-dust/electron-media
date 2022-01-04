@@ -43,7 +43,7 @@ function createScrollHandler(
         position:relative; top:0;` + style,
       );
       setTimeout(() => {
-        el.setAttribute('style', el.getAttribute('style') + 'top: 20px; opacity: 0.5;');
+        el.setAttribute('style', el.getAttribute('style') + 'top: 40px; opacity: 0.5;');
       }, 0);
       isload = false;
     }

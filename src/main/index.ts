@@ -54,7 +54,7 @@ if (!getLock) {
         if (result) {
           console.log('success load : ' + result);
         }
-      } catch (e) {
+      } catch (e: any) {
         console.error('Vue Devtools failed to install:', e.toString());
       }
     }

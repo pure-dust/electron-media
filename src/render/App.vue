@@ -13,7 +13,7 @@ export default defineComponent({
   components: { Layout },
   setup() {
     const store = useStore();
-    let str: string = store.getters.getTheme;
+    let str: string = store.getters.getTheme.theme;
     onMounted(() => {
       setTheme(str);
     });

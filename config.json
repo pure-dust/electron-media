@@ -1,3 +1,12 @@
 {
-  "theme": "#3195ff"
+  "theme": {
+    "theme": "#3195ff"
+  },
+  "novel": {
+    "color": "#000000",
+    "size": 12,
+    "background": "#ffffff",
+    "count": 50
+  },
+  "lang": "zh-cn"
 }

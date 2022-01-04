@@ -18,6 +18,9 @@ export default defineConfig(({ /* development | production */ mode }) => ({
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
+    fs: {
+      strict:false
+    }
   },
   resolve: {
     alias: {

@@ -20,14 +20,14 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted, PropType } from 'vue';
+import { defineComponent, ref, toRefs, onMounted, PropType, watch } from 'vue';
 type inputType = 'text' | 'textarea';
 export default defineComponent({
   name: 'KlInput',
   props: {
     modelValue: [String, Number],
     placeholder: {
-      type: [String, Number],
+      type: String,
       default: '请输入',
     },
     type: {
@@ -39,10 +39,16 @@ export default defineComponent({
     const inputVal = ref(prop.modelValue);
     const { placeholder, type } = toRefs(prop);
 
-    const updateInput = (e: KeyboardEvent) => {
+    watch(
+      () => prop.modelValue,
+      (v) => {
+        inputVal.value = v;
+      },
+    );
+
+    const updateInput = (e: Event) => {
       const val = (e.target as HTMLInputElement).value;
       inputVal.value = val;
-
       emit('update:modelValue', val);
     };
 
@@ -63,7 +69,7 @@ export default defineComponent({
 .kl-input {
   display: inline-block;
   width: 100%;
-  height: 100%;
+  height: 28px;
 
   input,
   textarea {

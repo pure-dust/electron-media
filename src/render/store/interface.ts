@@ -6,14 +6,14 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-import { ThemeStateType } from './module/theme';
+import { SystemState } from './module/config';
 import { NoticeStateType } from './module/notice';
 import { CanlendarStateType } from './module/calendar';
 
 export interface RootTypes {}
 
 export default interface AllStateType {
-  theme: ThemeStateType;
+  system: SystemState;
   notice: NoticeStateType;
   calendar: CanlendarStateType;
 }

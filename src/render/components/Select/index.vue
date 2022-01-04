@@ -124,6 +124,7 @@ export default defineComponent({
   display: inline-block;
   height: 100%;
   position: relative;
+  height: 28px;
 
   input {
     min-height: 24px;

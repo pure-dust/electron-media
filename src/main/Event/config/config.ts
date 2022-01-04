@@ -37,7 +37,7 @@ export class ConfigLoader {
     let fd;
     try {
       fd = openSync(path, 'r');
-    } catch (err) {
+    } catch (err: any) {
       if (err.code == 'ENOENT') {
         this.loadDefaultConfig();
         writeFileSync(this.userPath, JSON.stringify(this.config), { flag: 'w+' });
@@ -95,17 +95,31 @@ export class ConfigLoader {
   // 更新用户配置
   public updateUserConfig(configItem: ConfigItem) {
     if (!this.checkIsNull(configItem)) return;
-    this.config[configItem.key] = configItem.value;
+    let search = configItem.key.split('.');
+    if (search.length > 1) {
+      this.config[search[0]][search[1]] = configItem.value;
+    } else {
+      this.config[configItem.key] = configItem.value;
+    }
     this.setUserConfig();
   }
 
   // 获取配置项
   public getUserConfig(key?: string): SysTemConfig | string | null {
-    if (arguments.length != 0) {
+    if (key) {
       let keys = Object.keys(this.config);
-      let target = keys.find((el) => el == key);
-      if (!target) return null;
-      else return this.config[target];
+      let search = key.split('.');
+      if (search.length > 1) {
+        let val = this.config;
+        for (let i = 0; i < search.length; i++) {
+          val = val?.[search[i]];
+        }
+        return val;
+      } else {
+        let target = keys.find((el) => el == key);
+        if (!target) return null;
+        return this.config[target];
+      }
     } else return this.config;
   }
 

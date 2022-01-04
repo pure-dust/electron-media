@@ -1,4 +1,3 @@
-
 interface Window {
   /** 关闭预加载动画 */
   ClosePreloadLoading: () => void;
@@ -15,4 +14,8 @@ interface Index<T> {
 interface NedbCbParams {
   status: 'error' | 'success';
   message: Error | any;
+}
+
+interface RecursiveIndex {
+  [key: string]: string | RecursiveIndex;
 }

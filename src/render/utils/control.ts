@@ -11,6 +11,15 @@ import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { NotificationConstructorOptions } from 'electron/main';
 import { RemoveOptions, UpdateOptions } from 'nedb';
 
+export const getConfig = (message: string) => {
+  ipcRenderer.send('get-config', message);
+  return new Promise<string | ConfigType>((resolve, reject) => {
+    ipcRenderer.on('get-config', (event: IpcRendererEvent, message: string | ConfigType) => {
+      resolve(message);
+    });
+  });
+};
+
 export const setConfig = (message: ConfigItem) => {
   ipcRenderer.send('set-config', message);
 };

@@ -7,66 +7,75 @@
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="bg-canvas">
-    <div class="color-bg" :style="bgStyle" @mousedown="pointMove" ref="colorBox">
-      <div class="color-cover"></div>
-      <div class="point" :style="pointStyle"></div>
+  <div class="kl-color-selector">
+    <div class="kl-color-selector-reference" @click="open" ref="reference">
+      <slot name="reference"> </slot>
     </div>
-    <div class="control-box">
-      <div class="slide-bar" @mousedown.capture="slideMove" ref="slideBar">
-        <div class="slide-thumb" :style="`left: ${slide}px`"></div>
-      </div>
-    </div>
+    <teleport to="body">
+      <transition name="cross">
+        <div
+          v-show="visible"
+          class="kl-color-selector-wrapper"
+          :style="computedStyle"
+          v-click-outside:[reference]="close"
+        >
+          <div class="color-bg" :style="bgStyle" @mousedown="pointMove" ref="colorBox">
+            <div class="color-cover"></div>
+            <div class="point" :style="pointStyle"></div>
+          </div>
+          <div class="control-box">
+            <div class="slide-bar" @mousedown.capture="slideMove" ref="slideBar">
+              <div class="slide-thumb" :style="`left: ${slide}px`"></div>
+            </div>
+          </div>
+        </div>
+      </transition>
+    </teleport>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, ref, Ref, computed, reactive, watch, nextTick } from 'vue';
+import { defineComponent, ref, Ref, computed, reactive, watch, nextTick } from 'vue';
 import { HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from '@/utils/color';
-import { useStore } from '@/store/index';
-import { setConfig, setTheme } from '@/utils';
+
+interface pos {
+  top?: string;
+  right?: string;
+  bottom?: string;
+  left?: string;
+}
 
 export default defineComponent({
-  name: 'ColorSelector',
-  setup() {
+  name: 'KlColorSelector',
+  props: {
+    modelValue: [String],
+    defaultValue: {
+      type: String,
+      default: '#ffffff',
+    },
+  },
+  emits: ['on-change', 'update:modelValue'],
+  setup(prop, { emit }) {
     const colorBox: Ref<HTMLElement | null> = ref(null);
     const slideBar: Ref<HTMLElement | null> = ref(null);
+    const reference: Ref<HTMLElement | null> = ref(null);
+
     const width: Ref<number> = ref(0);
     const height: Ref<number> = ref(0);
     const slide: Ref<number> = ref(0);
     const slideWidth: Ref<number> = ref(0);
-    const store = useStore();
-    let isInit = false;
+    const visible = ref(false);
+    const computedStyle: Ref<pos> = ref({});
 
-    let hsb: HSB = reactive({
-      h: 0,
-      s: 0,
-      b: 0,
-    });
+    let hsb: HSB = reactive(RGBToHSB(HEXToRGB(prop.modelValue || prop.defaultValue)));
 
-    const point = reactive({
-      x: 0,
-      y: 0,
-    });
+    const inputVal = ref(RGBToHEX(HSBToRGB(hsb)));
 
-    watch(
-      hsb,
-      (v) => {
-        if (!isInit) return;
-        let str: string = RGBToHEX(HSBToRGB(v));
-        setConfig({ key: 'theme', value: RGBToHEX(HSBToRGB(v)) });
-        setTheme(str);
-      },
-      { deep: true },
-    );
+    const point = reactive({ x: 0, y: 0 });
 
     const pointStyle = computed(() => `top: ${point.y}px; left: ${point.x}px`);
 
     const bgStyle = computed(() => {
-      let c: HSB = {
-        h: hsb.h,
-        s: 100,
-        b: 100,
-      };
+      let c: HSB = { h: hsb.h, s: 100, b: 100 };
       const { r, g, b } = HSBToRGB(c);
       return `background: linear-gradient(to right, #ffffff, rgba(${r},${g},${b}))`;
     });
@@ -90,14 +99,18 @@ export default defineComponent({
         hsb.s = Math.round((100 * point.x) / width);
         hsb.b = Math.round((100 * (height - point.y)) / height);
         mouseEv.preventDefault();
+        updateModel();
       };
 
       document.onmouseup = () => {
+        updateModel();
         document.onmousemove = null;
+        document.onmouseup = null;
       };
     };
 
     const slideMove = (ev: MouseEvent) => {
+      slideWidth.value = slideBar.value?.offsetWidth as number;
       slide.value = ev.offsetX;
       let x: number = parseFloat((slide.value / slideWidth.value).toFixed(2));
 
@@ -110,34 +123,61 @@ export default defineComponent({
         x = parseFloat((slide.value / slideWidth.value).toFixed(2));
         hsb.h = Math.round(360 * x);
         mouseEv.preventDefault();
+        updateModel();
       };
 
       document.onmouseup = () => {
+        updateModel();
         document.onmousemove = null;
         document.onmouseup = null;
       };
     };
 
-    const initSlideAndPoint = () => {
-      hsb.h = RGBToHSB(HEXToRGB(store.getters.getTheme)).h;
-      hsb.s = RGBToHSB(HEXToRGB(store.getters.getTheme)).s;
-      hsb.b = RGBToHSB(HEXToRGB(store.getters.getTheme)).b;
-      slide.value = Math.round((hsb.h / 360) * slideWidth.value);
-      point.x = Math.round((hsb.s * (colorBox.value?.offsetWidth as number)) / 100);
-      point.y =
-        (colorBox.value?.offsetHeight as number) -
-        Math.round((hsb.b * (colorBox.value?.offsetHeight as number)) / 100);
-      nextTick(() => {
-        isInit = true;
-      });
+    const updateModel = () => {
+      inputVal.value = RGBToHEX(HSBToRGB(hsb));
+      emit('update:modelValue', inputVal.value);
+      emit('on-change', inputVal.value);
     };
 
-    onMounted(() => {
-      width.value = colorBox.value?.offsetWidth as number;
-      height.value = colorBox.value?.offsetHeight as number;
-      slideWidth.value = slideBar.value?.offsetWidth as number;
-      initSlideAndPoint();
-    });
+    const initSlideAndPoint = () => {
+      let t = RGBToHSB(HEXToRGB(prop.modelValue || prop.defaultValue));
+      hsb.h = t.h;
+      hsb.s = t.s;
+      hsb.b = t.b;
+      slide.value = Math.round((hsb.h / 360) * slideWidth.value);
+      console.log(t);
+      point.x = Math.round((hsb.s * colorBox.value!.offsetWidth) / 100);
+      point.y =
+        colorBox.value!.offsetHeight - Math.round((hsb.b * colorBox.value!.offsetHeight) / 100);
+    };
+
+    const close = () => {
+      visible.value = false;
+    };
+
+    const open = () => {
+      visible.value = true;
+      nextTick(() => {
+        width.value = colorBox.value?.offsetWidth as number;
+        height.value = colorBox.value?.offsetHeight as number;
+        slideWidth.value = slideBar.value?.offsetWidth as number;
+
+        let rect = reference.value?.getBoundingClientRect()!;
+
+        if (rect.top + height.value > window.innerHeight) {
+          computedStyle.value.bottom = rect.top - 2 + 'px';
+        } else {
+          computedStyle.value.top = rect.bottom + 2 + 'px';
+        }
+
+        if (rect.left + width.value > window.innerWidth) {
+          computedStyle.value.right = '2px';
+        } else {
+          computedStyle.value.left = rect.left + 'px';
+        }
+        initSlideAndPoint();
+      });
+    };
 
     return {
       colorBox,
@@ -148,22 +188,40 @@ export default defineComponent({
       slide,
       hsb,
       bgStyle,
+      visible,
+      reference,
+      computedStyle,
+      open,
+      close,
     };
   },
 });
 </script>
 <style lang="scss" scoped>
-.bg-canvas {
-  height: 100%;
+.kl-color-selector {
   width: 100%;
+  height: 100%;
+
+  &-reference {
+    width: 100%;
+    height: 100%;
+  }
+}
+.kl-color-selector-wrapper {
+  position: absolute;
+  width: 160px;
+  height: 120px;
   display: flex;
   flex-direction: column;
+  @include background('primary');
+  box-shadow: 0 2px 8px themed('border-dark-color');
+  padding: 5px;
+  z-index: 9999;
 
   .color-bg {
-    width: 100%;
-    height: 0;
-    flex: 1;
     position: relative;
+    width: 100%;
+    flex: 1;
     background: linear-gradient(to right, #ffffff, #ff0000);
     overflow: hidden;
 
