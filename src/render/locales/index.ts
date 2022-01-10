@@ -1,5 +1,5 @@
 import zhCn from './zh-cn';
 
 export default {
-  'zh-cn': zhCn,
+  'zh-CN': zhCn,
 } as RecursiveIndex;

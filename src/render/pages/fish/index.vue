@@ -8,14 +8,18 @@
       <div class="book-setting row-fill">
         <div class="config-item flex zcoo" v-for="(v, k) in config" :key="k">
           <span class="config-item-name">{{ t('novel.' + k) }}:</span>
-          <template v-if="k === 'color' || k === 'bakcground'">
-            <kl-color-selector :default-value="config[k]" v-model="config[k]">
+          <template v-if="k === 'color' || k === 'background'">
+            <kl-color-selector
+              :default-value="config[k]"
+              @change="(v) => configWacther(k, v)"
+              v-model="config[k]"
+            >
               <template #reference>
-                <kl-input v-model="config[k]"></kl-input>
+                <kl-input :readonly="true" v-model="config[k]"></kl-input>
               </template>
             </kl-color-selector>
           </template>
-          <kl-input v-else v-model="config[k]"></kl-input>
+          <kl-input v-else @change="(v) => configWacther(k, v)" v-model="config[k]"></kl-input>
         </div>
       </div>
     </div>
@@ -23,8 +27,9 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, Ref } from 'vue';
-import { useStore } from '@/store';
+import { useStore } from '@/store/config';
 import { useI18n } from '@/hooks/i18n';
+import { setConfig } from '@/utils';
 export default defineComponent({
   name: '',
   components: {},
@@ -32,13 +37,22 @@ export default defineComponent({
   setup() {
     const bookList = ref([]);
     const store = useStore();
-    const config: Ref<NovelConfig> = ref(store.getters.getNovel);
+    const config: Ref<NovelConfig> = ref(store.getNovel);
     const { t } = useI18n();
+
+    const configWacther = (key: string, value: any) => {
+      setConfig({ key, value }).then((done) => {
+        if (done) {
+          store.setNovel(config.value);
+        }
+      });
+    };
 
     return {
       bookList,
       config,
       t,
+      configWacther,
     };
   },
 });

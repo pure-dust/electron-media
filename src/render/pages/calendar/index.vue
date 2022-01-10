@@ -32,7 +32,7 @@
 import { defineComponent, onMounted, ref, Ref } from 'vue';
 import { Calenar, CalenarType } from '@/utils/calendar';
 import { useRouter } from 'vue-router';
-import { useStore } from '@/store';
+import { useStore } from '@/store/calendar';
 import _ from 'lodash';
 export default defineComponent({
   name: 'Calendar',
@@ -45,7 +45,7 @@ export default defineComponent({
 
     const dateMap = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
     onMounted(() => {
-      let cacheDate = store.getters.getCurrentDate ? store.getters.getCurrentDate : new Date();
+      let cacheDate = store.getCurrentDate ? store.getCurrentDate : new Date();
       calendar.setDate(cacheDate);
       date.value = calendar.getCalendar();
     });
@@ -62,13 +62,13 @@ export default defineComponent({
     const nextMonth = () => {
       calendar.getNext();
       date.value = calendar.getCalendar();
-      store.commit('setCurrentDate', calendar.getCurrent());
+      store.setCurrentDate(calendar.getCurrent());
     };
 
     const preMonth = () => {
       calendar.getPreious();
       date.value = calendar.getCalendar();
-      store.commit('setCurrentDate', calendar.getCurrent());
+      store.setCurrentDate(calendar.getCurrent());
     };
 
     const getDate = (e: MouseEvent) => {};
@@ -86,7 +86,7 @@ export default defineComponent({
       }
       if (index !== undefined && index !== null) {
         let data = date.value[parseInt(index)];
-        store.commit('setCardInfo', data);
+        store.setCardInfo(data);
         router.push({
           name: 'Single',
         });

@@ -4,18 +4,22 @@ interface SystemConfig extends Index<any> {
   lang: string;
 }
 
-interface ThemeConfig extends Index<string> {
+interface ThemeConfig {
   theme: string;
 }
 
-interface NovelConfig extends Index<string | number> {
+interface NovelConfig {
   color: string;
   size: number;
   background: string;
   count: number;
 }
 
-interface ConfigItem extends Index<string> {
+type themeKey = keyof ThemeConfig;
+
+type novelKey = keyof NovelConfig;
+
+interface ConfigItem {
   key: string;
   value: string;
 }

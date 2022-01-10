@@ -45,7 +45,7 @@ import { defineComponent, ref, Ref, onMounted, computed, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import _ from 'lodash';
 
-import { useStore } from '@/store';
+import { useStore } from '@/store/calendar';
 import { useDatabase } from '@/utils/control';
 import { CalenarType } from '@/utils/calendar';
 import Schedule from '@/components/Schedule/index.vue';
@@ -117,13 +117,13 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      if (!store.getters.getCardInfo) {
+      if (!store.getCardInfo) {
         router.push({
           name: useRoute().meta.parent as string,
         });
         return;
       } else {
-        dateInfo.value = store.getters.getCardInfo;
+        dateInfo.value = store.getCardInfo;
         getSchedule();
       }
     });

@@ -8,6 +8,7 @@
       @input="updateInput"
       :placeholder="placeholder"
       :value="inputVal"
+      :readonly="readonly"
     />
     <textarea
       v-else
@@ -15,6 +16,7 @@
       @input="updateInput"
       :placeholder="placeholder"
       :value="inputVal"
+      :readonly="readonly"
       rows="3"
     ></textarea>
   </div>
@@ -34,6 +36,16 @@ export default defineComponent({
       type: String as PropType<inputType>,
       default: 'text',
     },
+    readonly: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: {
+    'update:modelValue'() {},
+    change(payload: string | number | '') {
+      return payload ?? false;
+    },
   },
   setup(prop, { emit }) {
     const inputVal = ref(prop.modelValue);
@@ -50,6 +62,7 @@ export default defineComponent({
       const val = (e.target as HTMLInputElement).value;
       inputVal.value = val;
       emit('update:modelValue', val);
+      emit('change', val);
     };
 
     onMounted(() => {

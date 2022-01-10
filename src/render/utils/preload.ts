@@ -8,18 +8,12 @@
  */
 import { ipcRenderer } from 'electron';
 
-import Store from '@/store/index';
-
 export function perload() {
-  return new Promise((resolve, reject) => {
+  return new Promise<SystemConfig>((resolve, reject) => {
     const callback = (ev: Electron.IpcRendererEvent, message: SystemConfig) => {
-      Store.commit('setTheme', message.theme);
-      Store.commit('setNovel', message.novel);
-      Store.commit('setLang', message.lang)
-      resolve(null);
-      ipcRenderer.off(`get-config`, callback);
+      resolve(message);
     };
-    ipcRenderer.on(`get-config`, callback);
+    ipcRenderer.once(`get-config`, callback);
     ipcRenderer.send('get-config');
   });
 }

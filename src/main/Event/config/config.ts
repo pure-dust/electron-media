@@ -13,7 +13,7 @@ import { app } from 'electron';
 export class ConfigLoader {
   private userPath: string;
   private defaultPath: string;
-  private config: SysTemConfig = {} as SysTemConfig;
+  private config: SystemConfig = {} as SystemConfig;
   public loadMessage: string = '';
 
   static _instance: ConfigLoader | null;
@@ -33,7 +33,7 @@ export class ConfigLoader {
   }
 
   // 读取配置文件
-  private readConfigFile(path: string): SysTemConfig {
+  private readConfigFile(path: string): SystemConfig {
     let fd;
     try {
       fd = openSync(path, 'r');
@@ -82,13 +82,13 @@ export class ConfigLoader {
 
   // 加载默认配置
   private loadDefaultConfig() {
-    let defaultConfig: SysTemConfig = this.readConfigFile(this.defaultPath);
+    let defaultConfig: SystemConfig = this.readConfigFile(this.defaultPath);
     this.config = defaultConfig;
   }
 
   // 加载用户配置
   private loadUserConfig() {
-    let userConfig: SysTemConfig = this.readConfigFile(this.userPath);
+    let userConfig: SystemConfig = this.readConfigFile(this.userPath);
     this.config = userConfig;
   }
 
@@ -105,7 +105,7 @@ export class ConfigLoader {
   }
 
   // 获取配置项
-  public getUserConfig(key?: string): SysTemConfig | string | null {
+  public getUserConfig(key?: string): SystemConfig | string | null {
     if (key) {
       let keys = Object.keys(this.config);
       let search = key.split('.');

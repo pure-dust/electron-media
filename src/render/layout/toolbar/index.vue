@@ -15,7 +15,7 @@
     </transition>
     <div class="fun-box flex">
       <span class="text-box mini dance animate"> mini </span>
-      <kl-color-selector :default-value="theme" v-model="theme" @on-change="themeChange">
+      <kl-color-selector :default-value="theme" v-model="theme" @change="themeChange">
         <template #reference>
           <kl-icon hover icon="icon-ic_skin" width="32px" />
         </template>
@@ -36,24 +36,26 @@
 import { defineComponent, ref, onMounted, computed } from 'vue';
 import { windowMove, minScreen, fixWindow, closeWindow } from '@/utils/control';
 import { useRouter, useRoute } from 'vue-router';
-import { useStore } from '@/store/index';
+import { useStore } from '@/store/config';
+import { useStore as useNoticeStore } from '@/store/notice';
 import { setConfig, setTheme } from '@/utils';
 
 export default defineComponent({
   name: 'ToolBar',
   setup() {
     const store = useStore();
+    const noticeStore = useNoticeStore();
     const isFixed = ref(false);
     const router = useRouter();
     const route = useRoute();
-    const theme = ref(store.getters.getTheme.theme as string);
+    const theme = ref(store.getTheme.theme as string);
 
     const backToHome = () => {
       router.push({ name: route.meta?.parent as string });
     };
 
     const back = computed(() => {
-      return store.getters.getBack;
+      return noticeStore.getBack;
     });
 
     const onMouseDown = (e: MouseEvent) => {
@@ -77,6 +79,7 @@ export default defineComponent({
     const themeChange = () => {
       setConfig({ key: 'theme.theme', value: theme.value });
       setTheme(theme.value);
+      store.setTheme({ theme: theme.value })
     };
 
     onMounted(() => {

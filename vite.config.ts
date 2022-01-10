@@ -19,8 +19,8 @@ export default defineConfig(({ /* development | production */ mode }) => ({
       },
     },
     fs: {
-      strict:false
-    }
+      strict: false,
+    },
   },
   resolve: {
     alias: {

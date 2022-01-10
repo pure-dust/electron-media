@@ -10,14 +10,15 @@
     "resolveJsonModule": true,
     "sourceMap": true,
     "baseUrl": "./",
-    "strict": true,
+    "strict": false,
     "paths": {
       "@/*": ["src/render/*"],
       "@src/*": ["src/*"],
       "@root/*": ["./*"],
       "@main/*": ["src/main/*"]
     },
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "suppressImplicitAnyIndexErrors": true
   },
   "include": ["server", "src", "typings", "database"]
 }

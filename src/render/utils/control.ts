@@ -22,6 +22,11 @@ export const getConfig = (message: string) => {
 
 export const setConfig = (message: ConfigItem) => {
   ipcRenderer.send('set-config', message);
+  return new Promise<boolean>((resolve, reject) => {
+    ipcRenderer.on('set-config', (event: IpcRendererEvent, message: boolean) => {
+      resolve(message);
+    });
+  });
 };
 
 export const windowMove = (canMove: boolean) => {

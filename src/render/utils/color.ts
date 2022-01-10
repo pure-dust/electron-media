@@ -6,7 +6,6 @@
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-import store from '@/store/index';
 import { nanoid } from 'nanoid';
 type colorType = {
   [key: string]: string;
@@ -223,27 +222,6 @@ export function HSBToRGB(hsb: HSB): RGB {
  * @param {RGB} rgb
  * @return {*} hsb
  */
-// export function RGBToHSB(rgb: RGB): HSB {
-//   let hsb = { h: 0, s: 0, b: 0 };
-//   let min = Math.min(rgb.r, rgb.g, rgb.b);
-//   let max = Math.max(rgb.r, rgb.g, rgb.b);
-//   let delta = max - min;
-//   hsb.b = max;
-//   hsb.s = max != 0 ? (255 * delta) / max : 0;
-//   if (hsb.s != 0) {
-//     if (rgb.r == max) hsb.h = (rgb.g - rgb.b) / delta;
-//     else if (rgb.g == max) hsb.h = 2 + (rgb.b - rgb.r) / delta;
-//     else hsb.h = 4 + (rgb.r - rgb.g) / delta;
-//   } else hsb.h = -1;
-//   hsb.h *= 60;
-//   if (hsb.h < 0) hsb.h += 360;
-//   hsb.s *= 100 / 255;
-//   hsb.b *= 100 / 255;
-//   hsb.h = Math.round(hsb.h);
-//   hsb.s = Math.round(hsb.s);
-//   hsb.b = Math.round(hsb.b);
-//   return hsb;
-// }
 
 export function RGBToHSB(rgb: RGB): HSB {
   const { r, g, b } = rgb;
@@ -251,8 +229,8 @@ export function RGBToHSB(rgb: RGB): HSB {
   let min = Math.min(r, g, b);
   let max = Math.max(r, g, b);
   let delta = max - min;
-  hsb.b = max / 255;
-  hsb.s = max == 0 ? 0 : delta / max;
+  hsb.b = max / 255.0;
+  hsb.s = max === 0 ? 0 : parseFloat((delta / max) as unknown as string);
   if (max == min) {
     hsb.h = 0;
   } else if (max == r && g >= b) {
@@ -264,9 +242,9 @@ export function RGBToHSB(rgb: RGB): HSB {
   } else if (max == b) {
     hsb.h = ((r - g) * 60) / delta + 240;
   }
-  hsb.h = Math.round(hsb.h);
-  hsb.s = Math.round(hsb.s);
-  hsb.b = Math.round(hsb.b);
+  hsb.h = parseFloat(hsb.h.toFixed(0));
+  hsb.s = parseFloat(hsb.s.toFixed(2));
+  hsb.b = parseFloat(hsb.b.toFixed(2));
 
   return hsb;
 }
@@ -335,7 +313,6 @@ export const handler = ThemeHanlder.getInstance();
 
 export function setTheme(theme: string) {
   let themeStr = createColor(theme);
-  store.commit('setTheme', { theme });
   document.querySelector(':root')?.setAttribute('style', themeStr);
   handler.dispatch();
 }

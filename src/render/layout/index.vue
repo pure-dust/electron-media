@@ -17,7 +17,7 @@
   </div>
 </template>
 <script lang="ts">
-import { useStore } from '@/store';
+import { useStore } from '@/store/notice';
 import { defineComponent, watchEffect } from 'vue';
 import { useRoute } from 'vue-router';
 import Toolbar from './toolbar/index.vue';
@@ -29,7 +29,7 @@ export default defineComponent({
     const store = useStore();
 
     watchEffect(() => {
-      store.commit('setBack', route.path != '/');
+      store.setBack(route.path != '/');
     });
   },
 });

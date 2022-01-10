@@ -29,7 +29,6 @@ axiosInstance.interceptors.request.use((config) => {
     let cur = new Date().getTime();
     if (!cache?.lastTime) return config;
     if ((cache && cur - cache.lastTime < cache.lastTime) || (cache && c.time === 0)) {
-      //@ts-ignore
       cancel(JSON.stringify(cache.result));
     }
   }
@@ -80,11 +79,16 @@ function axiosRequest(
 
 const instance: CusAxiosInstance = {
   axiosInstance,
-  get: (url: string, params?: any, config?: CacheOption) => axiosRequest('GET', url, params, null, config),
-  delete: (url: string, data?: any, config?: CacheOption) => axiosRequest('DELETE', url, null, data, config),
-  post: (url: string, data?: any, config?: CacheOption) => axiosRequest('POST', url, null, data, config),
-  patch: (url: string, data?: any, config?: CacheOption) => axiosRequest('PATCH', url, null, data, config),
-  put: (url: string, data?: any, config?: CacheOption) => axiosRequest('PUT', url, null, data, config),
+  get: (url: string, params?: any, config?: CacheOption) =>
+    axiosRequest('GET', url, params, null, config),
+  delete: (url: string, data?: any, config?: CacheOption) =>
+    axiosRequest('DELETE', url, null, data, config),
+  post: (url: string, data?: any, config?: CacheOption) =>
+    axiosRequest('POST', url, null, data, config),
+  patch: (url: string, data?: any, config?: CacheOption) =>
+    axiosRequest('PATCH', url, null, data, config),
+  put: (url: string, data?: any, config?: CacheOption) =>
+    axiosRequest('PUT', url, null, data, config),
 };
 
 export default instance;

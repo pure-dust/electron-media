@@ -43,7 +43,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, reactive, ref, onMounted, Ref, PropType, toRef, computed } from 'vue';
-import { useStore } from '@/store';
+import { useStore } from '@/store/calendar';
 import { SCHEDULE_SELECT } from '@/contants/constant';
 import { reset } from '@/utils/utils';
 import { useDatabase } from '@/utils/control';
@@ -58,7 +58,7 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     const store = useStore();
-    const cardInfo = store.state.calendar.cardInfo;
+    const cardInfo = store.cardInfo;
     const visible = ref(false);
     const svgStyle = {
       width: '18px',
@@ -106,7 +106,7 @@ export default defineComponent({
           data: { ...schedule, date: cardInfo?.dateTime },
         }).then(() => {
           emit('refresh');
-          store.commit('updateMonitor')
+          store.updateMonitor()
           closeSchedule();
         });
       } else if (submitType === 'edit') {
@@ -124,7 +124,7 @@ export default defineComponent({
           update: {},
         }).then(() => {
           emit('refresh');
-          store.commit('updateMonitor')
+          store.updateMonitor()
           closeSchedule();
         });
       }

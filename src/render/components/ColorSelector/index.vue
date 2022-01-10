@@ -53,7 +53,7 @@ export default defineComponent({
       default: '#ffffff',
     },
   },
-  emits: ['on-change', 'update:modelValue'],
+  emits: ['change', 'update:modelValue'],
   setup(prop, { emit }) {
     const colorBox: Ref<HTMLElement | null> = ref(null);
     const slideBar: Ref<HTMLElement | null> = ref(null);
@@ -136,7 +136,7 @@ export default defineComponent({
     const updateModel = () => {
       inputVal.value = RGBToHEX(HSBToRGB(hsb));
       emit('update:modelValue', inputVal.value);
-      emit('on-change', inputVal.value);
+      emit('change', inputVal.value);
     };
 
     const initSlideAndPoint = () => {
@@ -145,10 +145,8 @@ export default defineComponent({
       hsb.s = t.s;
       hsb.b = t.b;
       slide.value = Math.round((hsb.h / 360) * slideWidth.value);
-      console.log(t);
-      point.x = Math.round((hsb.s * colorBox.value!.offsetWidth) / 100);
-      point.y =
-        colorBox.value!.offsetHeight - Math.round((hsb.b * colorBox.value!.offsetHeight) / 100);
+      point.x = Math.round(hsb.s * colorBox.value!.offsetWidth);
+      point.y = colorBox.value!.offsetHeight - Math.round(hsb.b * colorBox.value!.offsetHeight);
     };
 
     const close = () => {

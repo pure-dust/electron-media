@@ -72,13 +72,13 @@
     "koa": "^2.13.1",
     "koa-router": "^10.0.0",
     "lodash": "^4.17.21",
-    "lunar-typescript": "^1.2.4",
+    "lunar-typescript": "^1.2.16",
     "nanoid": "^3.1.25",
     "nedb": "^1.8.0",
+    "pinia": "^2.0.9",
     "sass-resources-loader": "^2.2.3",
-    "vue": "^3.0.11",
-    "vue-router": "^4.0.8",
-    "vuex": "^4.0.1"
+    "vue": "^3.2.0",
+    "vue-router": "^4.0.8"
   },
   "devDependencies": {
     "@babel/core": "^7.14.3",
@@ -87,7 +87,7 @@
     "@types/minimist": "^1.2.1",
     "@types/node": "^15.12.5",
     "@vitejs/plugin-vue": "^1.2.2",
-    "@vue/compiler-sfc": "^3.0.11",
+    "@vue/compiler-sfc": "^3.2.0",
     "babel-loader": "^8.2.2",
     "babel-plugin-import": "^1.13.3",
     "chalk": "^4.1.0",
