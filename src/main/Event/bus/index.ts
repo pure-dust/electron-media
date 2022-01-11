@@ -22,7 +22,14 @@ const EventBus = (win: BrowserWindow) => {
   });
 
   ipcMain.on('set-config', (event: IpcMainEvent, message: ConfigItem) => {
-    conf.updateUserConfig(message);
+    conf
+      .updateUserConfig(message)
+      .then((res) => {
+        event.reply('get-config', res);
+      })
+      .catch((err) => {
+        event.reply('get-config', err);
+      });
   });
 
   ipcMain.on('min-window', () => {

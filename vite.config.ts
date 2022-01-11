@@ -4,11 +4,13 @@ import { join, resolve } from 'path';
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import electron from 'vitejs-plugin-electron';
+import iconfont from './plugins/plugin-iconfont';
 
 export default defineConfig(({ /* development | production */ mode }) => ({
-  plugins: [vue(), electron()].filter(Boolean),
+  plugins: [vue(), electron(), iconfont()].filter(Boolean),
   root: resolve(__dirname, 'src/render'),
   base: '/',
+  iconfont: ['//at.alicdn.com/t/font_2613851_qf2knv5dw7l.js'],
   server: {
     port: +process.env.PORT,
     proxy: {

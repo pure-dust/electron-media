@@ -1,4 +1,11 @@
-import axios, { AxiosRequestConfig, Method, AxiosInstance, AxiosResponse, Canceler } from 'axios';
+import axios, {
+  AxiosRequestConfig,
+  Method,
+  AxiosInstance,
+  AxiosResponse,
+  Canceler,
+  ResponseType,
+} from 'axios';
 import _ from 'lodash';
 
 const axiosInstance = axios.create({
@@ -77,6 +84,28 @@ function axiosRequest(
     });
 }
 
+function download(
+  method: Method,
+  url: string,
+  params?: any,
+  data?: any,
+  config: AxiosRequestConfig = { headers: {} },
+) {
+  const axiosConfig = {
+    method,
+    url: url,
+    params,
+    responseType: 'blob' as ResponseType,
+    data,
+    ...config,
+  };
+  return axiosInstance(axiosConfig)
+    .then((res) => res)
+    .catch((error) => {
+      throw error;
+    });
+}
+
 const instance: CusAxiosInstance = {
   axiosInstance,
   get: (url: string, params?: any, config?: CacheOption) =>
@@ -89,6 +118,8 @@ const instance: CusAxiosInstance = {
     axiosRequest('PATCH', url, null, data, config),
   put: (url: string, data?: any, config?: CacheOption) =>
     axiosRequest('PUT', url, null, data, config),
+  download: (url: string, data?: any, config?: CacheOption) =>
+    download('GET', url, null, data, config),
 };
 
 export default instance;
@@ -100,4 +131,5 @@ export interface CusAxiosInstance {
   post: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
   patch: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
   put: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
+  download: (url: string, data?: any, config?: CacheOption) => Promise<AxiosResponse<any>>;
 }

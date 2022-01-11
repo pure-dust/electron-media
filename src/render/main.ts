@@ -1,3 +1,4 @@
+import '@/assets/iconfont/font_2613851_qf2knv5dw7l.js';
 import { createApp } from 'vue';
 import { CusAxiosInstance } from '../request';
 import { createPinia } from 'pinia';
@@ -13,7 +14,6 @@ import ClickOuntside from '@/directives/ClickOutside';
 import EnterAnimate from './directives/EnterAnimate';
 
 import './styles/index.scss';
-import '@/assets/iconfont/iconfont.js';
 import '@/assets/font/font.scss';
 
 import KLUI from '@/components';

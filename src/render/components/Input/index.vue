@@ -9,6 +9,7 @@
       :placeholder="placeholder"
       :value="inputVal"
       :readonly="readonly"
+      :style="computedStyle"
     />
     <textarea
       v-else
@@ -17,12 +18,13 @@
       :placeholder="placeholder"
       :value="inputVal"
       :readonly="readonly"
+      :style="computedStyle"
       rows="3"
     ></textarea>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted, PropType, watch } from 'vue';
+import { defineComponent, ref, toRefs, onMounted, PropType, watch, computed } from 'vue';
 type inputType = 'text' | 'textarea';
 export default defineComponent({
   name: 'KlInput',
@@ -40,9 +42,17 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    color: {
+      type: String,
+    },
+    background: {
+      type: String,
+    },
   },
   emits: {
-    'update:modelValue'() {},
+    'update:modelValue'() {
+      return true;
+    },
     change(payload: string | number | '') {
       return payload ?? false;
     },
@@ -50,6 +60,12 @@ export default defineComponent({
   setup(prop, { emit }) {
     const inputVal = ref(prop.modelValue);
     const { placeholder, type } = toRefs(prop);
+    const computedStyle = computed(() => {
+      let style: { color?: string; background?: string } = {};
+      prop.color ? (style.color = prop.color) : undefined;
+      prop.background ? (style.background = prop.background) : undefined;
+      return style;
+    });
 
     watch(
       () => prop.modelValue,
@@ -74,6 +90,7 @@ export default defineComponent({
       updateInput,
       placeholder,
       type,
+      computedStyle,
     };
   },
 });

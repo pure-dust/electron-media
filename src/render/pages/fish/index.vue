@@ -2,7 +2,12 @@
   <div class="col-fill fish-container flex-col">
     <div class="fish-inner flex">
       <div class="book-list flex-col">
-        <div class="book-list-title zcoo">书籍列表</div>
+        <div class="book-list-title zcoo">
+          <span>
+            {{ t('书籍列表') }}
+            <kl-icon></kl-icon>
+          </span>
+        </div>
         <div class="book-list-wrapper col-fill"></div>
       </div>
       <div class="book-setting row-fill">
@@ -15,7 +20,12 @@
               v-model="config[k]"
             >
               <template #reference>
-                <kl-input :readonly="true" v-model="config[k]"></kl-input>
+                <kl-input
+                  :color="config.color"
+                  :background="config.background"
+                  :readonly="true"
+                  v-model="config[k]"
+                ></kl-input>
               </template>
             </kl-color-selector>
           </template>
@@ -41,7 +51,8 @@ export default defineComponent({
     const { t } = useI18n();
 
     const configWacther = (key: string, value: any) => {
-      setConfig({ key, value }).then((done) => {
+      setConfig({ key: 'novel.' + key, value }).then((done) => {
+        console.log(done);
         if (done) {
           store.setNovel(config.value);
         }

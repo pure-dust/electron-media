@@ -59,7 +59,7 @@ export class ConfigLoader {
     } catch (err) {
       return null;
     }
-    writeFileSync(fd, JSON.stringify(this.config));
+    writeFileSync(fd, JSON.stringify(this.config, undefined, 2));
     closeSync(fd);
   }
 
@@ -94,14 +94,21 @@ export class ConfigLoader {
 
   // 更新用户配置
   public updateUserConfig(configItem: ConfigItem) {
-    if (!this.checkIsNull(configItem)) return;
-    let search = configItem.key.split('.');
-    if (search.length > 1) {
-      this.config[search[0]][search[1]] = configItem.value;
-    } else {
-      this.config[configItem.key] = configItem.value;
-    }
-    this.setUserConfig();
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        if (!this.checkIsNull(configItem)) return;
+        let search = configItem.key.split('.');
+        if (search.length > 1) {
+          this.config[search[0]][search[1]] = configItem.value;
+        } else {
+          this.config[configItem.key] = configItem.value;
+        }
+        this.setUserConfig();
+        resolve(true);
+      } catch (error) {
+        reject(false);
+      }
+    });
   }
 
   // 获取配置项
