@@ -84,3 +84,19 @@ export const useDatabase = (table: TableList, type: useDatabaseType, params: use
 export const notifyAction = (notice: NotificationConstructorOptions) => {
   ipcRenderer.send('notice', notice);
 };
+
+export const selectFile = () => {
+  ipcRenderer.send('select-file');
+  return new Promise<Array<FileInfo>>((resolve, reject) => {
+    ipcRenderer.on(
+      'select-file',
+      (event: IpcRendererEvent, message: Array<FileInfo> | RunTimeError) => {
+        if ('error' in message) {
+          reject(message);
+        } else {
+          resolve(message);
+        }
+      },
+    );
+  });
+};

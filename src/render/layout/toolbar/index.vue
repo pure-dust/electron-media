@@ -15,20 +15,22 @@
     </transition>
     <div class="fun-box flex">
       <span class="text-box mini dance animate"> mini </span>
-      <kl-color-selector :default-value="theme" v-model="theme" @change="themeChange">
-        <template #reference>
-          <kl-icon hover icon="icon-ic_skin" width="32px" />
-        </template>
-      </kl-color-selector>
-      <kl-icon
-        hover
-        icon="icon-ic_tack"
-        width="32px"
-        @on-click="fixedScreen"
-        :fixed-hover="isFixed"
-      />
-      <kl-icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
-      <kl-icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
+      <div class="icon-box">
+        <kl-color-selector :default-value="theme" v-model="theme" @change="themeChange">
+          <template #reference>
+            <kl-icon hover icon="icon-ic_skin" width="32px" />
+          </template>
+        </kl-color-selector>
+      </div>
+      <div class="icon-box">
+        <kl-icon hover icon="icon-ic_tack" @on-click="fixedScreen" :fixed-hover="isFixed" />
+      </div>
+      <div class="icon-box">
+        <kl-icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
+      </div>
+      <div class="icon-box">
+        <kl-icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
+      </div>
     </div>
   </div>
 </template>
@@ -79,7 +81,7 @@ export default defineComponent({
     const themeChange = () => {
       setConfig({ key: 'theme.theme', value: theme.value });
       setTheme(theme.value);
-      store.setTheme({ theme: theme.value })
+      store.setTheme({ theme: theme.value });
     };
 
     onMounted(() => {
@@ -132,6 +134,11 @@ $height: 30px;
 
     .fixed {
       background: themed('primary-hover');
+    }
+
+    .icon-box {
+      width: 30px;
+      height: 100%;
     }
   }
 

@@ -28,6 +28,20 @@ body,
   overflow: hidden;
 }
 
+.kl-scroll {
+  margin-right: -8px;
+  
+  &::-webkit-scrollbar {
+    width: 8px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    width: 8px;
+    box-shadow: inset 0 0 0 8px themed(primary);
+  }
+}
+
 input[type='text'] {
   appearance: none;
   outline: none;

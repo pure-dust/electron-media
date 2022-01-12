@@ -8,7 +8,7 @@
  */
 import { useDatabaseOption, useDatabaseType } from '@/utils/control';
 import LocalDB, { TableList } from '@root/database';
-import { ipcMain, app, BrowserWindow, IpcMainEvent, Notification } from 'electron';
+import { ipcMain, app, BrowserWindow, IpcMainEvent, Notification, dialog } from 'electron';
 import { NotificationConstructorOptions } from 'electron/main';
 import { ConfigLoader } from '../config/config';
 
@@ -78,6 +78,35 @@ const EventBus = (win: BrowserWindow) => {
 
   ipcMain.on('notice', (event: IpcMainEvent, message: NotificationConstructorOptions) => {
     new Notification(message).show();
+  });
+
+  ipcMain.on('select-file', (event: IpcMainEvent) => {
+    dialog
+      .showOpenDialog({
+        properties: ['openFile', 'multiSelections'],
+        filters: [
+          {
+            name: '小说',
+            extensions: ['txt'],
+          },
+        ],
+      })
+      .then(({ canceled, filePaths }) => {
+        if (!canceled) {
+          let fileList = filePaths.map((el) => {
+            return {
+              name: el.split(/(\\\\|\\|\/)/).splice(-1)[0],
+              path: el,
+            };
+          }) as Array<FileInfo>;
+          event.reply('select-file', fileList);
+        } else {
+          event.reply('select-file', {
+            message: '取消选择',
+            error: new Error('取消选择'),
+          });
+        }
+      });
   });
 };
 

@@ -4,12 +4,9 @@
       class="kl-button-icon"
       v-if="icon !== ''"
       :icon="icon"
-      width="12px"
-      height="12px"
-      :svg-style="{
-        width: '12px',
-        height: '12px',
-      }"
+      :auto="false"
+      :size="12"
+      :color="themed(type === 'default' ? 'primary' : type)"
     />
     <span :style="{ paddingLeft: icon !== '' ? '14px' : 0 }">
       <slot></slot>
@@ -18,7 +15,9 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType, toRefs } from 'vue';
+import { themed } from '@/utils';
 type ButtonType = 'default' | 'primary' | 'error' | 'success' | 'warning';
+type ButtonSize = 'small' | 'normal' | 'large';
 export default defineComponent({
   name: 'KlButton',
   props: {
@@ -42,20 +41,27 @@ export default defineComponent({
       type: Boolean,
       default: false,
     },
+    size: {
+      type: String as PropType<ButtonSize>,
+      default: 'normal',
+    },
   },
   setup(prop, { emit }) {
-    const { type, disabled, icon, round, plain } = toRefs(prop);
+    const { type, disabled, icon, round, plain, size } = toRefs(prop);
 
     const buttonClass = computed(() => {
       let styles = [];
       if (disabled.value)
         styles.push(plain.value ? 'kl-button-disabled-plain' : 'kl-button-disabled');
-      if (round.value) styles.push('kl-button-round');
+      if (round.value) {
+        styles.push('kl-button-round');
+      }
       if (plain.value) {
         styles.push(`kl-button-${type.value}-plain`);
       } else {
         styles.push(`kl-button-${type.value}`);
       }
+      styles.push(`size-${size.value}`);
       return styles.join(' ');
     });
 
@@ -69,13 +75,15 @@ export default defineComponent({
       buttonClass,
       icon,
       onClick,
+      themed,
     };
   },
 });
 </script>
 <style lang="scss">
 .kl-button {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
   position: relative;
   line-height: 1;
   white-space: nowrap;
@@ -92,7 +100,6 @@ export default defineComponent({
   transition: all 0.3s cubic-bezier(0.645, 0.045, 0.355, 1);
   font-weight: 500;
   user-select: none;
-  padding: 6px 12px;
   @include size(small);
   border-radius: 2px;
   margin-right: 10px;
@@ -110,6 +117,16 @@ export default defineComponent({
   span {
     position: relative;
     z-index: 2;
+  }
+
+  &.size-small {
+    padding: 4px 8px;
+  }
+  &.size-normal {
+    padding: 6px 12px;
+  }
+  &.size-large {
+    padding: 8px 16px;
   }
 }
 
@@ -195,7 +212,7 @@ export default defineComponent({
 .kl-button-default {
   background-color: themed(bg-light);
   border: 1px solid themed(border-light);
-  color: themed(font-dark);
+  color: themed(primary);
 
   &::before {
     content: '';

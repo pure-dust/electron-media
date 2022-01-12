@@ -10,11 +10,15 @@
     ></time-slot>
     <kl-dialog :visible="visible" @on-close="closeSchedule" title="111">
       <div class="schedule-item flex">
-        <kl-icon icon="icon-ic_document" width="36px" height="28px" :svg-style="svgStyle" />
+        <span class="schedule-item-label">
+          <kl-icon icon="icon-ic_document" :auto="false" />
+        </span>
         <kl-input class="row-fill" v-model="schedule.theme" placeholder="日程主题"></kl-input>
       </div>
       <div class="schedule-item flex">
-        <kl-icon icon="icon-ic_calendar" width="36px" height="28px" :svg-style="svgStyle" />
+        <span class="schedule-item-label">
+          <kl-icon icon="icon-ic_calendar" :auto="false" />
+        </span>
         <div class="row-fill flex">
           <kl-select :options="time" v-model="schedule.start" placeholder="开始时间"></kl-select>
           <span class="split-line">-</span>
@@ -22,7 +26,9 @@
         </div>
       </div>
       <div class="schedule-item flex">
-        <kl-icon icon="icon-type" width="36px" height="28px" :svg-style="svgStyle" />
+        <span class="schedule-item-label">
+          <kl-icon icon="icon-type" :auto="false" />
+        </span>
         <kl-select
           class="row-fill"
           :options="scheduleType"
@@ -31,7 +37,9 @@
         ></kl-select>
       </div>
       <div class="schedule-item flex">
-        <kl-icon width="36px" height="28px" icon="icon-ic_edit_round" :svg-style="svgStyle" />
+        <span class="schedule-item-label">
+          <kl-icon icon="icon-ic_edit_round" :auto="false" />
+        </span>
         <kl-input class="row-fill" type="textarea" v-model="schedule.event"></kl-input>
       </div>
       <template #footer>
@@ -106,7 +114,7 @@ export default defineComponent({
           data: { ...schedule, date: cardInfo?.dateTime },
         }).then(() => {
           emit('refresh');
-          store.updateMonitor()
+          store.updateMonitor();
           closeSchedule();
         });
       } else if (submitType === 'edit') {
@@ -124,7 +132,7 @@ export default defineComponent({
           update: {},
         }).then(() => {
           emit('refresh');
-          store.updateMonitor()
+          store.updateMonitor();
           closeSchedule();
         });
       }
@@ -203,6 +211,11 @@ export default defineComponent({
   .schedule-item {
     min-height: 28px;
     margin-bottom: 10px;
+
+    &-label {
+      margin-right: 10px;
+      padding-top: 6px;
+    }
 
     &:last-child {
       margin-bottom: 0;

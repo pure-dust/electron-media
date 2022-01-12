@@ -2,13 +2,19 @@
   <div class="col-fill fish-container flex-col">
     <div class="fish-inner flex">
       <div class="book-list flex-col">
-        <div class="book-list-title zcoo">
+        <div class="book-list-title zcoo flex">
           <span>
-            {{ t('书籍列表') }}
-            <kl-icon></kl-icon>
+            {{ t('novel.title') }}
           </span>
+          <kl-button size="small" @click="importNovel" icon="icon-add">
+            {{ t('novel.import') }}
+          </kl-button>
         </div>
-        <div class="book-list-wrapper col-fill"></div>
+        <kl-scroll class="col-fill">
+          <div class="book-list-wrapper">
+            <NovelCard v-for="item in bookList" :data="item" :key="item.path"></NovelCard>
+          </div>
+        </kl-scroll>
       </div>
       <div class="book-setting row-fill">
         <div class="config-item flex zcoo" v-for="(v, k) in config" :key="k">
@@ -36,16 +42,18 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref } from 'vue';
+import { defineComponent, onMounted, ref, Ref } from 'vue';
 import { useStore } from '@/store/config';
 import { useI18n } from '@/hooks/i18n';
-import { setConfig } from '@/utils';
+import { selectFile, setConfig, useDatabase } from '@/utils';
+import { nanoid } from 'nanoid';
+import NovelCard from './components/novel-card.vue';
 export default defineComponent({
   name: '',
-  components: {},
+  components: { NovelCard },
   props: {},
   setup() {
-    const bookList = ref([]);
+    const bookList: Ref<Array<FileInfo>> = ref([]);
     const store = useStore();
     const config: Ref<NovelConfig> = ref(store.getNovel);
     const { t } = useI18n();
@@ -59,11 +67,42 @@ export default defineComponent({
       });
     };
 
+    const importNovel = () => {
+      selectFile()
+        .then((fileList) => {
+          fileList = fileList.filter((el) => {
+            return !bookList.value.some((file) => file.path === el.path);
+          });
+          if (fileList.length > 0) {
+            useDatabase('novel', 'insert', {
+              data: fileList.map((file) => ({ id: nanoid(), ...file })),
+            });
+          }
+        })
+        .catch((err) => {});
+    };
+
+    const getNovel = () => {
+      useDatabase('novel', 'find', {
+        query: {},
+      }).then((res) => {
+        bookList.value = res as [];
+        for (let i = 0; i < 8; i++) {
+          bookList.value.push(bookList.value[0]);
+        }
+      });
+    };
+
+    onMounted(() => {
+      getNovel();
+    });
+
     return {
       bookList,
       config,
       t,
       configWacther,
+      importNovel,
     };
   },
 });
@@ -76,6 +115,7 @@ $padding: 10px;
 
   .fish-inner {
     flex: 1;
+    height: 0;
 
     .book-list {
       margin-right: 5px;
@@ -86,10 +126,21 @@ $padding: 10px;
       &-title {
         font-size: themed(middle-size);
         color: themed(font-light);
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 5px;
       }
 
       &-wrapper {
-        padding: $padding 0;
+        padding: $padding;
+        background: themed(bg-light);
+        display: grid;
+        grid-template-columns: repeat(3, calc((100% - 20px) / 3));
+        grid-template-rows: repeat(auto-fill, 120px);
+        align-items: center;
+        justify-items: center;
+        overflow: auto;
+        gap: 10px;
       }
     }
 

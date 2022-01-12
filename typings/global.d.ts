@@ -19,3 +19,8 @@ interface NedbCbParams {
 interface RecursiveIndex {
   [key: string]: string | RecursiveIndex;
 }
+
+interface RunTimeError {
+  message: string;
+  error: Error;
+}

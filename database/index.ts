@@ -8,7 +8,7 @@ interface DBType extends Index<Nedb> {
   calendar: Nedb;
 }
 
-export type TableList = 'calendar' | 'account';
+export type TableList = 'calendar' | 'account' | 'novel';
 
 function getPath(path: string) {
   return app.isPackaged ? join(app.getPath('exe'), '..' + path) : join(__dirname, path);
@@ -38,6 +38,11 @@ export default class LocalDB {
       }),
       account: new nedb({
         filename: getPath('/data/account.db'),
+        autoload: true,
+        timestampData: true,
+      }),
+      novel: new nedb({
+        filename: getPath('/data/novel.db'),
         autoload: true,
         timestampData: true,
       }),
