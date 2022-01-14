@@ -1,4 +1,5 @@
 import locales from '@/locales';
+import { Index } from '@root/typings/global';
 import _ from 'lodash';
 
 interface RecursiveObject {

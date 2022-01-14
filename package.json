@@ -6,6 +6,7 @@
   "author": "kamilee",
   "license": "MIT",
   "module": "es2020",
+  "types": "./types-components/index.d.ts",
   "scripts": {
     "type": "node -r ts-node/register script/build-types",
     "start": "npm run start:all",
