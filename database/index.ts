@@ -4,14 +4,20 @@ import { join } from 'path';
 import { app } from 'electron';
 import Nedb from 'nedb';
 import { CondType } from '@/utils';
+import { Index } from '@root/typings/global';
+
 interface DBType extends Index<Nedb> {
   calendar: Nedb;
+  account: nedb;
+  novel: nedb;
 }
 
 export type TableList = 'calendar' | 'account' | 'novel';
 
 function getPath(path: string) {
-  return app.isPackaged ? join(app.getPath('exe'), '..' + path) : join(__dirname, path);
+  return app.isPackaged
+    ? join(app.getPath('exe'), '..' + path)
+    : join(__dirname, path);
 }
 
 interface DBInstance extends Index<any> {
@@ -23,11 +29,15 @@ interface DBInstance extends Index<any> {
     options?: nedb.UpdateOptions | undefined,
     cb?: CbFunc | undefined,
   ) => void;
-  remove: (query: any, options: nedb.RemoveOptions | undefined, cb?: CbFunc | undefined) => void;
+  remove: (
+    query: any,
+    options: nedb.RemoveOptions | undefined,
+    cb?: CbFunc | undefined,
+  ) => void;
 }
 
 export default class LocalDB {
-  private db: DBType;
+  private readonly db: DBType;
 
   constructor() {
     this.db = {

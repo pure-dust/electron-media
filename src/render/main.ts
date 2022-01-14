@@ -5,7 +5,7 @@ import { createPinia } from 'pinia';
 
 import http from '../request';
 
-import { perload } from '@/utils/preload';
+import { preload } from '@/utils/preload';
 import router from './router';
 import App from './App.vue';
 
@@ -34,7 +34,7 @@ app.use(router);
 app.directive('click-wave', ClickWave);
 app.directive('click-outside', ClickOuntside);
 app.directive('enter-ani', EnterAnimate);
-perload().then((message) => {
+preload().then((message) => {
   const store = useStore();
   store.setTheme(message.theme);
   store.setNovel(message.novel);

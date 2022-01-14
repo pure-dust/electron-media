@@ -35,7 +35,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, ref, Ref, computed, reactive, watch, nextTick } from 'vue';
-import { HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from '@/utils/color';
+import { HSBToRGB, RGBToHEX, HSB, HEXToRGB, RGBToHSB } from '../../../utils';
 
 interface pos {
   top?: string;

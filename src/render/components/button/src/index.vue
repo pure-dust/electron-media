@@ -15,7 +15,7 @@
 </template>
 <script lang="ts">
 import { computed, defineComponent, PropType, toRefs } from 'vue';
-import { themed } from '@/utils';
+import { themed } from '../../../utils';
 type ButtonType = 'default' | 'primary' | 'error' | 'success' | 'warning';
 type ButtonSize = 'small' | 'normal' | 'large';
 export default defineComponent({

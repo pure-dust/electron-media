@@ -1,10 +1,13 @@
 {
+  "private": true,
   "name": "kl-tools",
   "version": "0.0.1",
   "main": "dist/main/_.js",
   "author": "kamilee",
   "license": "MIT",
+  "module": "es2020",
   "scripts": {
+    "type": "node -r ts-node/register script/build-types",
     "start": "npm run start:all",
     "start:all": "concurrently -n=vue,ele -c=green,blue \"npm run start:vue\" \"npm run start:ele\"",
     "start:vue": "vite",
@@ -111,7 +114,10 @@
     "vite": "^2.3.3",
     "vitejs-plugin-electron": "^0.1.0",
     "vue-loader": "^16.2.0",
-    "webpack": "^5.37.1"
+    "webpack": "^5.37.1",
+    "prettier": "^2.5.1",
+    "ts-morph": "^13.0.2",
+    "fast-glob": "^3.2.10"
   },
   "keywords": [
     "vite",

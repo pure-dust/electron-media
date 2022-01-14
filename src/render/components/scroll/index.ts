@@ -1,8 +1,8 @@
 import { App } from '@vue/runtime-dom';
-import KLButton from './index.vue';
+import KlScroll from './src/index.vue';
 
 export default {
   install(app: App<Element>) {
-    app.component('kl-button', KLButton);
+    app.component('kl-scroll', KlScroll);
   },
 };

@@ -1,8 +1,8 @@
 import { App } from '@vue/runtime-dom';
-import KLSelect from './index.vue';
+import Icon from './src/index.vue';
 
 export default {
   install(app: App<Element>) {
-    app.component('kl-select', KLSelect);
+    app.component('Icon', Icon);
   },
 };

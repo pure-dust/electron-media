@@ -31,7 +31,8 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: 'single',
         name: 'Single',
-        component: () => import('@/pages/calendar/singleDateCard/index.vue'),
+        component: () =>
+          import('@/pages/calendar/components/singleDateCard/index.vue'),
         meta: {
           parent: 'Calendar',
         },
@@ -54,9 +55,9 @@ const routes: Array<RouteRecordRaw> = [
     ],
   },
   {
-    path: "/fish",
-    name: "FishView",
-    component: () => import("@/pages/fish/view.vue"),
+    path: '/fish',
+    name: 'FishView',
+    component: () => import('@/pages/fish/view.vue'),
     children: [
       {
         path: '/fish',
@@ -67,7 +68,7 @@ const routes: Array<RouteRecordRaw> = [
         },
       },
     ],
-  }
+  },
 ];
 
 const router = createRouter({

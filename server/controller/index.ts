@@ -1,5 +1,5 @@
 const files = require.context('.', false, /\.ts$/);
-const modules: Index = {};
+const modules: Index<any> = {};
 
 files.keys().forEach((key) => {
   if (key === './index.ts') return;

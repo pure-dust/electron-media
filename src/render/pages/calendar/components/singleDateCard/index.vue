@@ -47,8 +47,8 @@ import _ from 'lodash';
 
 import { useStore } from '@/store/calendar';
 import { useDatabase } from '@/utils/control';
-import { CalenarType } from '@/utils/calendar';
-import Schedule from '@/components/Schedule/index.vue';
+import { CalendarType } from '@/utils/calendar';
+import Schedule from '@/pages/calendar/components/Schedule/index.vue';
 
 export default defineComponent({
   name: 'SingleDateCard',
@@ -57,7 +57,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
-    const dateInfo: Ref<CalenarType> = ref({
+    const dateInfo: Ref<CalendarType> = ref({
       year: 0,
       month: 0,
       date: 0,

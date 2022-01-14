@@ -1,5 +1,6 @@
 import { CondType } from '@/utils';
 import Nedb, { RemoveOptions, UpdateOptions } from 'nedb';
+import { NedbCbParams } from '@root/typings/global';
 
 export type CbFunc = (msg: NedbCbParams) => void;
 interface Cursor extends Nedb.Cursor<any> {
@@ -35,7 +36,12 @@ export function find(db: Nedb) {
 }
 
 export function update(db: Nedb) {
-  return function (query: string, data: any, options?: UpdateOptions, cb?: CbFunc) {
+  return function (
+    query: string,
+    data: any,
+    options?: UpdateOptions,
+    cb?: CbFunc,
+  ) {
     db.update(query, data, options, (err: Error | null, message: any) => {
       let msg: NedbCbParams = {
         status: err ? 'error' : 'success',
@@ -48,12 +54,16 @@ export function update(db: Nedb) {
 
 export function remove(db: Nedb) {
   return function (query: any, options?: RemoveOptions, cb?: CbFunc) {
-    db.remove(query, options as RemoveOptions, (err: Error | null, message: any) => {
-      let msg: NedbCbParams = {
-        status: err ? 'error' : 'success',
-        message: err || message,
-      };
-      cb && cb(msg);
-    });
+    db.remove(
+      query,
+      options as RemoveOptions,
+      (err: Error | null, message: any) => {
+        let msg: NedbCbParams = {
+          status: err ? 'error' : 'success',
+          message: err || message,
+        };
+        cb && cb(msg);
+      },
+    );
   };
 }

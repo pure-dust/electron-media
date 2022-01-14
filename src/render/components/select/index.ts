@@ -1,8 +1,8 @@
 import { App } from '@vue/runtime-dom';
-import KLInput from './index.vue';
+import KLSelect from './src/index.vue';
 
 export default {
   install(app: App<Element>) {
-    app.component('kl-input', KLInput);
+    app.component('kl-select', KLSelect);
   },
 };

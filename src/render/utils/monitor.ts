@@ -1,5 +1,6 @@
 import { notifyAction } from './control';
 import { useDatabase } from './control';
+import { Schedule } from '@root/typings/schedule';
 
 export class ScheduleMonitor {
   _clock: NodeJS.Timeout = null as unknown as NodeJS.Timeout;
@@ -67,7 +68,11 @@ export class ScheduleMonitor {
       let t = el.start.split(':');
       tar.setHours(parseInt(t[0]), parseInt(t[1]));
       tar = tar.getTime();
-      if (tar - time <= 0 && tar - time >= -5 * 60 * 1000 && !this.isFisrtNofity(el)) {
+      if (
+        tar - time <= 0 &&
+        tar - time >= -5 * 60 * 1000 &&
+        !this.isFisrtNofity(el)
+      ) {
         this.needFirstNotice.push(el);
       }
     });
@@ -82,7 +87,11 @@ export class ScheduleMonitor {
       let t = el.start.split(':');
       tar.setHours(parseInt(t[0]), parseInt(t[1]));
       tar = tar.getTime();
-      if (time - tar <= 5 * 1000 && time - tar >= -5 * 1000 && !this.isCurNotify(el)) {
+      if (
+        time - tar <= 5 * 1000 &&
+        time - tar >= -5 * 1000 &&
+        !this.isCurNotify(el)
+      ) {
         this.needCurNotice.push(el);
       }
     });

@@ -8,6 +8,7 @@
  */
 
 import _ from 'lodash';
+import { Index } from '@root/typings/global';
 
 /**
  * @description: 阻止事件一定时间内多次触发
@@ -84,7 +85,9 @@ export class Cubic {
 }
 
 export function themed(key: string) {
-  return getComputedStyle(document.documentElement).getPropertyValue(`--${key}`);
+  return getComputedStyle(document.documentElement).getPropertyValue(
+    `--${key}`,
+  );
 }
 
 /**
@@ -113,13 +116,18 @@ export function dateFormat(date: Date, fmt = 'yyyy-MM-dd') {
     S: date.getMilliseconds(),
   };
   if (/(y+)/.test(fmt)) {
-    fmt = fmt.replace(RegExp.$1, (date.getFullYear() + '').substr(4 - RegExp.$1.length));
+    fmt = fmt.replace(
+      RegExp.$1,
+      (date.getFullYear() + '').substr(4 - RegExp.$1.length),
+    );
   }
   for (let k in o) {
     if (new RegExp('(' + k + ')').test(fmt)) {
       fmt = fmt.replace(
         RegExp.$1,
-        RegExp.$1.length == 1 ? (o[k] as string) : ('00' + o[k]).substr(('' + o[k]).length),
+        RegExp.$1.length == 1
+          ? (o[k] as string)
+          : ('00' + o[k]).substr(('' + o[k]).length),
       );
     }
   }

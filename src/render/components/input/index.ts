@@ -1,8 +1,8 @@
 import { App } from '@vue/runtime-dom';
-import Icon from './index.vue';
+import KLInput from './src/index.vue';
 
 export default {
   install(app: App<Element>) {
-    app.component('Icon', Icon);
+    app.component('kl-input', KLInput);
   },
 };

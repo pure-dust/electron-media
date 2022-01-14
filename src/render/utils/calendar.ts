@@ -1,13 +1,14 @@
 import { Solar, Lunar } from 'lunar-typescript';
 import _ from 'lodash';
 import { dateFormat } from './utils';
+import { Index } from '@root/typings/global';
 
 interface CalenlarOptions {
   cycle?: string;
   lunar?: boolean;
   holiday?: boolean;
 }
-export interface CalenarType extends Index<any> {
+export interface CalendarType extends Index<any> {
   year: string | number; //年
   month: string | number; //月
   date: string | number; //日
@@ -44,10 +45,12 @@ export class Calenar {
   }
 
   private isSameMonth(d1: Date, d2: Date): boolean {
-    return d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth();
+    return (
+      d1.getFullYear() == d2.getFullYear() && d1.getMonth() == d2.getMonth()
+    );
   }
 
-  private createDateItem(date: Date): CalenarType {
+  private createDateItem(date: Date): CalendarType {
     let dateMap: Index<string> = {
       1: '星期一',
       2: '星期二',
@@ -82,8 +85,8 @@ export class Calenar {
     this.preview = date;
   }
 
-  public getCalendar(): Array<CalenarType> {
-    let currentDate = new Array<CalenarType>();
+  public getCalendar(): Array<CalendarType> {
+    let currentDate = new Array<CalendarType>();
     let month = this.preview.getMonth();
     let year = this.preview.getFullYear();
     let curNum = new Date(year, month + 1, 0).getDate();

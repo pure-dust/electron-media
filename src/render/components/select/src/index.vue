@@ -38,8 +38,13 @@
 </template>
 <script lang="ts">
 import { defineComponent, PropType, Ref, ref, toRefs, onMounted, reactive } from 'vue';
-import { themed } from '@/utils/utils';
+import { themed } from '../../../utils';
 import _ from 'lodash';
+
+interface SelectOption {
+  name: string;
+  value: string | number;
+}
 
 export default defineComponent({
   name: 'KlSelect',

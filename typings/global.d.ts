@@ -7,20 +7,20 @@ interface Window {
 
 type Nullable<T> = T | null;
 
-interface Index<T> {
+export declare interface Index<T> {
   [key: string]: T;
 }
 
-interface NedbCbParams {
+export declare interface NedbCbParams {
   status: 'error' | 'success';
   message: Error | any;
 }
 
-interface RecursiveIndex {
+export declare interface RecursiveIndex {
   [key: string]: string | RecursiveIndex;
 }
 
-interface RunTimeError {
+export declare interface RunTimeError {
   message: string;
   error: Error;
 }

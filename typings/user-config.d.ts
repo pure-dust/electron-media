@@ -1,27 +1,29 @@
-interface SystemConfig extends Index<any> {
+import { Index } from '@root/typings/global';
+
+export declare interface SystemConfig extends Index<any> {
   theme: ThemeConfig;
   novel: NovelConfig;
   lang: string;
 }
 
-interface ThemeConfig {
+export declare interface ThemeConfig {
   theme: string;
 }
 
-interface NovelConfig {
+export declare interface NovelConfig {
   color: string;
   size: number;
   background: string;
   count: number;
 }
 
-type themeKey = keyof ThemeConfig;
+export declare type themeKey = keyof ThemeConfig;
 
-type novelKey = keyof NovelConfig;
+export declare type novelKey = keyof NovelConfig;
 
-interface ConfigItem {
+export declare interface ConfigItem {
   key: string;
   value: string;
 }
 
-type ConfigType = ThemeConfig | NovelConfig;
+export declare type ConfigType = ThemeConfig | NovelConfig;

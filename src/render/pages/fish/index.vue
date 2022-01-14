@@ -1,4 +1,4 @@
-<template>
+<template xmlns=''>
   <div class="col-fill fish-container flex-col">
     <div class="fish-inner flex">
       <div class="book-list flex-col">
@@ -58,7 +58,7 @@ export default defineComponent({
     const config: Ref<NovelConfig> = ref(store.getNovel);
     const { t } = useI18n();
 
-    const configWacther = (key: string, value: any) => {
+    const configWatcher = (key: string, value: any) => {
       setConfig({ key: 'novel.' + key, value }).then((done) => {
         console.log(done);
         if (done) {
@@ -101,7 +101,7 @@ export default defineComponent({
       bookList,
       config,
       t,
-      configWacther,
+      configWacther: configWatcher,
       importNovel,
     };
   },
@@ -139,8 +139,7 @@ $padding: 10px;
         grid-template-rows: repeat(auto-fill, 120px);
         align-items: center;
         justify-items: center;
-        overflow: auto;
-        gap: 10px;
+        gap: $padding;
       }
     }
 

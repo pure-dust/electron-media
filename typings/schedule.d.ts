@@ -1,6 +1,6 @@
-type EventType = 'meeting' | 'travel' | 'normal' | '';
+export declare type EventType = 'meeting' | 'travel' | 'normal' | '';
 
-interface Schedule {
+export declare interface Schedule {
   _id?: string;
   theme: string;
   start: string;
@@ -10,13 +10,8 @@ interface Schedule {
   special?: boolean;
 }
 
-interface AddScheduleOption {
+export declare interface AddScheduleOption {
   hour: number;
   start: string;
   end: string;
-}
-
-interface SelectOption {
-  name: string;
-  value: string | number;
 }

@@ -30,7 +30,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
-import { Calenar, CalenarType } from '@/utils/calendar';
+import { Calenar, CalendarType } from '@/utils/calendar';
 import { useRouter } from 'vue-router';
 import { useStore } from '@/store/calendar';
 import _ from 'lodash';
@@ -39,7 +39,7 @@ export default defineComponent({
   props: {},
   setup() {
     const calendar = new Calenar();
-    const date: Ref<Array<CalenarType>> = ref([]);
+    const date: Ref<Array<CalendarType>> = ref([]);
     const router = useRouter();
     const store = useStore();
 
@@ -50,7 +50,7 @@ export default defineComponent({
       date.value = calendar.getCalendar();
     });
 
-    const calendarClass = (data: CalenarType) => {
+    const calendarClass = (data: CalendarType) => {
       let classArr = [];
       if (data.now) classArr.push('now-date');
       if (data.current) classArr.push('current-date');

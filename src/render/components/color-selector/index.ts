@@ -1,5 +1,5 @@
 import { App } from '@vue/runtime-dom';
-import KlColorSelector from './index.vue';
+import KlColorSelector from './src/index.vue';
 
 export default {
   install(app: App<Element>) {

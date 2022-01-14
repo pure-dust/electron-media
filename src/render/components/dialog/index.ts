@@ -1,5 +1,5 @@
 import { App } from '@vue/runtime-dom';
-import Dialog from './index.vue';
+import Dialog from './src/index.vue';
 
 export default {
   install(app: App<Element>) {

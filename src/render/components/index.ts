@@ -1,10 +1,10 @@
-import KLIcon from './Icon/index.vue';
-import KLInput from './Input/index.vue';
-import KLDialog from './Dialog/index.vue';
-import KLSelect from './Select/index.vue';
-import KLButton from './Button/index.vue';
-import KLColorSelector from './ColorSelector/index.vue';
-import KLScroll from './Scroll/index.vue';
+import KLIcon from './icon/src/index.vue';
+import KLInput from './input/src/index.vue';
+import KLDialog from './dialog/src/index.vue';
+import KLSelect from './select/src/index.vue';
+import KLButton from './button/src/index.vue';
+import KLColorSelector from './color-selector/src/index.vue';
+import KLScroll from './scroll/src/index.vue';
 import { App } from 'vue';
 
 export default {

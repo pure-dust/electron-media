@@ -1,16 +1,16 @@
 import { defineStore } from 'pinia';
-import { CalenarType, ScheduleMonitor, dateFormat } from '@/utils';
+import { CalendarType, ScheduleMonitor, dateFormat } from '@/utils';
 
 export const useStore = defineStore('calendar', {
   state: () => {
     return {
-      cardInfo: null as unknown as CalenarType,
+      cardInfo: null as unknown as CalendarType,
       currentDate: null as unknown as Date,
       monitor: new ScheduleMonitor(dateFormat(new Date())),
     };
   },
   actions: {
-    setCardInfo(payload: CalenarType) {
+    setCardInfo(payload: CalendarType) {
       this.cardInfo = payload;
     },
     setCurrentDate(payload: Date) {

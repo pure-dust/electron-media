@@ -7,8 +7,9 @@
  * @Email: 932184220@qq.com
  */
 import { ipcRenderer } from 'electron';
+import { SystemConfig } from '@root/typings/user-config';
 
-export function perload() {
+export function preload() {
   return new Promise<SystemConfig>((resolve, reject) => {
     const callback = (ev: Electron.IpcRendererEvent, message: SystemConfig) => {
       resolve(message);

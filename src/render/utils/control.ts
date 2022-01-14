@@ -10,22 +10,31 @@ import { TableList } from '@root/database';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { NotificationConstructorOptions } from 'electron/main';
 import { RemoveOptions, UpdateOptions } from 'nedb';
+import { ConfigItem, ConfigType } from '@root/typings/user-config';
+import { Index, NedbCbParams, RunTimeError } from '@root/typings/global';
+import { FileInfo } from '@root/typings/novel';
 
 export const getConfig = (message: string) => {
   ipcRenderer.send('get-config', message);
   return new Promise<string | ConfigType>((resolve, reject) => {
-    ipcRenderer.on('get-config', (event: IpcRendererEvent, message: string | ConfigType) => {
-      resolve(message);
-    });
+    ipcRenderer.on(
+      'get-config',
+      (event: IpcRendererEvent, message: string | ConfigType) => {
+        resolve(message);
+      },
+    );
   });
 };
 
 export const setConfig = (message: ConfigItem) => {
   ipcRenderer.send('set-config', message);
   return new Promise<boolean>((resolve, reject) => {
-    ipcRenderer.on('set-config', (event: IpcRendererEvent, message: boolean) => {
-      resolve(message);
-    });
+    ipcRenderer.on(
+      'set-config',
+      (event: IpcRendererEvent, message: boolean) => {
+        resolve(message);
+      },
+    );
   });
 };
 
@@ -40,9 +49,12 @@ export const minScreen = () => {
 export const fixWindow = (fixed?: boolean) => {
   ipcRenderer.send('fix-window', fixed);
   return new Promise((resolve, reject) => {
-    ipcRenderer.on('get-fixed-window', (event: IpcRendererEvent, message: boolean) => {
-      resolve(message);
-    });
+    ipcRenderer.on(
+      'get-fixed-window',
+      (event: IpcRendererEvent, message: boolean) => {
+        resolve(message);
+      },
+    );
   });
 };
 
@@ -72,12 +84,21 @@ export interface useDatabaseOption extends Object {
   cond?: CondType;
 }
 
-export const useDatabase = (table: TableList, type: useDatabaseType, params: useDatabaseOption) => {
+export const useDatabase = (
+  table: TableList,
+  type: useDatabaseType,
+  params: useDatabaseOption,
+) => {
   ipcRenderer.send('use-database', table, type, params);
   return new Promise((reslove, reject) => {
-    ipcRenderer.on('database-cb', (event: IpcRendererEvent, message: NedbCbParams) => {
-      message.status === 'success' ? reslove(message.message) : reject(message.message);
-    });
+    ipcRenderer.on(
+      'database-cb',
+      (event: IpcRendererEvent, message: NedbCbParams) => {
+        message.status === 'success'
+          ? reslove(message.message)
+          : reject(message.message);
+      },
+    );
   });
 };
 
