@@ -13,16 +13,28 @@
         <span class="schedule-item-label">
           <kl-icon icon="icon-ic_document" :auto="false" />
         </span>
-        <kl-input class="row-fill" v-model="schedule.theme" placeholder="日程主题"></kl-input>
+        <kl-input
+          class="row-fill"
+          v-model="schedule.theme"
+          placeholder="日程主题"
+        ></kl-input>
       </div>
       <div class="schedule-item flex">
         <span class="schedule-item-label">
           <kl-icon icon="icon-ic_calendar" :auto="false" />
         </span>
         <div class="row-fill flex">
-          <kl-select :options="time" v-model="schedule.start" placeholder="开始时间"></kl-select>
+          <kl-select
+            :options="time"
+            v-model="schedule.start"
+            placeholder="开始时间"
+          ></kl-select>
           <span class="split-line">-</span>
-          <kl-select :options="time" v-model="schedule.end" placeholder="结束时间"></kl-select>
+          <kl-select
+            :options="time"
+            v-model="schedule.end"
+            placeholder="结束时间"
+          ></kl-select>
         </div>
       </div>
       <div class="schedule-item flex">
@@ -40,7 +52,11 @@
         <span class="schedule-item-label">
           <kl-icon icon="icon-ic_edit_round" :auto="false" />
         </span>
-        <kl-input class="row-fill" type="textarea" v-model="schedule.event"></kl-input>
+        <kl-input
+          class="row-fill"
+          type="textarea"
+          v-model="schedule.event"
+        ></kl-input>
       </div>
       <template #footer>
         <kl-button type="primary" @click="submitSchedule">确定</kl-button>
@@ -50,13 +66,23 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, reactive, ref, onMounted, Ref, PropType, toRef, computed } from 'vue';
+import {
+  defineComponent,
+  reactive,
+  ref,
+  onMounted,
+  Ref,
+  PropType,
+  toRef,
+  computed,
+} from 'vue';
 import { useStore } from '@/store/calendar';
 import { SCHEDULE_SELECT } from '@/contants/constant';
 import { reset } from '@/utils/utils';
 import { useDatabase } from '@/utils/control';
 import _ from 'lodash';
 import TimeSlot from './components/timeSlot.vue';
+import { Schedule, AddScheduleOption } from '@root/typings/schedule';
 export default defineComponent({
   name: 'Schedule',
   components: { TimeSlot },
@@ -80,7 +106,7 @@ export default defineComponent({
       event: '',
     });
 
-    const time: Ref<Array<SelectOption>> = ref([]);
+    const time = ref([]);
     const scheduleType = SCHEDULE_SELECT;
 
     let submitType = 'add';

@@ -1,7 +1,13 @@
 {
   "compilerOptions": {
     "target": "ES2017",
-    "types": ["@types/lodash", "@types/webpack-env", "@types/koa", "@types/node", "@types/nedb"],
+    "types": [
+      "@types/lodash",
+      "@types/webpack-env",
+      "@types/koa",
+      "@types/node",
+      "@types/nedb"
+    ],
     "module": "CommonJS",
     "moduleResolution": "node",
     "importHelpers": true,
@@ -18,7 +24,14 @@
       "@main/*": ["src/main/*"]
     },
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true,
+    "suppressImplicitAnyIndexErrors": true
   },
-  "include": ["server", "src", "typings", "database"]
+  "include": [
+    "server",
+    "src",
+    "typings",
+    "database",
+    "types-components",
+    "types-utils"
+  ]
 }

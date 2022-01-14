@@ -1,4 +1,4 @@
-<template xmlns=''>
+<template xmlns="">
   <div class="col-fill fish-container flex-col">
     <div class="fish-inner flex">
       <div class="book-list flex-col">
@@ -12,7 +12,11 @@
         </div>
         <kl-scroll class="col-fill">
           <div class="book-list-wrapper">
-            <NovelCard v-for="item in bookList" :data="item" :key="item.path"></NovelCard>
+            <NovelCard
+              v-for="item in bookList"
+              :data="item"
+              :key="item.path"
+            ></NovelCard>
           </div>
         </kl-scroll>
       </div>
@@ -35,7 +39,11 @@
               </template>
             </kl-color-selector>
           </template>
-          <kl-input v-else @change="(v) => configWacther(k, v)" v-model="config[k]"></kl-input>
+          <kl-input
+            v-else
+            @change="(v) => configWacther(k, v)"
+            v-model="config[k]"
+          ></kl-input>
         </div>
       </div>
     </div>
@@ -48,6 +56,8 @@ import { useI18n } from '@/hooks/i18n';
 import { selectFile, setConfig, useDatabase } from '@/utils';
 import { nanoid } from 'nanoid';
 import NovelCard from './components/novel-card.vue';
+import { FileInfo } from '@root/typings/novel';
+import { NovelConfig } from '@root/typings/user-config';
 export default defineComponent({
   name: '',
   components: { NovelCard },

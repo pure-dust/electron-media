@@ -18,6 +18,6 @@
     "sourceMap": true,
     "strict": false,
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true
+    "suppressImplicitAnyIndexErrors": true 
   }
 }

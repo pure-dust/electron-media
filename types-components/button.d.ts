@@ -1,5 +1,5 @@
 import { PropType } from 'vue';
-import { themed } from '../../../utils';
+import { themed } from '../types-utils';
 declare type ButtonType = 'default' | 'primary' | 'error' | 'success' | 'warning';
 declare type ButtonSize = 'small' | 'normal' | 'large';
 declare const _default: import("vue").DefineComponent<{

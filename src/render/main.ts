@@ -16,7 +16,7 @@ import EnterAnimate from './directives/EnterAnimate';
 import './styles/index.scss';
 import '@/assets/font/font.scss';
 
-import KLUI from '@/components';
+import KlUI from '@/components';
 
 import { useStore } from '@/store/config';
 
@@ -29,7 +29,7 @@ declare module '@vue/runtime-core' {
 const app = createApp(App);
 app.config.globalProperties.$http = http;
 app.use(createPinia());
-app.use(KLUI);
+app.use(KlUI);
 app.use(router);
 app.directive('click-wave', ClickWave);
 app.directive('click-outside', ClickOuntside);

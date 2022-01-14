@@ -4,6 +4,7 @@
   </div>
 </template>
 <script lang="ts">
+import { FileInfo } from '@root/typings/novel';
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
   name: 'NovelCard',

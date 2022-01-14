@@ -14,6 +14,7 @@
   </div>
 </template>
 <script lang="ts">
+import { Schedule, AddScheduleOption } from '@root/typings/schedule';
 import { defineComponent, PropType } from 'vue';
 import ScheduleCard from './scheduleCard.vue';
 

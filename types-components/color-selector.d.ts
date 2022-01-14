@@ -1,5 +1,5 @@
 import { Ref } from 'vue';
-import { HSB } from '../../../utils';
+import { HSB } from '../types-utils';
 interface pos {
     top?: string;
     right?: string;

@@ -6,6 +6,7 @@
   <transition class="schedule-card-container"> </transition>
 </template>
 <script lang="ts">
+import { Schedule } from '@root/typings/schedule';
 import { defineComponent, PropType } from 'vue';
 export default defineComponent({
   name: 'ScheduleCard',

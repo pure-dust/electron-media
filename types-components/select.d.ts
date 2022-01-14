@@ -1,5 +1,5 @@
 import { PropType, Ref } from 'vue';
-import { themed } from '../../../utils';
+import { themed } from '../types-utils';
 interface SelectOption {
     name: string;
     value: string | number;
