@@ -3,13 +3,14 @@ import { Project } from 'ts-morph';
 
 const glob = require('fast-glob');
 import { promises } from 'fs';
-import { dirname } from 'path';
+import { dirname, basename } from 'path';
 
 interface PluginDtsOption {
   root: string;
   config: string;
   outDir: string;
   type?: Array<string>;
+  suffix?: string;
 }
 
 export default async function generateTypes(option: PluginDtsOption) {
@@ -25,28 +26,41 @@ export default async function generateTypes(option: PluginDtsOption) {
     skipAddingFilesFromTsConfig: true,
   });
 
-  const files = await glob([option.root + '/**/*.vue']);
+  let types = option.type || ['vue', 'ts'];
+
+  const files = await glob(
+    types.map((el) => {
+      return option.root + `/**/*.${el}`;
+    }),
+  );
+
   const sourceFiles = [];
   await Promise.all(
     files.map(async (file) => {
-      const sfc = parse((await promises.readFile(file, 'utf-8')).toString());
-      const { script, scriptSetup } = sfc.descriptor;
-      if (script || scriptSetup) {
-        let content = '';
-        let isTs = false;
-        if (script && script.content) {
-          content += script.content;
-          if (script.lang === 'ts') {
-            isTs = true;
+      let content = '';
+      let isTs = false;
+      if (/\.ts/.test(file)) {
+        isTs = true;
+        content = await (await promises.readFile(file, 'utf-8')).toString();
+      } else {
+        const sfc = parse((await promises.readFile(file, 'utf-8')).toString());
+        const { script, scriptSetup } = sfc.descriptor;
+        if (script || scriptSetup) {
+          isTs = false;
+          if (script && script.content) {
+            content += script.content;
+            if (script.lang === 'ts') {
+              isTs = true;
+            }
           }
         }
-        sourceFiles.push(
-          project.createSourceFile(
-            file.replace('.vue', '') + (isTs ? '.ts' : '.js'),
-            content,
-          ),
-        );
       }
+      sourceFiles.push(
+        project.createSourceFile(
+          file.replace(/\.(vue|ts|js)/, '') + '-temp' + (isTs ? '.ts' : '.js'),
+          content,
+        ),
+      );
     }),
   );
 
@@ -56,13 +70,29 @@ export default async function generateTypes(option: PluginDtsOption) {
 
   project.emitToMemory();
 
+  await promises.mkdir(option.outDir, { recursive: true });
+
   for (const sourceFile of sourceFiles) {
     const emitOutput = sourceFile.getEmitOutput().getOutputFiles();
 
     for (const outputFile of emitOutput) {
-      const filePath = outputFile.getFilePath();
-      await promises.mkdir(dirname(filePath), { recursive: true });
+      let filePath = outputFile.getFilePath();
+      if (option.suffix) {
+        console.log(option.suffix + '/[^/]+');
+
+        filePath =
+          option.outDir +
+          filePath
+            .match(new RegExp(option.suffix + '/[^/]+'))[0]
+            .replace(option.suffix, '') +
+          '.d.ts';
+      } else {
+        filePath =
+          option.outDir + '/' + basename(filePath).replace('-temp', '');
+      }
+
       await promises.writeFile(filePath, outputFile.getText(), 'utf8');
+      console.log('处理文件', filePath);
     }
   }
 }

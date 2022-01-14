@@ -2,13 +2,13 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-23 09:24:29
+ * @LastEditTime: 2022-01-14 11:40:38
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
 
 import _ from 'lodash';
-import { Index } from '@root/typings/global';
+import { Index } from '../../../typings/global';
 
 /**
  * @description: 阻止事件一定时间内多次触发

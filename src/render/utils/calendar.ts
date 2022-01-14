@@ -1,7 +1,7 @@
 import { Solar, Lunar } from 'lunar-typescript';
 import _ from 'lodash';
 import { dateFormat } from './utils';
-import { Index } from '@root/typings/global';
+import { Index } from '../../../typings/global';
 
 interface CalenlarOptions {
   cycle?: string;

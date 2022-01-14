@@ -1,7 +1,7 @@
 import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
 import { Configuration, Stats, DefinePlugin } from 'webpack';
-import * as HtmlWebpackPlugin from 'html-webpack-plugin';
+import  HtmlWebpackPlugin from 'html-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import { red, green } from 'chalk';
 import { resolveRoot } from './utils';

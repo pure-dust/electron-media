@@ -18,20 +18,6 @@
     "sourceMap": true,
     "strict": false,
     "allowSyntheticDefaultImports": true,
-    "suppressImplicitAnyIndexErrors": true,
-    "paths": {
-      "@/*": [
-        "src/render/*"
-      ],
-      "@src/*": [
-        "src/*"
-      ],
-      "@root/*": [
-        "./*"
-      ],
-      "@main/*": [
-        "src/main/*"
-      ]
-    }
-  },
+    "suppressImplicitAnyIndexErrors": true
+  }
 }

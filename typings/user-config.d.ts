@@ -1,4 +1,4 @@
-import { Index } from '@root/typings/global';
+import { Index } from './global';
 
 export declare interface SystemConfig extends Index<any> {
   theme: ThemeConfig;

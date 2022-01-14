@@ -30,8 +30,7 @@
       "!node_modules",
       "dist/**/*"
     ],
-    "extraResources": [
-      {
+    "extraResources": [{
         "from": "src/preload",
         "to": "app/src/preload"
       },
@@ -47,14 +46,12 @@
       ]
     },
     "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [
-            "x64"
-          ]
-        }
-      ],
+      "target": [{
+        "target": "nsis",
+        "arch": [
+          "x64"
+        ]
+      }],
       "artifactName": "${productName}_${version}.${ext}"
     },
     "nsis": {

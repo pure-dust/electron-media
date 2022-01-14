@@ -2,17 +2,17 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-16 15:01:13
+ * @LastEditTime: 2022-01-14 11:38:16
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-import { TableList } from '@root/database';
+import { TableList } from '../../../database';
 import { ipcRenderer, IpcRendererEvent } from 'electron';
 import { NotificationConstructorOptions } from 'electron/main';
 import { RemoveOptions, UpdateOptions } from 'nedb';
-import { ConfigItem, ConfigType } from '@root/typings/user-config';
-import { Index, NedbCbParams, RunTimeError } from '@root/typings/global';
-import { FileInfo } from '@root/typings/novel';
+import { ConfigItem, ConfigType } from '../../../typings/user-config';
+import { Index, NedbCbParams, RunTimeError } from '../../../typings/global';
+import { FileInfo } from '../../../typings/novel';
 
 export const getConfig = (message: string) => {
   ipcRenderer.send('get-config', message);

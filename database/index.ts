@@ -3,8 +3,8 @@ import { insert, find, update, remove, CbFunc } from './operation';
 import { join } from 'path';
 import { app } from 'electron';
 import Nedb from 'nedb';
-import { CondType } from '@/utils';
-import { Index } from '@root/typings/global';
+import { CondType } from '../src/render/utils';
+import { Index } from '../typings/global';
 
 interface DBType extends Index<Nedb> {
   calendar: Nedb;

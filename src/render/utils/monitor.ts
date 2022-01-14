@@ -1,6 +1,6 @@
 import { notifyAction } from './control';
 import { useDatabase } from './control';
-import { Schedule } from '@root/typings/schedule';
+import { Schedule } from '../../../typings/schedule';
 
 export class ScheduleMonitor {
   _clock: NodeJS.Timeout = null as unknown as NodeJS.Timeout;

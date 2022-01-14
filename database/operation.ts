@@ -1,6 +1,6 @@
-import { CondType } from '@/utils';
+import { CondType } from '../src/render/utils';
 import Nedb, { RemoveOptions, UpdateOptions } from 'nedb';
-import { NedbCbParams } from '@root/typings/global';
+import { NedbCbParams } from '../typings/global';
 
 export type CbFunc = (msg: NedbCbParams) => void;
 interface Cursor extends Nedb.Cursor<any> {
