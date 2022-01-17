@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-14 11:38:16
+ * @LastEditTime: 2022-01-17 17:16:53
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -12,7 +12,7 @@ import { NotificationConstructorOptions } from 'electron/main';
 import { RemoveOptions, UpdateOptions } from 'nedb';
 import { ConfigItem, ConfigType } from '../../../typings/user-config';
 import { Index, NedbCbParams, RunTimeError } from '../../../typings/global';
-import { FileInfo } from '../../../typings/novel';
+import { FileInfo, NovelInfo } from '../../../typings/novel';
 
 export const getConfig = (message: string) => {
   ipcRenderer.send('get-config', message);
@@ -116,6 +116,38 @@ export const selectFile = () => {
           reject(message);
         } else {
           resolve(message);
+        }
+      },
+    );
+  });
+};
+
+export const analyseFile = (path: string) => {
+  ipcRenderer.send('analyse-file', path);
+  return new Promise<NovelInfo>((resolve, reject) => {
+    ipcRenderer.on(
+      'analyse-file',
+      (event: IpcRendererEvent, message: NovelInfo | RunTimeError) => {
+        if ('error' in message) {
+          reject(message);
+        } else {
+          resolve(message);
+        }
+      },
+    );
+  });
+};
+
+export const getChapter = (chapter: string) => {
+  ipcRenderer.send('get-chapter', chapter);
+  return new Promise<string>((resolve, reject) => {
+    ipcRenderer.on(
+      'get-chapter',
+      (event: IpcRendererEvent, message: string | RunTimeError) => {
+        if (typeof message === 'string') {
+          resolve(message);
+        } else {
+          reject(message);
         }
       },
     );

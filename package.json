@@ -68,6 +68,7 @@
     "@types/lodash": "^4.14.170",
     "@types/nedb": "^1.8.11",
     "@types/webpack-env": "^1.16.0",
+    "@vueuse/core": "^7.5.3",
     "axios": "^0.21.1",
     "iconv-lite": "^0.6.3",
     "koa": "^2.13.1",

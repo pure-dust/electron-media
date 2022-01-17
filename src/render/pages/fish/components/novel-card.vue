@@ -25,5 +25,6 @@ export default defineComponent({
   align-items: center;
   background: themed(primary);
   color: themed(font-light);
+  cursor: pointer;
 }
 </style>

@@ -2,13 +2,15 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 11:22:32
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:54:57
+ * @LastEditTime: 2022-01-17 11:18:04
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
 import { openSync, readFileSync, closeSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { app } from 'electron';
+import { Index } from '@root/typings/global';
+import { SystemConfig, ConfigItem } from '@root/typings/user-config';
 
 export class ConfigLoader {
   private userPath: string;

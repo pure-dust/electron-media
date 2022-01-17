@@ -1,4 +1,4 @@
-<template xmlns="">
+<template>
   <div class="col-fill fish-container flex-col">
     <div class="fish-inner flex">
       <div class="book-list flex-col">
@@ -16,6 +16,7 @@
               v-for="item in bookList"
               :data="item"
               :key="item.path"
+              @click="toNovel(item)"
             ></NovelCard>
           </div>
         </kl-scroll>
@@ -55,9 +56,10 @@ import { useStore } from '@/store/config';
 import { useI18n } from '@/hooks/i18n';
 import { selectFile, setConfig, useDatabase } from '@/utils';
 import { nanoid } from 'nanoid';
-import NovelCard from './components/novel-card.vue';
+import NovelCard from '../components/novel-card.vue';
 import { FileInfo } from '@root/typings/novel';
 import { NovelConfig } from '@root/typings/user-config';
+import { useRouter } from 'vue-router';
 export default defineComponent({
   name: '',
   components: { NovelCard },
@@ -67,6 +69,7 @@ export default defineComponent({
     const store = useStore();
     const config: Ref<NovelConfig> = ref(store.getNovel);
     const { t } = useI18n();
+    const router = useRouter();
 
     const configWatcher = (key: string, value: any) => {
       setConfig({ key: 'novel.' + key, value }).then((done) => {
@@ -103,6 +106,13 @@ export default defineComponent({
       });
     };
 
+    const toNovel = (file: FileInfo) => {
+      router.push({
+        name: 'Novel',
+        query: { path: file.path },
+      });
+    };
+
     onMounted(() => {
       getNovel();
     });
@@ -113,6 +123,7 @@ export default defineComponent({
       t,
       configWacther: configWatcher,
       importNovel,
+      toNovel,
     };
   },
 });

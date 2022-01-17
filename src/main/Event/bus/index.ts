@@ -2,13 +2,24 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 15:03:00
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:56:56
+ * @LastEditTime: 2022-01-17 17:17:16
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
+import {
+  ipcMain,
+  app,
+  BrowserWindow,
+  IpcMainEvent,
+  Notification,
+  dialog,
+} from 'electron';
 import { useDatabaseOption, useDatabaseType } from '@/utils/control';
 import LocalDB, { TableList } from '@root/database';
-import { ipcMain, app, BrowserWindow, IpcMainEvent, Notification, dialog } from 'electron';
+import NovelAnalyser from '../novel';
+
+import { FileInfo } from '@root/typings/novel';
+import { ConfigItem } from '@root/typings/user-config';
 import { NotificationConstructorOptions } from 'electron/main';
 import { ConfigLoader } from '../config/config';
 
@@ -65,7 +76,9 @@ const EventBus = (win: BrowserWindow) => {
           localDb.getTable(table).find(params.query, cb, params.cond);
           break;
         case 'update':
-          localDb.getTable(table).update(params.query, params.data, params.update, cb);
+          localDb
+            .getTable(table)
+            .update(params.query, params.data, params.update, cb);
           break;
         case 'remove':
           localDb.getTable(table).remove(params.query, params.remove, cb);
@@ -76,9 +89,12 @@ const EventBus = (win: BrowserWindow) => {
     }
   });
 
-  ipcMain.on('notice', (event: IpcMainEvent, message: NotificationConstructorOptions) => {
-    new Notification(message).show();
-  });
+  ipcMain.on(
+    'notice',
+    (event: IpcMainEvent, message: NotificationConstructorOptions) => {
+      new Notification(message).show();
+    },
+  );
 
   ipcMain.on('select-file', (event: IpcMainEvent) => {
     dialog
@@ -107,6 +123,15 @@ const EventBus = (win: BrowserWindow) => {
           });
         }
       });
+  });
+
+  ipcMain.on('analyse-file', (event: IpcMainEvent, message: string) => {
+    let info = NovelAnalyser.analyse(message);
+    event.reply('analyse-file', info);
+  });
+  ipcMain.on('get-chapter', (event: IpcMainEvent, message: string) => {
+    let content = NovelAnalyser.getChapter(message);
+    event.reply('analyse-file', content);
   });
 };
 

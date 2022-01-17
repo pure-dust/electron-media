@@ -1,153 +1,228 @@
 <template>
-  <div class="kl-scroll">
-    <div class="kl-scroll-wrapper" ref="wrapperRef" @wheel="onMouseWheel">
-      <div
-        class="kl-scroll-inner"
-        ref="scrollRef"
-        @mouseenter="mouseEnter"
-        @mouseleave="mouseleave"
-      >
-        <slot></slot>
-      </div>
+  <div ref="scrollbar$" class="kl-scroll">
+    <div
+      ref="wrap$"
+      :class="['kl-scroll__wrap', 'kl-scroll__wrap--hidden-default']"
+      :style="style"
+      @scroll="handleScroll"
+    >
+      <component :is="tag" ref="resize$" :class="['kl-scroll__view']">
+        <slot />
+      </component>
     </div>
-
-    <div
-      v-if="showX"
-      v-show="showThumb"
-      :style="width"
-      class="kl-scroll-thumb-x"
-    ></div>
-    <div
-      v-if="showY"
-      v-show="showThumb"
-      :style="height"
-      class="kl-scroll-thumb-y"
-    ></div>
+    <bar
+      :move="moveX"
+      :ratio="ratioX"
+      :size="sizeWidth"
+      :always="always"
+      dark
+    />
+    <bar
+      :move="moveY"
+      :ratio="ratioY"
+      :size="sizeHeight"
+      vertical
+      :always="always"
+      dark
+    />
   </div>
 </template>
 <script lang="ts">
 import {
-  defineComponent,
-  ref,
-  Ref,
-  onMounted,
-  onUnmounted,
   computed,
+  defineComponent,
   nextTick,
+  onMounted,
+  provide,
+  ref,
+  watch,
+  reactive,
 } from 'vue';
+import Bar from './bar.vue';
+import type { StyleValue, CSSProperties } from 'vue';
+import { isString, isNumber } from 'lodash';
+import { useResizeObserver, useEventListener } from '@vueuse/core';
+
+function addUnit(value: string | number) {
+  if (isString(value)) {
+    return value;
+  } else if (isNumber(value)) {
+    return `${value}px`;
+  }
+  return '';
+}
 
 export default defineComponent({
   name: 'KlScroll',
-  setup() {
-    const wrapperRef: Ref<HTMLElement> = ref(null);
-    const scrollRef: Ref<HTMLElement> = ref(null);
-    const wrapperHeight = ref(0);
-    const wrapperWidth = ref(0);
-    const realHeight = ref(0);
-    const realWidth = ref(0);
-    const showX = ref(false);
-    const showY = ref(false);
-    const showThumb = ref(false);
+  components: {
+    Bar,
+  },
+  props: {
+    height: {
+      type: [String, Number],
+      default: '',
+    },
+    maxHeight: {
+      type: [String, Number],
+      default: '',
+    },
+    noresize: Boolean, // 如果 container 尺寸不会发生变化，最好设置它可以优化性能
+    tag: {
+      type: String,
+      default: 'div',
+    },
+    always: {
+      type: Boolean,
+      default: false,
+    },
+    minSize: {
+      type: Number,
+      default: 20,
+    },
+    dark: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  emits: ['scroll'],
 
-    const translateX = ref(0);
-    const translateY = ref(0);
+  setup(props, { emit }) {
+    let stopResizeObserver: (() => void) | undefined = undefined;
+    let stopResizeListener: (() => void) | undefined = undefined;
 
-    const mouseEnter = () => {
-      showThumb.value = true;
+    const scrollbar$ = ref<HTMLDivElement>();
+    const wrap$ = ref<HTMLDivElement>();
+    const resize$ = ref<HTMLElement>();
+
+    const sizeWidth = ref('0');
+    const sizeHeight = ref('0');
+    const moveX = ref(0);
+    const moveY = ref(0);
+    const ratioY = ref(1);
+    const ratioX = ref(1);
+    const GAP = 4; // top 2 + bottom 2 of bar instance
+
+    const style = computed<StyleValue>(() => {
+      const style: CSSProperties = {};
+      if (props.height) style.height = addUnit(props.height);
+      if (props.maxHeight) style.maxHeight = addUnit(props.maxHeight);
+      return [style];
+    });
+
+    const handleScroll = () => {
+      if (wrap$.value) {
+        const offsetHeight = wrap$.value.offsetHeight - GAP;
+        const offsetWidth = wrap$.value.offsetWidth - GAP;
+
+        moveY.value =
+          ((wrap$.value.scrollTop * 100) / offsetHeight) * ratioY.value;
+        moveX.value =
+          ((wrap$.value.scrollLeft * 100) / offsetWidth) * ratioX.value;
+
+        emit('scroll', {
+          scrollTop: wrap$.value.scrollTop,
+          scrollLeft: wrap$.value.scrollLeft,
+        });
+      }
     };
 
-    const height = computed(() => {
-      return {
-        height:
-          ((wrapperHeight.value / realHeight.value) * 100).toFixed(2) + '%',
-        transform: `translateY(${translateY.value}px)`,
-      };
-    });
+    const setScrollTop = (value: number) => {
+      if (!isNumber(value)) {
+        return;
+      }
+      wrap$.value!.scrollTop = value;
+    };
 
-    const width = computed(() => {
-      return {
-        width: ((wrapperWidth.value / realWidth.value) * 100).toFixed(2) + '%',
-      };
-    });
-
-    const mouseleave = () => {
-      showThumb.value = false;
+    const setScrollLeft = (value: number) => {
+      if (!isNumber(value)) {
+        return;
+      }
+      wrap$.value!.scrollLeft = value;
     };
 
     const update = () => {
-      wrapperHeight.value = wrapperRef.value.offsetHeight;
-      wrapperWidth.value = wrapperRef.value.offsetWidth;
-      realHeight.value = scrollRef.value.offsetHeight;
-      realWidth.value = scrollRef.value.offsetWidth;
-      showX.value = realWidth.value > wrapperWidth.value;
-      showY.value = realHeight.value > wrapperHeight.value;
+      if (!wrap$.value) return;
+
+      const offsetHeight = wrap$.value.offsetHeight - GAP;
+      const offsetWidth = wrap$.value.offsetWidth - GAP;
+
+      const originalHeight = offsetHeight ** 2 / wrap$.value.scrollHeight;
+      const originalWidth = offsetWidth ** 2 / wrap$.value.scrollWidth;
+      const height = Math.max(originalHeight, props.minSize);
+      const width = Math.max(originalWidth, props.minSize);
+
+      ratioY.value =
+        originalHeight /
+        (offsetHeight - originalHeight) /
+        (height / (offsetHeight - height));
+      ratioX.value =
+        originalWidth /
+        (offsetWidth - originalWidth) /
+        (width / (offsetWidth - width));
+
+      sizeHeight.value = height + GAP < offsetHeight ? `${height}px` : '';
+      sizeWidth.value = width + GAP < offsetWidth ? `${width}px` : '';
     };
 
-    const resizeObserver = new ResizeObserver(update);
+    watch(
+      () => props.noresize,
+      (noresize) => {
+        if (noresize) {
+          stopResizeObserver?.();
+          stopResizeListener?.();
+        } else {
+          ({ stop: stopResizeObserver } = useResizeObserver(resize$, update));
+          stopResizeListener = useEventListener('resize', update);
+        }
+      },
+      { immediate: true },
+    );
+
+    provide(
+      'scroll',
+      reactive({
+        scrollbarElement: scrollbar$,
+        wrapElement: wrap$,
+      }),
+    );
 
     onMounted(() => {
-      update();
-      resizeObserver.observe(scrollRef.value);
+      nextTick(() => update());
     });
-
-    onUnmounted(() => {
-      resizeObserver.disconnect();
-    });
-
-    const onMouseWheel = (e: WheelEvent) => {
-      translateY.value = wrapperRef.value.scrollTop;
-    };
 
     return {
-      scrollRef,
-      wrapperRef,
-      width,
-      height,
-      showX,
-      showY,
-      showThumb,
-      mouseEnter,
-      mouseleave,
-      onMouseWheel,
+      scrollbar$,
+      wrap$,
+      resize$,
+
+      moveX,
+      moveY,
+      ratioX,
+      ratioY,
+      sizeWidth,
+      sizeHeight,
+      style,
+      update,
+      handleScroll,
+      setScrollTop,
+      setScrollLeft,
     };
   },
 });
 </script>
-<style lang="scss" scoped>
-$offset: calc(100% + 0px);
+<style lang="scss">
 .kl-scroll {
-  width: 100%;
-  height: 100%;
   overflow: hidden;
   position: relative;
+  height: 100%;
 
-  &-wrapper {
-    width: 100%;
-    height: 100%;
+  &__wrap {
     overflow: auto;
+    height: 100%;
+
     &::-webkit-scrollbar {
-      width: 0px;
-      height: 0;
-      background: transparent;
+      display: none;
     }
-  }
-
-  &-thumb-x,
-  &-thumb-y {
-    position: absolute;
-    box-shadow: inset 0 0 0 8px themed(primary);
-  }
-
-  &-thumb-x {
-    bottom: 0;
-    left: 0;
-    height: 5px;
-  }
-
-  &-thumb-y {
-    right: 0;
-    width: 5px;
-    top: 0;
   }
 }
 </style>
