@@ -15,6 +15,7 @@ export declare interface NovelConfig {
   size: number;
   background: string;
   count: number;
+  lineHeight: number
 }
 
 export declare type themeKey = keyof ThemeConfig;

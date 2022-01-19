@@ -10,7 +10,7 @@ export default defineConfig(({ /* development | production */ mode }) => ({
   plugins: [vue(), electron(), iconfont()].filter(Boolean),
   root: resolve(__dirname, 'src/render'),
   base: '/',
-  iconfont: ['//at.alicdn.com/t/font_2613851_qf2knv5dw7l.js'],
+  iconfont: ['//at.alicdn.com/t/font_2613851_75vm0b7095y.js'],
   server: {
     port: +process.env.PORT,
     proxy: {

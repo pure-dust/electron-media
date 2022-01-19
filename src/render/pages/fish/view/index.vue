@@ -52,10 +52,11 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
+import { nanoid } from 'nanoid';
 import { useStore } from '@/store/config';
+import { useStore as useNovelStore } from '@/store/novel';
 import { useI18n } from '@/hooks/i18n';
 import { selectFile, setConfig, useDatabase } from '@/utils';
-import { nanoid } from 'nanoid';
 import NovelCard from '../components/novel-card.vue';
 import { FileInfo } from '@root/typings/novel';
 import { NovelConfig } from '@root/typings/user-config';
@@ -67,6 +68,7 @@ export default defineComponent({
   setup() {
     const bookList: Ref<Array<FileInfo>> = ref([]);
     const store = useStore();
+    const novelStore = useNovelStore();
     const config: Ref<NovelConfig> = ref(store.getNovel);
     const { t } = useI18n();
     const router = useRouter();
@@ -100,16 +102,13 @@ export default defineComponent({
         query: {},
       }).then((res) => {
         bookList.value = res as [];
-        for (let i = 0; i < 8; i++) {
-          bookList.value.push(bookList.value[0]);
-        }
       });
     };
 
     const toNovel = (file: FileInfo) => {
+      novelStore.setPath(file.path);
       router.push({
         name: 'Novel',
-        query: { path: file.path },
       });
     };
 
@@ -153,6 +152,7 @@ $padding: 10px;
       }
 
       &-wrapper {
+        height: 313px;
         padding: $padding;
         background: themed(bg-light);
         display: grid;

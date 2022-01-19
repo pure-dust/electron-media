@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-21 09:18:35
+ * @LastEditTime: 2022-01-18 11:37:46
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -93,7 +93,7 @@ export default defineComponent({
           height: height.value,
           name: 'kl-fish',
           intro: '摸就完事了!!!',
-          icon: 'icon-fish',
+          icon: 'icon-catfish',
           path: '/fish',
         },
         { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },

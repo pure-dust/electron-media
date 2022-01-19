@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-17 11:18:33
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-17 17:38:41
+ * @LastEditTime: 2022-01-18 16:55:39
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -89,13 +89,9 @@ class NovelAnalyser {
     return this.novel;
   }
 
-  getChapter(chapter: string) {
-    let reg = new RegExp(
-      chapter.replace(/\r/g, '') + `([\\s\\S]*)(?=(第[\\s\\S]章))`,
-      'g',
-    );
-    console.log(reg);
-    return '';
+  getChapter(str: string) {
+    let reg = new RegExp(str, 'g');
+    return this.content.match(reg)?.[0] || '';
   }
 }
 

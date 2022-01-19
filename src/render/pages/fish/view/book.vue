@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-17 10:58:33
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-17 17:18:22
+ * @LastEditTime: 2022-01-18 14:38:49
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -11,10 +11,10 @@
     <kl-scroll class="col-fill">
       <div class="novel-inner">
         <div
-          v-for="c in list.list"
+          v-for="(c, i) in novel.list"
           :key="c.name"
           class="chapter zcoo animate"
-          @click="toChapter(c.name)"
+          @click="toChapter(i)"
         >
           {{ c.name }}
         </div>
@@ -24,38 +24,51 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import { analyseFile, getChapter } from '@/utils';
+import { useRouter, useRoute } from 'vue-router';
+import { analyseFile } from '@/utils';
 import { NovelInfo } from '@root/typings/novel';
+import { useStore } from '@/store/novel';
 export default defineComponent({
-  name: '',
-  components: {},
+  name: 'Book',
   props: {},
   setup() {
-    const { query } = useRoute();
-    const list = ref<NovelInfo>({
+    const store = useStore();
+    const router = useRouter();
+    const novel = ref<NovelInfo>({
       name: '',
       list: [],
     });
 
-    const toChapter = (chapter: string) => {
-      getChapter(chapter)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {});
+    const toChapter = (index: number) => {
+      store.setCurrent(index);
+      router.push({
+        name: 'Chapter',
+      });
+    };
+
+    const analyseNovel = () => {
+      if (store.path) {
+        if (store.novel.name) {
+          novel.value = store.novel;
+        } else {
+          analyseFile(store.path).then((res) => {
+            novel.value = res;
+            store.setNovel(novel.value);
+          });
+        }
+      } else {
+        router.push({
+          name: useRoute().meta.parent as string,
+        });
+      }
     };
 
     onMounted(() => {
-      if (query.path) {
-        analyseFile(query.path as string).then((res) => {
-          list.value = res;
-        });
-      }
+      analyseNovel();
     });
 
     return {
-      list,
+      novel,
       toChapter,
     };
   },

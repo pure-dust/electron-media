@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-08 16:58:43
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-17 10:59:45
+ * @LastEditTime: 2022-01-18 14:39:58
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -73,6 +73,15 @@ const routes: Array<RouteRecordRaw> = [
         component: () => import('@/pages/fish/view/book.vue'),
         meta: {
           parent: 'Fish',
+        },
+      },
+      {
+        path: '/fish/chapter',
+        name: 'Chapter',
+        component: () => import('@/pages/fish/view/chapter.vue'),
+        meta: {
+          parent: 'Novel',
+          ancestor: 'Fish'
         },
       },
     ],

@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:44:18
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:48:43
+ * @LastEditTime: 2022-01-18 11:32:15
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -17,13 +17,20 @@
         :icon="option?.icon"
         :color="iconColor"
         :hover="false"
-        :svg-style="{ height: '80px', width: '80px' }"
+        :size="80"
       />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, PropType, computed, ref, onUnmounted } from 'vue';
+import {
+  defineComponent,
+  toRefs,
+  PropType,
+  computed,
+  ref,
+  onUnmounted,
+} from 'vue';
 import { useRouter } from 'vue-router';
 import { themed, handler } from '@/utils';
 
@@ -67,8 +74,8 @@ export default defineComponent({
     });
 
     onUnmounted(() => {
-      handler.destroyed(key)
-    })
+      handler.destroyed(key);
+    });
 
     return {
       style,

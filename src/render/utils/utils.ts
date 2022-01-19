@@ -2,12 +2,13 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-17 10:21:07
+ * @LastEditTime: 2022-01-18 14:47:05
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
 
 import _ from 'lodash';
+import { getChapter } from '.';
 import { Index } from '../../../typings/global';
 
 /**
@@ -105,6 +106,12 @@ export function reset(target: Index<any>, init?: boolean) {
   }
 }
 
+/**
+ * @description: 日期格式化
+ * @param date
+ * @param fmt
+ * @returns
+ */
 export function dateFormat(date: Date, fmt = 'yyyy-MM-dd') {
   let o: Index<number | string> = {
     'M+': date.getMonth() + 1,
@@ -132,4 +139,17 @@ export function dateFormat(date: Date, fmt = 'yyyy-MM-dd') {
     }
   }
   return fmt;
+}
+
+export async function transChapter(current: string, next?: string) {
+  let str = '';
+  if (next) {
+    str =
+      current.replace(/\r/g, '') +
+      `[\\s\\S]*?` +
+      `(?=${next.replace(/\r/g, '')})`;
+  } else {
+    str = current.replace(/\r/g, '') + `[\\s\\S]*`;
+  }
+  return await getChapter(str);
 }

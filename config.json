@@ -6,7 +6,8 @@
     "color": "#000000",
     "size": 12,
     "background": "#ffffff",
-    "count": 50
+    "count": 50,
+    "lineHeight": 18
   },
   "lang": "zh-cn"
 }

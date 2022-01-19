@@ -2,10 +2,16 @@
  * @Author: Lixiao2
  * @Date: 2021-06-01 17:51:25
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 11:20:35
+ * @LastEditTime: 2022-01-18 14:44:20
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
+import {
+  ThemeConfig,
+  NovelConfig,
+  themeKey,
+  novelKey,
+} from '@root/typings/user-config';
 import { defineStore } from 'pinia';
 
 export const useStore = defineStore('config', {
@@ -13,13 +19,14 @@ export const useStore = defineStore('config', {
     return {
       theme: {
         theme: '',
-      },
+      } as ThemeConfig,
       novel: {
         color: '',
         size: 0,
         count: 0,
         background: '',
-      },
+        lineHeight: 0,
+      } as NovelConfig,
       lang: 'zh-cn',
     };
   },

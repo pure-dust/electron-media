@@ -34,7 +34,7 @@
           <span v-else> 今天暂时没有日程计划哦 </span>
         </p>
         <div class="col-fill">
-          <Schedule @refresh="getSchedule" :list="scheduleList" />
+          <schedule-card @refresh="getSchedule" :list="scheduleList" />
         </div>
       </div>
     </div>
@@ -48,11 +48,12 @@ import _ from 'lodash';
 import { useStore } from '@/store/calendar';
 import { useDatabase } from '@/utils/control';
 import { CalendarType } from '@/utils/calendar';
-import Schedule from '@/pages/calendar/components/Schedule/index.vue';
+import ScheduleCard from '@/pages/calendar/components/Schedule/index.vue';
+import { Schedule } from '@root/typings/schedule';
 
 export default defineComponent({
   name: 'SingleDateCard',
-  components: { Schedule },
+  components: { ScheduleCard },
   props: {},
   setup() {
     const store = useStore();

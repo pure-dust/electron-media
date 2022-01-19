@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-17 17:16:53
+ * @LastEditTime: 2022-01-18 11:10:15
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -91,7 +91,7 @@ export const useDatabase = (
 ) => {
   ipcRenderer.send('use-database', table, type, params);
   return new Promise((reslove, reject) => {
-    ipcRenderer.on(
+    ipcRenderer.once(
       'database-cb',
       (event: IpcRendererEvent, message: NedbCbParams) => {
         message.status === 'success'
@@ -109,7 +109,7 @@ export const notifyAction = (notice: NotificationConstructorOptions) => {
 export const selectFile = () => {
   ipcRenderer.send('select-file');
   return new Promise<Array<FileInfo>>((resolve, reject) => {
-    ipcRenderer.on(
+    ipcRenderer.once(
       'select-file',
       (event: IpcRendererEvent, message: Array<FileInfo> | RunTimeError) => {
         if ('error' in message) {
@@ -125,7 +125,7 @@ export const selectFile = () => {
 export const analyseFile = (path: string) => {
   ipcRenderer.send('analyse-file', path);
   return new Promise<NovelInfo>((resolve, reject) => {
-    ipcRenderer.on(
+    ipcRenderer.once(
       'analyse-file',
       (event: IpcRendererEvent, message: NovelInfo | RunTimeError) => {
         if ('error' in message) {
@@ -141,7 +141,7 @@ export const analyseFile = (path: string) => {
 export const getChapter = (chapter: string) => {
   ipcRenderer.send('get-chapter', chapter);
   return new Promise<string>((resolve, reject) => {
-    ipcRenderer.on(
+    ipcRenderer.once(
       'get-chapter',
       (event: IpcRendererEvent, message: string | RunTimeError) => {
         if (typeof message === 'string') {

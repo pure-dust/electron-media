@@ -71,9 +71,7 @@ import {
   reactive,
   ref,
   onMounted,
-  Ref,
   PropType,
-  toRef,
   computed,
 } from 'vue';
 import { useStore } from '@/store/calendar';
@@ -84,7 +82,7 @@ import _ from 'lodash';
 import TimeSlot from './components/timeSlot.vue';
 import { Schedule, AddScheduleOption } from '@root/typings/schedule';
 export default defineComponent({
-  name: 'Schedule',
+  name: 'ScheduleCard',
   components: { TimeSlot },
   emits: ['refresh'],
   props: {
