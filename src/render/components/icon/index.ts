@@ -3,6 +3,6 @@ import Icon from './src/index.vue';
 
 export default {
   install(app: App<Element>) {
-    app.component('Icon', Icon);
+    app.component('kl-icon', Icon);
   },
 };

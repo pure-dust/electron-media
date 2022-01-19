@@ -7,6 +7,7 @@ export default {
     color: '字体色',
     count: '展示字数',
     lineHeight: '行高',
+    transparent: '背景透明',
     size: '字体大小',
     import: '导入',
   },

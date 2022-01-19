@@ -7,7 +7,8 @@
     "size": 12,
     "background": "#ffffff",
     "count": 50,
-    "lineHeight": 18
+    "lineHeight": 18,
+    "transparent": false
   },
   "lang": "zh-cn"
 }

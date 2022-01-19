@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 11:10:15
+ * @LastEditTime: 2022-01-19 17:29:44
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -44,6 +44,13 @@ export const windowMove = (canMove: boolean) => {
 
 export const minScreen = () => {
   ipcRenderer.send('min-window');
+};
+
+export const miniMode = (width: number, height: number) => {
+  ipcRenderer.send('mini-size', {
+    width,
+    height,
+  });
 };
 
 export const fixWindow = (fixed?: boolean) => {

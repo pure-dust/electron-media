@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-01 17:51:25
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 14:44:20
+ * @LastEditTime: 2022-01-19 09:30:07
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -26,6 +26,7 @@ export const useStore = defineStore('config', {
         count: 0,
         background: '',
         lineHeight: 0,
+        transparent: false,
       } as NovelConfig,
       lang: 'zh-cn',
     };

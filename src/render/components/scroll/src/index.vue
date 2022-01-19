@@ -194,7 +194,6 @@ export default defineComponent({
       scrollbar$,
       wrap$,
       resize$,
-
       moveX,
       moveY,
       ratioX,

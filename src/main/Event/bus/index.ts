@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 15:03:00
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 11:10:39
+ * @LastEditTime: 2022-01-19 17:54:41
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -132,6 +132,12 @@ const EventBus = (win: BrowserWindow) => {
   ipcMain.on('get-chapter', (event: IpcMainEvent, message: string) => {
     let content = NovelAnalyser.getChapter(message);
     event.reply('get-chapter', content);
+  });
+
+  ipcMain.on('mini-size', (event: IpcMainEvent, { width, height }) => {
+    win.resizable = true;
+    win.setSize(width, height);
+    win.resizable = false;
   });
 };
 

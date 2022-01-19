@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-18 13:33:40
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 14:52:27
+ * @LastEditTime: 2022-01-19 10:12:23
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -71,6 +71,7 @@ $padding: 10px;
     height: 100%;
     padding: $padding;
     background: themed(primary);
+    word-wrap: break-word;
   }
 }
 </style>

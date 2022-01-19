@@ -23,28 +23,16 @@
       </div>
       <div class="book-setting row-fill">
         <div class="config-item flex zcoo" v-for="(v, k) in config" :key="k">
-          <span class="config-item-name">{{ t('novel.' + k) }}:</span>
-          <template v-if="k === 'color' || k === 'background'">
-            <kl-color-selector
-              :default-value="config[k]"
-              @change="(v) => configWacther(k, v)"
-              v-model="config[k]"
-            >
-              <template #reference>
-                <kl-input
-                  :color="config.color"
-                  :background="config.background"
-                  :readonly="true"
-                  v-model="config[k]"
-                ></kl-input>
-              </template>
-            </kl-color-selector>
-          </template>
-          <kl-input
-            v-else
-            @change="(v) => configWacther(k, v)"
+          <dynamic-input
             v-model="config[k]"
-          ></kl-input>
+            label-width="50px"
+            split=" :"
+            :label="t('novel.' + k)"
+            :type="NOVEL_CONFIG[k]"
+            :color="config.color"
+            :background="config.background"
+            @change="(v) => configWatcher(k, v)"
+          ></dynamic-input>
         </div>
       </div>
     </div>
@@ -52,18 +40,22 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
+import { useRouter } from 'vue-router';
 import { nanoid } from 'nanoid';
 import { useStore } from '@/store/config';
 import { useStore as useNovelStore } from '@/store/novel';
 import { useI18n } from '@/hooks/i18n';
 import { selectFile, setConfig, useDatabase } from '@/utils';
-import NovelCard from '../components/novel-card.vue';
 import { FileInfo } from '@root/typings/novel';
 import { NovelConfig } from '@root/typings/user-config';
-import { useRouter } from 'vue-router';
+import { NOVEL_CONFIG } from '@/contants/constant';
+
+import NovelCard from '../components/novel-card.vue';
+import dynamicInput from '../components/dynamic-input.vue';
+
 export default defineComponent({
   name: '',
-  components: { NovelCard },
+  components: { NovelCard, dynamicInput },
   props: {},
   setup() {
     const bookList: Ref<Array<FileInfo>> = ref([]);
@@ -75,7 +67,6 @@ export default defineComponent({
 
     const configWatcher = (key: string, value: any) => {
       setConfig({ key: 'novel.' + key, value }).then((done) => {
-        console.log(done);
         if (done) {
           store.setNovel(config.value);
         }
@@ -120,9 +111,10 @@ export default defineComponent({
       bookList,
       config,
       t,
-      configWacther: configWatcher,
+      configWatcher,
       importNovel,
       toNovel,
+      NOVEL_CONFIG,
     };
   },
 });
