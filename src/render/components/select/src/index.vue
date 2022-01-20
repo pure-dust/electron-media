@@ -11,12 +11,11 @@
     />
     <kl-icon
       icon="icon-ic_horn_down"
-      height="100%"
-      width="30px"
+      size="18px"
       class="select-arrow"
       :class="{ 'select-arrow-active': dropVisible }"
-      :svg-style="{ width: '20px', height: '20px' }"
       :color="themed('primary')"
+      :auto="false"
     ></kl-icon>
     <teleport to="body">
       <transition :name="tansitionName">
@@ -37,7 +36,15 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, Ref, ref, toRefs, onMounted, reactive } from 'vue';
+import {
+  defineComponent,
+  PropType,
+  Ref,
+  ref,
+  toRefs,
+  onMounted,
+  reactive,
+} from 'vue';
 import { themed } from '../../../utils';
 import _ from 'lodash';
 
@@ -89,7 +96,10 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      inputVal.value = _.find(options.value, (el) => el.value === prop.modelValue)?.name;
+      inputVal.value = _.find(
+        options.value,
+        (el) => el.value === prop.modelValue,
+      )?.name;
 
       const ele = selectRef.value as HTMLElement;
 
@@ -97,12 +107,18 @@ export default defineComponent({
       dropStyle.width = ele.offsetWidth + 'px';
       dropStyle.left = ele.getBoundingClientRect().left + 'px';
       if (mid < window.innerHeight / 2) {
-        dropStyle.top = ele.getBoundingClientRect().top + ele.offsetHeight + 4 + 'px';
+        dropStyle.top =
+          ele.getBoundingClientRect().top + ele.offsetHeight + 4 + 'px';
         dropStyle.maxHeight =
-          window.innerHeight - ele.getBoundingClientRect().top - ele.offsetHeight - 14 + 'px';
+          window.innerHeight -
+          ele.getBoundingClientRect().top -
+          ele.offsetHeight -
+          14 +
+          'px';
         tansitionName.value = 'scale-top';
       } else {
-        dropStyle.bottom = ele.getBoundingClientRect().top - ele.offsetHeight + 4 + 'px';
+        dropStyle.bottom =
+          ele.getBoundingClientRect().top - ele.offsetHeight + 4 + 'px';
         dropStyle.maxHeight = ele.getBoundingClientRect().top - 14 + 'px';
         tansitionName.value = 'scale-bottom';
       }
@@ -157,12 +173,13 @@ export default defineComponent({
   .select-arrow {
     position: absolute;
     right: 0;
-    top: 0;
+    top: 50%;
     pointer-events: none;
+    transform: translateY(-50%);
 
     &-active {
       transform-origin: center;
-      transform: rotate(180deg);
+      transform: translateY(-50%) rotate(180deg);
     }
   }
 }

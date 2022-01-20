@@ -1,13 +1,22 @@
 <template>
-  <div class="schedule-card-container" @click.stop="onCardClick">
-    {{ schedule?.theme }}
-    <i class="close-icon iconfont icon-ic_close animate" @click.stop="onCloseClick"></i>
-  </div>
-  <transition class="schedule-card-container"> </transition>
+  <transition class="schedule-card-container">
+    <div class="schedule-card-container" @click.stop="onCardClick">
+      {{ schedule?.theme }}
+      <kl-icon
+        class="close-icon"
+        icon="icon-ic_close"
+        @click.stop="onCloseClick"
+        :size="14"
+        :auto="false"
+        :color="themed('error-light')"
+      ></kl-icon>
+    </div>
+  </transition>
 </template>
 <script lang="ts">
 import { Schedule } from '@root/typings/schedule';
 import { defineComponent, PropType } from 'vue';
+import { themed } from '@/utils';
 export default defineComponent({
   name: 'ScheduleCard',
   emits: ['on-close', 'on-card-click'],
@@ -28,6 +37,7 @@ export default defineComponent({
     return {
       onCloseClick,
       onCardClick,
+      themed,
     };
   },
 });
@@ -60,17 +70,6 @@ export default defineComponent({
       right: 3px;
       opacity: 1;
     }
-  }
-
-  .close-icon {
-    opacity: 0;
-    color: themed(error-light);
-    display: block;
-    position: absolute;
-    top: 50%;
-    font-size: 14px;
-    right: -15px;
-    transform: translateY(-50%);
   }
 }
 </style>

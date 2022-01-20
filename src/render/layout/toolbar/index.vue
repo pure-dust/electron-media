@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 09:03:50
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-19 17:52:22
+ * @LastEditTime: 2022-01-20 14:45:32
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -74,6 +74,7 @@ import {
   closeWindow,
   miniMode,
 } from '@/utils';
+import { useNovelMini } from '@/control/screen';
 
 export default defineComponent({
   name: 'ToolBar',
@@ -83,11 +84,9 @@ export default defineComponent({
     const isFixed = ref(false);
     const router = useRouter();
     const route = useRoute();
-    const theme = ref(store.getTheme.theme as string);
-    const mini = ref(false);
-
+    const theme = ref(store.getTheme.theme);
     const backToHome = () => {
-      router.push({ name: route.meta?.parent as string });
+      router.push({ name: route.meta.parent as string });
     };
 
     const back = computed(() => {
@@ -119,14 +118,13 @@ export default defineComponent({
     };
 
     const miniSize = () => {
-      if (mini.value) {
-        miniMode(540, 400);
-      } else {
-        miniMode(200, 200);
+      switch (route.meta.mini) {
+        case 'novel':
+          useNovelMini();
+          break;
+        default:
+          break;
       }
-      mini.value = !mini.value;
-
-      console.log(mini.value);
     };
 
     onMounted(() => {
@@ -136,15 +134,15 @@ export default defineComponent({
     });
 
     return {
+      theme,
+      isFixed,
+      back,
       onMouseDown,
       windowMove,
       closeWindow,
       minScreen,
       fixedScreen,
-      isFixed,
-      back,
       backToHome,
-      theme,
       themeChange,
       miniSize,
     };

@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-01 17:51:25
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-19 09:30:07
+ * @LastEditTime: 2022-01-20 11:13:22
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -19,6 +19,8 @@ export const useStore = defineStore('config', {
     return {
       theme: {
         theme: '',
+        width: 540,
+        height: 400,
       } as ThemeConfig,
       novel: {
         color: '',
@@ -36,7 +38,7 @@ export const useStore = defineStore('config', {
     getNovel: (state): NovelConfig => state.novel,
   },
   actions: {
-    setTheme(payload: ThemeConfig) {
+    setTheme(payload:  Partial<ThemeConfig>) {
       Object.keys(this.theme).forEach((key) => {
         payload[key as themeKey]
           ? (this.theme[key as themeKey] = payload[key as themeKey])

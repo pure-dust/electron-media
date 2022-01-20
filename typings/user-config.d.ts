@@ -8,6 +8,8 @@ export declare interface SystemConfig extends Index<any> {
 
 export declare interface ThemeConfig {
   theme: string;
+  width: number
+  height: number
 }
 
 export declare interface NovelConfig {

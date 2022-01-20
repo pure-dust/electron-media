@@ -6,6 +6,12 @@ import menuEvent from './Event/Menu/index';
 import eventBus from './Event/bus/index';
 import moveEvent from './Event/move/index';
 
+import { ConfigLoader } from './Event/config/config';
+const conf = ConfigLoader.getInstance();
+
+let width = (conf.getUserConfig('theme.width') as unknown as number) || 540;
+let height = (conf.getUserConfig('theme.height') as unknown as number) || 400;
+
 let win: BrowserWindow;
 
 function getLoadURL() {
@@ -28,8 +34,8 @@ if (!getLock) {
 
   app.on('ready', async () => {
     win = new BrowserWindow({
-      width: 540,
-      height: 400,
+      width,
+      height,
       resizable: false,
       frame: false,
       transparent: true,
@@ -48,8 +54,13 @@ if (!getLock) {
 
     if (isDevelopment && !process.env.IS_TEST) {
       try {
-        const { default: installExtension } = require('electron-devtools-installer');
-        var vue_devtools_beta = { id: 'ljjemllljcmogpfapbkkighbhhppjdbg', electron: '>=1.2.1' };
+        const {
+          default: installExtension,
+        } = require('electron-devtools-installer');
+        var vue_devtools_beta = {
+          id: 'ljjemllljcmogpfapbkkighbhhppjdbg',
+          electron: '>=1.2.1',
+        };
         var result = await installExtension(vue_devtools_beta);
         if (result) {
           console.log('success load : ' + result);

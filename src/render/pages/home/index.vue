@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-19 17:17:21
+ * @LastEditTime: 2022-01-20 11:02:05
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -35,9 +35,7 @@ export default defineComponent({
   components: { Card },
   props: {},
   setup() {
-    let cardList = ref([
-      
-    ]);
+    let cardList = ref([]);
     let height = ref(0);
     const scrollBox: Ref<HTMLElement | null> = ref(null);
     const cubic = new Cubic(0.56, 0.11, 0.42, 0.9);
@@ -127,6 +125,7 @@ export default defineComponent({
 $padding: 20px;
 .app-main {
   display: grid;
+  width: 100%;
   padding: $padding $padding 0;
   grid-template-columns: repeat(2, calc(50% - #{$padding} / 2));
   grid-template-rows: auto auto;

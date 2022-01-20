@@ -1,6 +1,8 @@
 {
   "theme": {
-    "theme": "#3195ff"
+    "theme": "#3195ff",
+    "width": 540,
+    "height": 400
   },
   "novel": {
     "color": "#000000",

@@ -1,9 +1,5 @@
-import '@/assets/iconfont/font_2613851_qf2knv5dw7l.js';
 import { createApp } from 'vue';
-import { CusAxiosInstance } from '../request';
 import { createPinia } from 'pinia';
-
-import http from '../request';
 
 import { preload } from '@/utils/preload';
 import router from './router';
@@ -20,14 +16,7 @@ import KlUI from '@/components';
 
 import { useStore } from '@/store/config';
 
-declare module '@vue/runtime-core' {
-  interface ComponentCustomProperties {
-    $http: CusAxiosInstance;
-  }
-}
-
 const app = createApp(App);
-app.config.globalProperties.$http = http;
 app.use(createPinia());
 app.use(KlUI);
 app.use(router);

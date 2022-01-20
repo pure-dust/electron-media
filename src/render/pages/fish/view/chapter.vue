@@ -2,15 +2,27 @@
  * @Author: Lixiao2
  * @Date: 2022-01-18 13:33:40
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-19 10:12:23
+ * @LastEditTime: 2022-01-20 15:33:58
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="chapter-container col-fill flex-col">
-    <kl-scroll class="col-fill">
+  <div :class="['chapter-container', 'col-fill']">
+    <kl-scroll
+      v-if="!notice.mini"
+      :class="['col-fill', { 'mini-size': notice.mini }]"
+    >
       <div class="chapter-inner zcoo" :style="style" v-html="content"></div>
     </kl-scroll>
+    <teleport to="body">
+      <div
+        :class="['zcoo', { 'mini-size': notice.mini }]"
+        :style="style"
+        v-if="notice.mini"
+      >
+        {{ currentContent }}
+      </div>
+    </teleport>
   </div>
 </template>
 <script lang="ts">
@@ -18,30 +30,70 @@ import { computed, defineComponent, onMounted, ref, StyleValue } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store/novel';
 import { useStore as useConfigStore } from '@/store/config';
+import { useStore as useNoticeStore } from '@/store/notice';
 import { transChapter } from '@/utils';
+import { ipcRenderer } from 'electron';
+import { useNovelMini } from '@/control/screen';
 
 export default defineComponent({
   name: 'Chapter',
   setup() {
     const store = useStore();
-    const configStore = useConfigStore();
+    const config = useConfigStore();
+    const notice = useNoticeStore();
     const router = useRouter();
-    const content = ref('');
 
-    const getChapter = () => {
-      transChapter(store.getCurrent[0], store.getCurrent[1]).then((res) => {
-        content.value = res.replace(/(\r)/g, '<br />');
-      });
-    };
+    const content = ref('');
+    const miniContent = ref('');
+    const current = ref(0);
+
+    const currentContent = computed(() => {
+      return miniContent.value.substring(
+        current.value * Number(config.novel.count),
+        (current.value + 1) * Number(config.novel.count),
+      );
+    });
 
     const style = computed(() => {
       return {
-        color: configStore.getNovel.color,
-        fontSize: configStore.getNovel.size + 'px',
-        background: configStore.getNovel.background,
-        lineHeight: configStore.getNovel.lineHeight + 'px',
+        color: config.novel.color,
+        fontSize: config.novel.size + 'px',
+        background: config.novel.transparent
+          ? notice.mini
+            ? 'transparent'
+            : config.novel.background
+          : config.novel.background,
+        lineHeight: config.novel.lineHeight + 'px',
       } as StyleValue;
     });
+
+    const nextPage = () => {
+      if (!notice.mini) return;
+      current.value++;
+      if (current.value * config.novel.count > miniContent.value.length) {
+        store.setCurrent(store.current + 1);
+        getChapter();
+        current.value = 0;
+      }
+    };
+
+    const prevPage = () => {
+      if (!notice.mini) return;
+      current.value--;
+      if (current.value < 0) {
+        store.setCurrent(store.current - 1);
+        getChapter();
+        current.value = Math.ceil(
+          miniContent.value.length / config.novel.count,
+        );
+      }
+    };
+
+    const getChapter = async () => {
+      let res = await transChapter(store.getCurrent[0], store.getCurrent[1]);
+      content.value = res.replace(/(\r)/g, '<br />');
+      miniContent.value = res.replace(/(\r|\t)/g, '');
+    };
 
     onMounted(() => {
       if (!store.path) {
@@ -50,11 +102,19 @@ export default defineComponent({
         });
       } else {
         getChapter();
+        ipcRenderer.on('mini-size', useNovelMini);
+        ipcRenderer.on('next-page', nextPage);
+        ipcRenderer.on('prev-page', prevPage);
       }
     });
+
     return {
       content,
       style,
+      notice,
+      current,
+      miniContent,
+      currentContent,
     };
   },
 });
@@ -73,5 +133,15 @@ $padding: 10px;
     background: themed(primary);
     word-wrap: break-word;
   }
+}
+.mini-size {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  background: transparent;
+  z-index: 9999;
+  user-select: none;
 }
 </style>
