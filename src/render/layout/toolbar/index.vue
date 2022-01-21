@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 09:03:50
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-20 14:45:32
+ * @LastEditTime: 2022-01-21 09:38:40
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -38,7 +38,7 @@
           hover
           icon="icon-ic_tack"
           @on-click="fixedScreen"
-          :fixed-hover="isFixed"
+          :fixed-hover="notice.fixed"
         />
       </div>
       <div class="icon-box">
@@ -70,28 +70,26 @@ import {
   setTheme,
   windowMove,
   minScreen,
-  fixWindow,
   closeWindow,
-  miniMode,
 } from '@/utils';
-import { useNovelMini } from '@/control/screen';
+import { useFixedWindow, useNovelMini } from '@/control/screen';
 
 export default defineComponent({
   name: 'ToolBar',
   setup() {
     const store = useStore();
-    const noticeStore = useNoticeStore();
-    const isFixed = ref(false);
+    const notice = useNoticeStore();
     const router = useRouter();
     const route = useRoute();
     const theme = ref(store.getTheme.theme);
+
+    const back = computed(() => {
+      return notice.back;
+    });
+
     const backToHome = () => {
       router.push({ name: route.meta.parent as string });
     };
-
-    const back = computed(() => {
-      return noticeStore.getBack;
-    });
 
     const onMouseDown = (e: MouseEvent) => {
       if (
@@ -105,10 +103,8 @@ export default defineComponent({
       windowMove(true);
     };
 
-    const fixedScreen = () => {
-      fixWindow(!isFixed.value).then((sign) => {
-        isFixed.value = sign as boolean;
-      });
+    const fixedScreen = async () => {
+      useFixedWindow(!notice.fixed);
     };
 
     const themeChange = () => {
@@ -127,16 +123,14 @@ export default defineComponent({
       }
     };
 
-    onMounted(() => {
-      fixWindow().then((sign) => {
-        isFixed.value = sign as boolean;
-      });
+    onMounted(async () => {
+      useFixedWindow();
     });
 
     return {
       theme,
-      isFixed,
       back,
+      notice,
       onMouseDown,
       windowMove,
       closeWindow,

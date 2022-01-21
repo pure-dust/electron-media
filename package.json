@@ -38,6 +38,10 @@
       {
         "from": "./config.json",
         "to": "../resources"
+      },
+      {
+        "from": "./fish.ico",
+        "to": "../resources"
       }
     ],
     "mac": {
@@ -47,6 +51,7 @@
       ]
     },
     "win": {
+      "icon": "./fish.ico",
       "target": [{
         "target": "nsis",
         "arch": [

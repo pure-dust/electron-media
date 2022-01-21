@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-18 13:33:40
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-20 15:33:58
+ * @LastEditTime: 2022-01-21 11:57:43
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -19,6 +19,8 @@
         :class="['zcoo', { 'mini-size': notice.mini }]"
         :style="style"
         v-if="notice.mini"
+        @mousedown="onMouseDown"
+        @mouseup="onMouseUp"
       >
         {{ currentContent }}
       </div>
@@ -31,7 +33,7 @@ import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store/novel';
 import { useStore as useConfigStore } from '@/store/config';
 import { useStore as useNoticeStore } from '@/store/notice';
-import { transChapter } from '@/utils';
+import { transChapter, windowMove } from '@/utils';
 import { ipcRenderer } from 'electron';
 import { useNovelMini } from '@/control/screen';
 
@@ -67,32 +69,45 @@ export default defineComponent({
       } as StyleValue;
     });
 
-    const nextPage = () => {
+    const nextPage = async () => {
       if (!notice.mini) return;
       current.value++;
       if (current.value * config.novel.count > miniContent.value.length) {
         store.setCurrent(store.current + 1);
-        getChapter();
+        await getChapter();
         current.value = 0;
       }
     };
 
-    const prevPage = () => {
+    const prevPage = async () => {
       if (!notice.mini) return;
       current.value--;
       if (current.value < 0) {
         store.setCurrent(store.current - 1);
-        getChapter();
-        current.value = Math.ceil(
-          miniContent.value.length / config.novel.count,
-        );
+        await getChapter();
+        current.value =
+          Math.ceil(miniContent.value.length / config.novel.count) - 1;
       }
+    };
+
+    const onMouseDown = () => {
+      if (!notice.mini) {
+        return;
+      }
+      windowMove(true);
+    };
+
+    const onMouseUp = () => {
+      if (!notice.mini) {
+        return;
+      }
+      windowMove(false);
     };
 
     const getChapter = async () => {
       let res = await transChapter(store.getCurrent[0], store.getCurrent[1]);
-      content.value = res.replace(/(\r)/g, '<br />');
-      miniContent.value = res.replace(/(\r|\t)/g, '');
+      content.value = res?.replace(/(\r)/g, '<br />') || '';
+      miniContent.value = res?.replace(/(\r|\t\s)/g, '') || '';
     };
 
     onMounted(() => {
@@ -115,6 +130,8 @@ export default defineComponent({
       current,
       miniContent,
       currentContent,
+      onMouseDown,
+      onMouseUp,
     };
   },
 });

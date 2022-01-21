@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 15:03:00
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-20 11:45:38
+ * @LastEditTime: 2022-01-21 11:21:40
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -129,15 +129,20 @@ const EventBus = (win: BrowserWindow) => {
     let info = NovelAnalyser.analyse(message);
     event.reply('analyse-file', info);
   });
+
   ipcMain.on('get-chapter', (event: IpcMainEvent, message: string) => {
     let content = NovelAnalyser.getChapter(message);
     event.reply('get-chapter', content);
   });
 
-  ipcMain.on('mini-size', (event: IpcMainEvent, { width, height }) => {
+  ipcMain.on('mini-size', (event: IpcMainEvent, { width, height, mini }) => {
     win.resizable = true;
     win.setSize(width, height);
     win.resizable = false;
+    win.setSkipTaskbar(mini);
+    if (!mini) {
+      win.center();
+    }
   });
 };
 

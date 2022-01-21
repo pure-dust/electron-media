@@ -3,7 +3,7 @@ import { Project } from 'ts-morph';
 
 const glob = require('fast-glob');
 import { promises } from 'fs';
-import { dirname, basename } from 'path';
+import { basename } from 'path';
 
 interface PluginDtsOption {
   root: string;
@@ -19,7 +19,7 @@ export default async function generateTypes(option: PluginDtsOption) {
       declaration: true,
       emitDeclarationOnly: true,
       noEmitOnError: true,
-      allowJs: true, // 如果想兼容 js 语法需要加上
+      allowJs: true,
       outDir: option.outDir,
     },
     tsConfigFilePath: 'script/tsconfig.json',

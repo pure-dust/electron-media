@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-19 17:29:44
+ * @LastEditTime: 2022-01-21 11:19:40
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -46,16 +46,17 @@ export const minScreen = () => {
   ipcRenderer.send('min-window');
 };
 
-export const miniMode = (width: number, height: number) => {
+export const miniMode = (width: number, height: number, mini: boolean) => {
   ipcRenderer.send('mini-size', {
     width,
     height,
+    mini
   });
 };
 
 export const fixWindow = (fixed?: boolean) => {
   ipcRenderer.send('fix-window', fixed);
-  return new Promise((resolve, reject) => {
+  return new Promise<boolean>((resolve, reject) => {
     ipcRenderer.on(
       'get-fixed-window',
       (event: IpcRendererEvent, message: boolean) => {
