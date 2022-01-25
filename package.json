@@ -78,7 +78,7 @@
     "koa-router": "^10.0.0",
     "lodash": "^4.17.21",
     "lunar-typescript": "^1.2.16",
-    "nanoid": "^3.1.25",
+    "nanoid": "^3.2.0",
     "nedb": "^1.8.0",
     "pinia": "^2.0.9",
     "sass-resources-loader": "^2.2.3",
