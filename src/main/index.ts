@@ -3,10 +3,13 @@ const path = require('path');
 const isDevelopment = process.env;
 
 import menuEvent from './Event/Menu/index';
-import eventBus from './Event/bus/index';
+import eventBus from './Event/event/index';
 import moveEvent from './Event/move/index';
+import shotcut from './Event/shotcut';
 
 import { ConfigLoader } from './Event/config/config';
+
+
 const conf = ConfigLoader.getInstance();
 
 let width = (conf.getUserConfig('theme.width') as unknown as number) || 540;
@@ -51,6 +54,7 @@ if (!getLock) {
     menuEvent(win);
     eventBus(win);
     moveEvent(win);
+    shotcut(win)
 
     if (isDevelopment && !process.env.IS_TEST) {
       try {

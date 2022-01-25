@@ -1,6 +1,9 @@
 <template>
   <div class="novel-card zcoo flex">
     <div class="title">{{ data.name.replace('.txt', '') }}</div>
+    <div class="novel-card-shelter">
+      <kl-button type="error" text @click="$emit('delete')">删除</kl-button>
+    </div>
   </div>
 </template>
 <script lang="ts">
@@ -26,5 +29,23 @@ export default defineComponent({
   background: themed(primary);
   color: themed(font-light);
   cursor: pointer;
+  position: relative;
+
+  &:hover &-shelter {
+    opacity: 1;
+    z-index: 10;
+  }
+
+  &-shelter {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.2);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    z-index: -1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>

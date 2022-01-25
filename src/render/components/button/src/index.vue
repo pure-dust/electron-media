@@ -45,14 +45,20 @@ export default defineComponent({
       type: String as PropType<ButtonSize>,
       default: 'normal',
     },
+    text: {
+      type: Boolean,
+      default: false,
+    },
   },
   setup(prop, { emit }) {
-    const { type, disabled, icon, round, plain, size } = toRefs(prop);
+    const { type, disabled, icon, round, plain, size, text } = toRefs(prop);
 
     const buttonClass = computed(() => {
       let styles = [];
       if (disabled.value)
-        styles.push(plain.value ? 'kl-button-disabled-plain' : 'kl-button-disabled');
+        styles.push(
+          plain.value ? 'kl-button-disabled-plain' : 'kl-button-disabled',
+        );
       if (round.value) {
         styles.push('kl-button-round');
       }
@@ -60,6 +66,9 @@ export default defineComponent({
         styles.push(`kl-button-${type.value}-plain`);
       } else {
         styles.push(`kl-button-${type.value}`);
+      }
+      if (text.value) {
+        styles.push(`is-text`);
       }
       styles.push(`size-${size.value}`);
       return styles.join(' ');
@@ -128,6 +137,12 @@ export default defineComponent({
   &.size-large {
     padding: 8px 16px;
   }
+
+  &.is-text {
+    border: none;
+    padding: 0;
+    background: transparent;
+  }
 }
 
 @mixin theme($theme) {
@@ -135,11 +150,16 @@ export default defineComponent({
     @if $theme != disabled {
       background-color: themed($theme);
       border: 1px solid themed(#{$theme}-dark);
-      &:hover {
+
+      &.is-text {
+        color: themed($theme);
+      }
+
+      &:hover:not(.is-text) {
         background-color: themed(#{$theme}-hover);
       }
 
-      &:active {
+      &:active:not(.is-text) {
         background-color: themed($theme);
       }
     } @else {
@@ -147,11 +167,11 @@ export default defineComponent({
       border: 1px solid themed(#{$theme}-dark) !important;
       cursor: default;
 
-      &:hover {
+      &:hover:not(.is-text) {
         background-color: themed(#{$theme}) !important;
       }
 
-      &:active {
+      &:active:not(.is-text) {
         background-color: themed($theme) !important;
       }
     }
@@ -175,14 +195,14 @@ export default defineComponent({
       border: 1px solid themed(#{$theme}-dark);
       color: themed($theme);
 
-      &:hover {
+      &:hover:not(.is-text) {
         &::before {
           opacity: 1;
         }
         @include color(light);
       }
 
-      &:active {
+      &:active:not(.is-text) {
         &::before {
           background-color: themed(#{$theme}-dark);
           opacity: 1;
@@ -193,14 +213,14 @@ export default defineComponent({
       cursor: default;
       color: themed($theme);
 
-      &:hover {
+      &:hover:not(.is-text) {
         &::before {
           opacity: 0.3 !important;
         }
         color: themed($theme) !important;
       }
 
-      &:active {
+      &:active:not(.is-text) {
         &::before {
           opacity: 0.3 !important;
         }
@@ -227,7 +247,7 @@ export default defineComponent({
     z-index: 1;
   }
 
-  &:hover {
+  &:hover:not(.is-text) {
     border: 1px solid themed(primary);
     color: themed(primary);
     &::before {
@@ -235,7 +255,7 @@ export default defineComponent({
     }
   }
 
-  &:active {
+  &:active:not(.is-text) {
     border: 1px solid themed(primary);
   }
 }

@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-20 11:53:18
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-21 11:19:59
+ * @LastEditTime: 2022-01-25 14:01:46
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -13,6 +13,7 @@ import { fixWindow, miniMode } from '@/utils';
 export function useNovelMini() {
   const conf = useConfigStore();
   const notice = useNoticeStore();
+  
   if (notice.mini) {
     miniMode(conf.theme.width, conf.theme.height, !notice.mini);
   } else {

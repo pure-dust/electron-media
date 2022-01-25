@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 09:03:50
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-21 09:38:40
+ * @LastEditTime: 2022-01-25 10:46:27
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -23,6 +23,13 @@
     <div class="fun-box flex">
       <span class="text-box mini dance animate" @click="miniSize"> mini </span>
       <div class="icon-box">
+        <kl-icon
+          hover
+          icon="icon-ic_setting"
+          @click="$router.push({ name: 'Setting' })"
+        ></kl-icon>
+      </div>
+      <div class="icon-box">
         <kl-color-selector
           :default-value="theme"
           v-model="theme"
@@ -42,26 +49,16 @@
         />
       </div>
       <div class="icon-box">
-        <kl-icon
-          hover
-          icon="icon-ic_reduce"
-          width="32px"
-          @on-click="minScreen"
-        />
+        <kl-icon hover icon="icon-ic_reduce" @on-click="minScreen" />
       </div>
       <div class="icon-box">
-        <kl-icon
-          hover
-          icon="icon-ic_cancel"
-          width="32px"
-          @on-click="closeWindow"
-        />
+        <kl-icon hover icon="icon-ic_cancel" @on-click="closeWindow" />
       </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, onMounted, computed } from 'vue';
+import { defineComponent, ref, onMounted, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { useStore } from '@/store/config';
 import { useStore as useNoticeStore } from '@/store/notice';

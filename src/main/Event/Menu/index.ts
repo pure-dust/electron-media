@@ -2,18 +2,11 @@
  * @Author: Lixiao2
  * @Date: 2021-06-09 14:50:16
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-21 10:40:20
+ * @LastEditTime: 2022-01-25 13:57:59
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-import {
-  app,
-  Menu,
-  MenuItem,
-  BrowserWindow,
-  globalShortcut,
-  Tray,
-} from 'electron';
+import { app, Menu, MenuItem, BrowserWindow, Tray } from 'electron';
 import { join } from 'path';
 
 const icon = app.isPackaged
@@ -43,18 +36,6 @@ export default function (win: BrowserWindow): void {
     }),
   );
   Menu.setApplicationMenu(menu);
-
-  globalShortcut.register('CommandOrControl+Alt+num1', () => {
-    win.webContents.send('mini-size');
-  });
-
-  globalShortcut.register('CommandOrControl+Alt+numadd', () => {
-    win.webContents.send('next-page');
-  });
-
-  globalShortcut.register('CommandOrControl+Alt+numsub', () => {
-    win.webContents.send('prev-page');
-  });
 
   app.whenReady().then(() => {
     tray.setToolTip('kl-tools');

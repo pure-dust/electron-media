@@ -1,7 +1,7 @@
 const NODE_ENV = (process.env.NODE_ENV = 'production');
 
 import { webpack } from 'webpack';
-import * as ora from 'ora';
+const ora = require("ora")
 import { green } from 'chalk';
 import { config, compileHandle } from './webpack.config';
 

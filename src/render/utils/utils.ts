@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 14:47:05
+ * @LastEditTime: 2022-01-25 14:37:15
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -143,7 +143,7 @@ export function dateFormat(date: Date, fmt = 'yyyy-MM-dd') {
 
 export async function transChapter(current: string, next?: string) {
   let str = '';
-  if (next) {
+  if (typeof next === 'string') {
     str =
       current.replace(/\r/g, '') +
       `[\\s\\S]*?` +

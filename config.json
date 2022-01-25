@@ -12,5 +12,10 @@
     "lineHeight": 18,
     "transparent": false
   },
-  "lang": "zh-cn"
+  "lang": "zh-cn",
+  "key": {
+    "miniSize": ["CommandOrControl", "Alt", "num1"],
+    "prevPage": ["CommandOrControl", "Alt", "numsub"],
+    "nextPage": ["CommandOrControl", "Alt", "numadd"]
+  }
 }

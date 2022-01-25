@@ -2,12 +2,16 @@
  * @Author: Lixiao2
  * @Date: 2021-06-08 16:58:43
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-20 11:05:13
+ * @LastEditTime: 2022-01-25 11:26:24
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
 import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router';
 import Home from '@/pages/home/index.vue';
+
+import calendar from './module/calendar';
+import account from './module/account';
+import fish from './module/fish';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -16,82 +20,28 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
   },
   {
-    path: '/calendar',
-    name: 'CalendarView',
-    component: () => import('@/pages/calendar/view.vue'),
-    children: [
-      {
-        path: '/calendar',
-        name: 'Calendar',
-        component: () => import('@/pages/calendar/index.vue'),
-        meta: {
-          parent: 'Home',
-        },
-      },
-      {
-        path: 'single',
-        name: 'Single',
-        component: () =>
-          import('@/pages/calendar/components/singleDateCard/index.vue'),
-        meta: {
-          parent: 'Calendar',
-        },
-      },
-    ],
+    path: '/setting',
+    name: 'Setting',
+    component: () => import('@/pages/setting/index.vue'),
+    meta: {
+      parent: 'Home',
+    },
   },
-  {
-    path: '/account',
-    name: 'AccountView',
-    component: () => import('@/pages/account/view.vue'),
-    children: [
-      {
-        path: '/account',
-        name: 'Account',
-        component: () => import('@/pages/account/index.vue'),
-        meta: {
-          parent: 'Home',
-        },
-      },
-    ],
-  },
-  {
-    path: '/fish',
-    name: 'FishView',
-    component: () => import('@/pages/fish/view.vue'),
-    children: [
-      {
-        path: '/fish',
-        name: 'Fish',
-        component: () => import('@/pages/fish/view/index.vue'),
-        meta: {
-          parent: 'Home',
-        },
-      },
-      {
-        path: '/fish/novel',
-        name: 'Novel',
-        component: () => import('@/pages/fish/view/book.vue'),
-        meta: {
-          parent: 'Fish',
-        },
-      },
-      {
-        path: '/fish/chapter',
-        name: 'Chapter',
-        component: () => import('@/pages/fish/view/chapter.vue'),
-        meta: {
-          parent: 'Novel',
-          ancestor: 'Fish',
-          mini: 'novel'
-        },
-      },
-    ],
-  },
+  calendar,
+  account,
+  fish,
 ];
 
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
+});
+
+router.beforeEach((to, from, next) => {
+  if (to.name === 'Setting') {
+    to.meta.parent = from.name || 'Home';
+  }
+  next();
 });
 
 export default router;

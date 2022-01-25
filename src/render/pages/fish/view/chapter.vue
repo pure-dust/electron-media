@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-18 13:33:40
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-21 11:57:43
+ * @LastEditTime: 2022-01-25 14:35:02
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -71,22 +71,30 @@ export default defineComponent({
 
     const nextPage = async () => {
       if (!notice.mini) return;
-      current.value++;
       if (current.value * config.novel.count > miniContent.value.length) {
+        if (store.current === store.novel.list.length - 1) {
+          return;
+        }
         store.setCurrent(store.current + 1);
         await getChapter();
         current.value = 0;
+      } else {
+        current.value++;
       }
     };
 
     const prevPage = async () => {
       if (!notice.mini) return;
-      current.value--;
-      if (current.value < 0) {
+      if (current.value - 1 < 0) {
+        if (store.current === 0) {
+          return;
+        }
         store.setCurrent(store.current - 1);
         await getChapter();
         current.value =
           Math.ceil(miniContent.value.length / config.novel.count) - 1;
+      } else {
+        current.value--;
       }
     };
 
@@ -117,6 +125,9 @@ export default defineComponent({
         });
       } else {
         getChapter();
+        ipcRenderer.off('mini-size', useNovelMini);
+        ipcRenderer.off('next-page', nextPage);
+        ipcRenderer.off('prev-page', prevPage);
         ipcRenderer.on('mini-size', useNovelMini);
         ipcRenderer.on('next-page', nextPage);
         ipcRenderer.on('prev-page', prevPage);

@@ -24,9 +24,3 @@ export declare interface RunTimeError {
   message: string;
   error: Error;
 }
-
-declare module 'vue' {
-  export interface GlobalComponents {
-    KlButton: typeof import('../src/render/components/button/src/index.vue')
-  }
-}

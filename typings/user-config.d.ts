@@ -1,15 +1,16 @@
 import { Index } from './global';
 
 export declare interface SystemConfig extends Index<any> {
+  lang: string;
   theme: ThemeConfig;
   novel: NovelConfig;
-  lang: string;
+  key: ShortCut;
 }
 
 export declare interface ThemeConfig {
   theme: string;
-  width: number
-  height: number
+  width: number;
+  height: number;
 }
 
 export declare interface NovelConfig {
@@ -21,9 +22,17 @@ export declare interface NovelConfig {
   transparent: boolean;
 }
 
+export declare interface ShortCut {
+  miniSize: Array<string>;
+  prevPage: Array<string>;
+  nextPage: Array<string>;
+}
+
 export declare type themeKey = keyof ThemeConfig;
 
 export declare type novelKey = keyof NovelConfig;
+
+export declare type cutKey = keyof ShortCut
 
 export declare interface ConfigItem {
   key: string;

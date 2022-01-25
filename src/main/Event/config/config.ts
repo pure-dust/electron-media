@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 11:22:32
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-17 11:18:04
+ * @LastEditTime: 2022-01-25 13:55:49
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -42,7 +42,9 @@ export class ConfigLoader {
     } catch (err: any) {
       if (err.code == 'ENOENT') {
         this.loadDefaultConfig();
-        writeFileSync(this.userPath, JSON.stringify(this.config), { flag: 'w+' });
+        writeFileSync(this.userPath, JSON.stringify(this.config), {
+          flag: 'w+',
+        });
         fd = openSync(path, 'r');
       } else {
         throw new Error(err);
@@ -114,7 +116,9 @@ export class ConfigLoader {
   }
 
   // 获取配置项
-  public getUserConfig(key?: string): SystemConfig | string | null {
+  public getUserConfig(
+    key?: string,
+  ): SystemConfig | string | Index<any> | null {
     if (key) {
       let keys = Object.keys(this.config);
       let search = key.split('.');

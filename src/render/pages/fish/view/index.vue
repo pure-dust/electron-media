@@ -17,6 +17,7 @@
               :data="item"
               :key="item.path"
               @click="toNovel(item)"
+              @delete="deleteNovel(item)"
             ></NovelCard>
           </div>
         </kl-scroll>
@@ -53,12 +54,19 @@ import { NOVEL_CONFIG } from '@/contants/constant';
 import NovelCard from '../components/novel-card.vue';
 import dynamicInput from '../components/dynamic-input.vue';
 
+interface BookInfo extends FileInfo {
+  id: string;
+  _id: string;
+  createAt: string;
+  updateAt: string;
+}
+
 export default defineComponent({
   name: '',
   components: { NovelCard, dynamicInput },
   props: {},
   setup() {
-    const bookList: Ref<Array<FileInfo>> = ref([]);
+    const bookList: Ref<Array<BookInfo>> = ref([]);
     const store = useStore();
     const novelStore = useNovelStore();
     const config: Ref<NovelConfig> = ref(store.getNovel);
@@ -82,6 +90,8 @@ export default defineComponent({
           if (fileList.length > 0) {
             useDatabase('novel', 'insert', {
               data: fileList.map((file) => ({ id: nanoid(), ...file })),
+            }).then(() => {
+              getNovel();
             });
           }
         })
@@ -96,7 +106,20 @@ export default defineComponent({
       });
     };
 
-    const toNovel = (file: FileInfo) => {
+    const deleteNovel = (file: BookInfo) => {
+      useDatabase('novel', 'remove', {
+        query: {
+          id: file.id,
+        },
+        remove: {
+          multi: true,
+        },
+      }).then(() => {
+        getNovel();
+      });
+    };
+
+    const toNovel = (file: BookInfo) => {
       novelStore.setPath(file.path);
       router.push({
         name: 'Novel',
@@ -108,13 +131,14 @@ export default defineComponent({
     });
 
     return {
+      NOVEL_CONFIG,
       bookList,
       config,
       t,
       configWatcher,
       importNovel,
       toNovel,
-      NOVEL_CONFIG,
+      deleteNovel,
     };
   },
 });
