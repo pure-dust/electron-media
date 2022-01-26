@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-17 10:58:33
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 14:38:49
+ * @LastEditTime: 2022-01-26 16:27:06
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -34,6 +34,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    const route = useRoute();
     const novel = ref<NovelInfo>({
       name: '',
       list: [],
@@ -48,7 +49,7 @@ export default defineComponent({
 
     const analyseNovel = () => {
       if (store.path) {
-        if (store.novel.name) {
+        if (store.novel.name === route.query.name) {
           novel.value = store.novel;
         } else {
           analyseFile(store.path).then((res) => {
@@ -58,7 +59,7 @@ export default defineComponent({
         }
       } else {
         router.push({
-          name: useRoute().meta.parent as string,
+          name: route.meta.parent as string,
         });
       }
     };

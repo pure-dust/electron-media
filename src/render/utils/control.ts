@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-21 11:19:40
+ * @LastEditTime: 2022-01-26 15:38:38
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -50,7 +50,7 @@ export const miniMode = (width: number, height: number, mini: boolean) => {
   ipcRenderer.send('mini-size', {
     width,
     height,
-    mini
+    mini,
   });
 };
 

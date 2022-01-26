@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-18 13:33:40
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-25 14:35:02
+ * @LastEditTime: 2022-01-26 10:53:34
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -138,8 +138,6 @@ export default defineComponent({
       content,
       style,
       notice,
-      current,
-      miniContent,
       currentContent,
       onMouseDown,
       onMouseUp,

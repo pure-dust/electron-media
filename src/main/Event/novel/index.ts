@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-17 11:18:33
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-18 16:55:39
+ * @LastEditTime: 2022-01-26 16:25:37
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -86,6 +86,7 @@ class NovelAnalyser {
         content: '',
       })),
     };
+
     return this.novel;
   }
 

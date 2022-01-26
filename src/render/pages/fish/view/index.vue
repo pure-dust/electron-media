@@ -123,6 +123,9 @@ export default defineComponent({
       novelStore.setPath(file.path);
       router.push({
         name: 'Novel',
+        query: {
+          name: file.name,
+        },
       });
     };
 
