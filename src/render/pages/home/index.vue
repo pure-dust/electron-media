@@ -2,20 +2,31 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:31:58
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-21 09:18:35
+ * @LastEditTime: 2022-01-20 11:02:05
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
   <div class="col-fill flex-col">
-    <div class="app-main col-fill" ref="scrollBox" @mousewheel="onMouseWheel">
-      <Card v-for="(item, i) in cardList" :key="i" v-enter-ani:[scrollInstance] :option="item" />
+    <div
+      class="app-main col-fill"
+      ref="scrollBox"
+      @mousemove="mosue_in"
+      @mouseleave="mouse_out"
+      @mousewheel="onMouseWheel"
+    >
+      <Card
+        v-for="(item, i) in cardList"
+        :key="i"
+        v-enter-ani:[scrollBox]
+        :option="item"
+      />
     </div>
     <div class="space-block"></div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, computed, onMounted } from 'vue';
+import { defineComponent, ref, Ref, onMounted } from 'vue';
 import Card from './components/Card.vue';
 
 import { timing, Cubic } from '@/utils/utils';
@@ -24,14 +35,10 @@ export default defineComponent({
   components: { Card },
   props: {},
   setup() {
-    let cardList: Ref<Array<any> | null> = ref(null);
-    let height: Ref<number> = ref(0);
+    let cardList = ref([]);
+    let height = ref(0);
     const scrollBox: Ref<HTMLElement | null> = ref(null);
     const cubic = new Cubic(0.56, 0.11, 0.42, 0.9);
-
-    const scrollInstance = computed(() => {
-      return scrollBox.value;
-    });
 
     const onMouseWheel = timing((e: WheelEvent, auto: boolean) => {
       let dom = e.target as HTMLElement;
@@ -47,7 +54,6 @@ export default defineComponent({
         let clock: NodeJS.Timeout | null = null;
         let t = 0;
         let origin: number = dom.scrollTop;
-        dom.setAttribute('data-scroll', '');
         clock = setInterval(() => {
           t += 1 / 100;
           let rate = Math.round(cubic.solve(t) * 100) / 100;
@@ -55,7 +61,6 @@ export default defineComponent({
             rate = 1;
             clearInterval(clock as NodeJS.Timeout);
             clock = null;
-            dom.removeAttribute('data-scroll');
           }
           dom.scrollTop = origin + rate * interval;
         }, 10);
@@ -70,6 +75,14 @@ export default defineComponent({
         }
       }
     }, 1000);
+
+    const mosue_in = () => {
+      scrollBox.value?.setAttribute('data-scroll', '');
+    };
+
+    const mouse_out = () => {
+      scrollBox.value?.removeAttribute('data-scroll');
+    };
 
     onMounted(() => {
       height.value = scrollBox.value?.offsetHeight as number;
@@ -89,18 +102,21 @@ export default defineComponent({
           icon: 'icon-zhangben',
           path: '/account',
         },
-        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
-        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
-        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
-        { height: height.value, name: 'kl日历', intro: '一个小巧灵活的小日历' },
+        {
+          height: height.value,
+          name: 'kl-fish',
+          intro: '摸就完事了!!!',
+          icon: 'icon-catfish',
+          path: '/fish',
+        },
       ];
     });
     return {
       cardList,
       scrollBox,
-      scrollInstance,
       onMouseWheel,
-      height,
+      mosue_in,
+      mouse_out,
     };
   },
 });
@@ -109,7 +125,8 @@ export default defineComponent({
 $padding: 20px;
 .app-main {
   display: grid;
-  padding: $padding;
+  width: 100%;
+  padding: $padding $padding 0;
   grid-template-columns: repeat(2, calc(50% - #{$padding} / 2));
   grid-template-rows: auto auto;
   overflow: hidden auto;

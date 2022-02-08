@@ -2,30 +2,37 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 10:44:18
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:48:43
+ * @LastEditTime: 2022-01-18 11:32:15
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
   <div class="card-container zcoo animate flex" :style="style" @click="linkTo">
     <div class="card-detail flex-col row-fill">
-      <div class="card-title">{{ option.name }}</div>
-      <div class="card-intro">{{ option.intro }}</div>
+      <div class="card-title">{{ option?.name }}</div>
+      <div class="card-intro">{{ option?.intro }}</div>
     </div>
     <div class="card-img">
-      <Icon
-        :icon="option.icon"
-        :color="themed('primary-light')"
+      <kl-icon
+        :icon="option?.icon"
+        :color="iconColor"
         :hover="false"
-        :svg-style="{ height: '80px', width: '80px' }"
+        :size="80"
       />
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, toRefs, PropType, computed } from 'vue';
+import {
+  defineComponent,
+  toRefs,
+  PropType,
+  computed,
+  ref,
+  onUnmounted,
+} from 'vue';
 import { useRouter } from 'vue-router';
-import { themed } from '@/utils/utils';
+import { themed, handler } from '@/utils';
 
 interface CardOption {
   height: number;
@@ -52,10 +59,6 @@ export default defineComponent({
       return style;
     });
 
-    const intro = computed(() => {
-      return option?.value?.intro.split(/,|，/);
-    });
-
     const linkTo = () => {
       if (option?.value?.path) {
         router.push({
@@ -64,12 +67,21 @@ export default defineComponent({
       }
     };
 
+    let iconColor = ref(themed('primary-light'));
+
+    let key = handler.watch(() => {
+      iconColor.value = themed('primary-light');
+    });
+
+    onUnmounted(() => {
+      handler.destroyed(key);
+    });
+
     return {
       style,
       option,
-      intro,
       linkTo,
-      themed,
+      iconColor,
     };
   },
 });
@@ -81,7 +93,7 @@ export default defineComponent({
   cursor: pointer;
   padding: 20px;
   @include background('primary');
-  @include font-color('light');
+  @include color('light');
   transform-origin: center 100%;
   user-select: none;
 

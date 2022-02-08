@@ -2,10 +2,15 @@
  * @Author: Lixiao2
  * @Date: 2021-06-17 15:19:35
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-23 09:24:29
+ * @LastEditTime: 2022-01-25 14:37:15
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
+
+import _ from 'lodash';
+import { getChapter } from '.';
+import { Index } from '../../../typings/global';
+
 /**
  * @description: 阻止事件一定时间内多次触发
  * @param {Function} fn
@@ -80,12 +85,71 @@ export class Cubic {
   }
 }
 
-/**
- * @description: 生成三次贝塞尔曲线方程
- * @param {string} 变量名
- * @return {string} css变量值
- */
-
 export function themed(key: string) {
-  return getComputedStyle(document.documentElement).getPropertyValue(`--${key}`);
+  return getComputedStyle(document.documentElement).getPropertyValue(
+    `--${key}`,
+  );
+}
+
+/**
+ * @description: 重置源对象属性
+ * @param {target} 源对象
+ * @return {void}
+ */
+export function reset(target: Index<any>, init?: boolean) {
+  for (const key in target) {
+    if (Array.isArray(target[key])) target[key] = [];
+    else if (typeof target[key] === 'boolean') target[key] = init || false;
+    else if (typeof target[key] === 'string') target[key] = '';
+    else if (typeof target[key] === 'number') target[key] = null;
+    else if (typeof target[key] === 'object') reset(target[key]);
+  }
+}
+
+/**
+ * @description: 日期格式化
+ * @param date
+ * @param fmt
+ * @returns
+ */
+export function dateFormat(date: Date, fmt = 'yyyy-MM-dd') {
+  let o: Index<number | string> = {
+    'M+': date.getMonth() + 1,
+    'd+': date.getDate(),
+    'h+': date.getHours(),
+    'm+': date.getMinutes(),
+    's+': date.getSeconds(),
+    'q+': Math.floor((date.getMonth() + 3) / 3),
+    S: date.getMilliseconds(),
+  };
+  if (/(y+)/.test(fmt)) {
+    fmt = fmt.replace(
+      RegExp.$1,
+      (date.getFullYear() + '').substr(4 - RegExp.$1.length),
+    );
+  }
+  for (let k in o) {
+    if (new RegExp('(' + k + ')').test(fmt)) {
+      fmt = fmt.replace(
+        RegExp.$1,
+        RegExp.$1.length == 1
+          ? (o[k] as string)
+          : ('00' + o[k]).substr(('' + o[k]).length),
+      );
+    }
+  }
+  return fmt;
+}
+
+export async function transChapter(current: string, next?: string) {
+  let str = '';
+  if (typeof next === 'string') {
+    str =
+      current.replace(/\r/g, '') +
+      `[\\s\\S]*?` +
+      `(?=${next.replace(/\r/g, '')})`;
+  } else {
+    str = current.replace(/\r/g, '') + `[\\s\\S]*`;
+  }
+  return await getChapter(str);
 }

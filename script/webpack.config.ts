@@ -1,12 +1,15 @@
-import { join } from 'path';
+import { join, resolve } from 'path';
 import { readFileSync } from 'fs';
 import { Configuration, Stats, DefinePlugin } from 'webpack';
-import HtmlWebpackPlugin from 'html-webpack-plugin';
+import  HtmlWebpackPlugin from 'html-webpack-plugin';
 import { VueLoaderPlugin } from 'vue-loader';
 import { red, green } from 'chalk';
 import { resolveRoot } from './utils';
 
-export const config = (env: typeof process.env.NODE_ENV, proc: 'main' | 'render') => {
+export const config = (
+  env: typeof process.env.NODE_ENV,
+  proc: 'main' | 'render',
+) => {
   const isdev = env === 'development';
   const isprod = env === 'production';
   const ismain = proc === 'main';
@@ -42,7 +45,14 @@ export const config = (env: typeof process.env.NODE_ENV, proc: 'main' | 'render'
             plugins: [
               ['@babel/plugin-transform-typescript', { isTSX: true }],
               '@vue/babel-plugin-jsx',
-              ['import', { libraryName: 'ant-design-vue', libraryDirectory: 'es', style: 'css' }],
+              [
+                'import',
+                {
+                  libraryName: 'ant-design-vue',
+                  libraryDirectory: 'es',
+                  style: 'css',
+                },
+              ],
             ],
           },
         },
@@ -76,6 +86,15 @@ export const config = (env: typeof process.env.NODE_ENV, proc: 'main' | 'render'
                 },
               },
             },
+            {
+              loader: 'sass-resources-loader',
+              options: {
+                resources: resolve(
+                  __dirname,
+                  '../src/render/styles/_handle.scss',
+                ),
+              },
+            },
           ],
         },
       ],
@@ -95,7 +114,10 @@ export const config = (env: typeof process.env.NODE_ENV, proc: 'main' | 'render'
       ? [
           new HtmlWebpackPlugin({
             templateContent: () => {
-              const html = readFileSync(resolveRoot('src/render/index.html'), 'utf8');
+              const html = readFileSync(
+                resolveRoot('src/render/index.html'),
+                'utf8',
+              );
               return html
                 .split('\n')
                 .filter((line) => !line.includes('/main.ts')) // 去掉 vite 开发期 script

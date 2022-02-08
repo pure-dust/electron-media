@@ -1,3 +1,21 @@
 {
-  "theme": "#3195ff"
+  "theme": {
+    "theme": "#3195ff",
+    "width": 540,
+    "height": 400
+  },
+  "novel": {
+    "color": "#000000",
+    "size": 12,
+    "background": "#ffffff",
+    "count": 50,
+    "lineHeight": 18,
+    "transparent": false
+  },
+  "lang": "zh-cn",
+  "key": {
+    "miniSize": ["CommandOrControl", "Alt", "num1"],
+    "prevPage": ["CommandOrControl", "Alt", "numsub"],
+    "nextPage": ["CommandOrControl", "Alt", "numadd"]
+  }
 }

@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "types": [
+      "@types/lodash",
+      "@types/webpack-env",
+      "@types/koa",
+      "@types/node",
+      "@types/nedb"
+    ],
+    "module": "CommonJS",
+    "moduleResolution": "node",
+    "allowJs": true,
+    "importHelpers": true,
+    "jsx": "react",
+    "esModuleInterop": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": false,
+    "allowSyntheticDefaultImports": true,
+    "suppressImplicitAnyIndexErrors": true 
+  }
+}

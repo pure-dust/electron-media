@@ -9,9 +9,9 @@
 <template>
   <div class="col-fill calendar-container flex-col">
     <div class="calendar-tool flex animate">
-      <Icon @on-click="preMonth" width="30px" icon="icon-ic_arrow_left" hover />
+      <kl-icon @on-click="preMonth" width="30px" icon="icon-ic_arrow_left" hover />
       <div class="tool-box row-fill flex"></div>
-      <Icon @on-click="nextMonth" width="30px" icon="icon-ic_arrow_right" hover />
+      <kl-icon @on-click="nextMonth" width="30px" icon="icon-ic_arrow_right" hover />
     </div>
     <div class="calendar-inner zcoo col-fill" @mouseover="getDate" @click="toDetailCard">
       <div class="calendar-header" v-for="(item, i) in dateMap" :key="i">{{ item }}</div>
@@ -30,29 +30,27 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, ref, Ref } from 'vue';
-import { Calenar, CalenarType } from '@/utils/calendar';
+import { Calenar, CalendarType } from '@/utils/calendar';
 import { useRouter } from 'vue-router';
-import { useStore } from '@/store';
+import { useStore } from '@/store/calendar';
 import _ from 'lodash';
-import Icon from '@/components/Icon/index.vue';
 export default defineComponent({
   name: 'Calendar',
-  components: { Icon },
   props: {},
   setup() {
     const calendar = new Calenar();
-    const date: Ref<Array<CalenarType>> = ref([]);
+    const date: Ref<Array<CalendarType>> = ref([]);
     const router = useRouter();
     const store = useStore();
 
     const dateMap = ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期天'];
     onMounted(() => {
-      let cacheDate = store.getters.getCurrentDate ? store.getters.getCurrentDate : new Date();
+      let cacheDate = store.getCurrentDate ? store.getCurrentDate : new Date();
       calendar.setDate(cacheDate);
       date.value = calendar.getCalendar();
     });
 
-    const calendarClass = (data: CalenarType) => {
+    const calendarClass = (data: CalendarType) => {
       let classArr = [];
       if (data.now) classArr.push('now-date');
       if (data.current) classArr.push('current-date');
@@ -64,13 +62,13 @@ export default defineComponent({
     const nextMonth = () => {
       calendar.getNext();
       date.value = calendar.getCalendar();
-      store.commit('setCurrentDate', calendar.getCurrent());
+      store.setCurrentDate(calendar.getCurrent());
     };
 
     const preMonth = () => {
       calendar.getPreious();
       date.value = calendar.getCalendar();
-      store.commit('setCurrentDate', calendar.getCurrent());
+      store.setCurrentDate(calendar.getCurrent());
     };
 
     const getDate = (e: MouseEvent) => {};
@@ -88,7 +86,7 @@ export default defineComponent({
       }
       if (index !== undefined && index !== null) {
         let data = date.value[parseInt(index)];
-        store.commit('setCardInfo', data);
+        store.setCardInfo(data);
         router.push({
           name: 'Single',
         });
@@ -145,8 +143,8 @@ $padding: 10px;
     grid-template-rows: auto auto;
 
     .calendar-header {
-      @include font-color('light');
-      @include font-size('small');
+      @include color('light');
+      @include size('small');
       @include border('light');
       @include background('primary');
       margin-left: -1px;
@@ -160,8 +158,8 @@ $padding: 10px;
       position: relative;
       user-select: none;
       overflow: hidden;
-      @include font-color('light');
-      @include font-size('small');
+      @include color('light');
+      @include size('small');
       @include border('light');
       align-items: center;
       justify-content: space-around;
@@ -171,7 +169,7 @@ $padding: 10px;
       padding-bottom: 10px;
 
       & > p:nth-child(1) {
-        @include font-size('large');
+        @include size('large');
         height: 0;
         flex: 1;
       }

@@ -2,18 +2,20 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 11:22:32
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-18 17:54:57
+ * @LastEditTime: 2022-01-25 13:55:49
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
 import { openSync, readFileSync, closeSync, writeFileSync } from 'fs';
 import { join } from 'path';
 import { app } from 'electron';
+import { Index } from '@root/typings/global';
+import { SystemConfig, ConfigItem } from '@root/typings/user-config';
 
 export class ConfigLoader {
   private userPath: string;
   private defaultPath: string;
-  private config: SysTemConfig = {} as SysTemConfig;
+  private config: SystemConfig = {} as SystemConfig;
   public loadMessage: string = '';
 
   static _instance: ConfigLoader | null;
@@ -33,14 +35,16 @@ export class ConfigLoader {
   }
 
   // 读取配置文件
-  private readConfigFile(path: string): SysTemConfig {
+  private readConfigFile(path: string): SystemConfig {
     let fd;
     try {
       fd = openSync(path, 'r');
-    } catch (err) {
+    } catch (err: any) {
       if (err.code == 'ENOENT') {
         this.loadDefaultConfig();
-        writeFileSync(this.userPath, JSON.stringify(this.config), { flag: 'w+' });
+        writeFileSync(this.userPath, JSON.stringify(this.config), {
+          flag: 'w+',
+        });
         fd = openSync(path, 'r');
       } else {
         throw new Error(err);
@@ -59,12 +63,12 @@ export class ConfigLoader {
     } catch (err) {
       return null;
     }
-    writeFileSync(fd, JSON.stringify(this.config));
+    writeFileSync(fd, JSON.stringify(this.config, undefined, 2));
     closeSync(fd);
   }
 
   // 检查复杂类型是否为空--只检查第一层
-  private checkIsNull(item: Array<any> | (Object & Index)): boolean {
+  private checkIsNull(item: Array<any> | (Object & Index<any>)): boolean {
     if (Array.isArray(item)) {
       return item.filter((el) => this.checkSingle(el)).length > 0;
     } else if (Object.prototype.toString.call(item) == '[object Object]') {
@@ -82,30 +86,53 @@ export class ConfigLoader {
 
   // 加载默认配置
   private loadDefaultConfig() {
-    let defaultConfig: SysTemConfig = this.readConfigFile(this.defaultPath);
+    let defaultConfig: SystemConfig = this.readConfigFile(this.defaultPath);
     this.config = defaultConfig;
   }
 
   // 加载用户配置
   private loadUserConfig() {
-    let userConfig: SysTemConfig = this.readConfigFile(this.userPath);
+    let userConfig: SystemConfig = this.readConfigFile(this.userPath);
     this.config = userConfig;
   }
 
   // 更新用户配置
   public updateUserConfig(configItem: ConfigItem) {
-    if (!this.checkIsNull(configItem)) return;
-    this.config[configItem.key] = configItem.value;
-    this.setUserConfig();
+    return new Promise<boolean>((resolve, reject) => {
+      try {
+        if (!this.checkIsNull(configItem)) return;
+        let search = configItem.key.split('.');
+        if (search.length > 1) {
+          this.config[search[0]][search[1]] = configItem.value;
+        } else {
+          this.config[configItem.key] = configItem.value;
+        }
+        this.setUserConfig();
+        resolve(true);
+      } catch (error) {
+        reject(false);
+      }
+    });
   }
 
   // 获取配置项
-  public getUserConfig(key?: string): SysTemConfig | string | null {
-    if (arguments.length != 0) {
+  public getUserConfig(
+    key?: string,
+  ): SystemConfig | string | Index<any> | null {
+    if (key) {
       let keys = Object.keys(this.config);
-      let target = keys.find((el) => el == key);
-      if (!target) return null;
-      else return this.config[target];
+      let search = key.split('.');
+      if (search.length > 1) {
+        let val = this.config;
+        for (let i = 0; i < search.length; i++) {
+          val = val?.[search[i]];
+        }
+        return val;
+      } else {
+        let target = keys.find((el) => el == key);
+        if (!target) return null;
+        return this.config[target];
+      }
     } else return this.config;
   }
 

@@ -2,62 +2,91 @@
  * @Author: Lixiao2
  * @Date: 2021-06-11 09:03:50
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-23 14:07:42
+ * @LastEditTime: 2022-01-25 10:46:27
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
 <template>
-  <div class="toolbar-container animate" @mousedown.self="onMouseDown" @mouseup="windowMove(false)">
+  <div
+    class="toolbar-container animate"
+    @mousedown.self="onMouseDown"
+    @mouseup="windowMove(false)"
+  >
     <transition name="left">
-      <span class="text-box back animate zcoo" v-if="back" @click.stop.capture="backToHome"
+      <span
+        class="text-box back animate zcoo"
+        v-if="back"
+        @click.stop.capture="backToHome"
         >返回</span
       >
     </transition>
     <div class="fun-box flex">
-      <span class="text-box mini dance animate"> mini </span>
-      <Icon hover icon="icon-ic_skin" width="32px" @on-click="open" ref="btn">
-        <transition name="cross">
-          <div class="color-panel animate" v-if="colorPanel">
-            <ColorSelector v-click-outside:[btn]="open" />
-          </div>
-        </transition>
-      </Icon>
-      <Icon hover icon="icon-ic_tack" width="32px" @on-click="fixedScreen" :fixed-hover="isFixed" />
-      <Icon hover icon="icon-ic_reduce" width="32px" @on-click="minScreen" />
-      <Icon hover icon="icon-ic_cancel" width="32px" @on-click="closeWindow" />
+      <span class="text-box mini dance animate" @click="miniSize"> mini </span>
+      <div class="icon-box">
+        <kl-icon
+          hover
+          icon="icon-ic_setting"
+          @click="$router.push({ name: 'Setting' })"
+        ></kl-icon>
+      </div>
+      <div class="icon-box">
+        <kl-color-selector
+          :default-value="theme"
+          v-model="theme"
+          @change="themeChange"
+        >
+          <template #reference>
+            <kl-icon hover icon="icon-ic_skin" width="32px" />
+          </template>
+        </kl-color-selector>
+      </div>
+      <div class="icon-box">
+        <kl-icon
+          hover
+          icon="icon-ic_tack"
+          @on-click="fixedScreen"
+          :fixed-hover="notice.fixed"
+        />
+      </div>
+      <div class="icon-box">
+        <kl-icon hover icon="icon-ic_reduce" @on-click="minScreen" />
+      </div>
+      <div class="icon-box">
+        <kl-icon hover icon="icon-ic_cancel" @on-click="closeWindow" />
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, Ref, onMounted, computed } from 'vue';
-import { windowMove, minScreen, fixWindow, closeWindow } from '@/utils/control';
+import { defineComponent, ref, onMounted, computed, watch } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
-import { useStore } from '@/store/index';
+import { useStore } from '@/store/config';
+import { useStore as useNoticeStore } from '@/store/notice';
+import {
+  setConfig,
+  setTheme,
+  windowMove,
+  minScreen,
+  closeWindow,
+} from '@/utils';
+import { useFixedWindow, useNovelMini } from '@/control/screen';
 
-import ColorSelector from './components/ColorSelector/index.vue';
 export default defineComponent({
   name: 'ToolBar',
-  components: { ColorSelector },
-  props: {},
   setup() {
-    const colorPanel = ref(false);
-    const btn: Ref<HTMLElement | null> = ref(null);
     const store = useStore();
-    const isFixed = ref(false);
+    const notice = useNoticeStore();
     const router = useRouter();
     const route = useRoute();
-
-    const open = () => {
-      colorPanel.value = !colorPanel.value;
-    };
-
-    const backToHome = () => {
-      router.push({ name: route.meta?.parent as string });
-    };
+    const theme = ref(store.getTheme.theme);
 
     const back = computed(() => {
-      return store.getters.getBack;
+      return notice.back;
     });
+
+    const backToHome = () => {
+      router.push({ name: route.meta.parent as string });
+    };
 
     const onMouseDown = (e: MouseEvent) => {
       if (
@@ -71,30 +100,42 @@ export default defineComponent({
       windowMove(true);
     };
 
-    const fixedScreen = () => {
-      fixWindow(!isFixed.value).then((sign) => {
-        isFixed.value = sign as boolean;
-      });
+    const fixedScreen = async () => {
+      useFixedWindow(!notice.fixed);
     };
 
-    onMounted(() => {
-      fixWindow().then((sign) => {
-        isFixed.value = sign as boolean;
-      });
+    const themeChange = () => {
+      setConfig({ key: 'theme.theme', value: theme.value });
+      setTheme(theme.value);
+      store.setTheme({ theme: theme.value });
+    };
+
+    const miniSize = () => {
+      switch (route.meta.mini) {
+        case 'novel':
+          useNovelMini();
+          break;
+        default:
+          break;
+      }
+    };
+
+    onMounted(async () => {
+      useFixedWindow();
     });
 
     return {
-      colorPanel,
-      open,
-      btn,
+      theme,
+      back,
+      notice,
       onMouseDown,
       windowMove,
       closeWindow,
       minScreen,
       fixedScreen,
-      isFixed,
-      back,
       backToHome,
+      themeChange,
+      miniSize,
     };
   },
 });
@@ -118,6 +159,9 @@ $height: 30px;
     margin-left: auto;
     align-items: center;
     height: 100%;
+    & > * {
+      flex: 1;
+    }
 
     .mini {
       line-height: $height - 2;
@@ -127,15 +171,9 @@ $height: 30px;
       background: themed('primary-hover');
     }
 
-    .color-panel {
-      @include background('primary');
-      position: absolute;
-      left: -64px;
-      top: 100%;
-      width: 160px;
-      height: 120px;
-      padding: 5px;
-      box-shadow: 0 2px 8px themed('border-dark-color');
+    .icon-box {
+      width: 30px;
+      height: 100%;
     }
   }
 

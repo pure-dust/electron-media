@@ -1,10 +1,7 @@
 import { createApp } from 'vue';
-import { CusAxiosInstance } from '../request';
+import { createPinia } from 'pinia';
 
-import http from '../request';
-
-import { perload } from '@/utils/preload';
-import Store, { key } from '@/store';
+import { preload } from '@/utils/preload';
 import router from './router';
 import App from './App.vue';
 
@@ -12,26 +9,24 @@ import ClickWave from '@/directives/ClickWave';
 import ClickOuntside from '@/directives/ClickOutside';
 import EnterAnimate from './directives/EnterAnimate';
 
-import Icon from '@/components/Icon/index.vue';
-
 import './styles/index.scss';
-import '@/assets/iconfont/iconfont.js';
 import '@/assets/font/font.scss';
 
-declare module '@vue/runtime-core' {
-  interface ComponentCustomProperties {
-    $http: CusAxiosInstance;
-  }
-}
+import KlUI from '@/components';
 
-perload().then(() => {
-  const app = createApp(App);
-  app.config.globalProperties.$http = http;
-  app.component('Icon', Icon);
-  app.use(Store, key);
-  app.use(router);
-  app.directive('click-wave', ClickWave);
-  app.directive('click-outside', ClickOuntside);
-  app.directive('enter-ani', EnterAnimate);
+import { useStore } from '@/store/config';
+
+const app = createApp(App);
+app.use(createPinia());
+app.use(KlUI);
+app.use(router);
+app.directive('click-wave', ClickWave);
+app.directive('click-outside', ClickOuntside);
+app.directive('enter-ani', EnterAnimate);
+preload().then((message) => {
+  const store = useStore();
+  store.setTheme(message.theme);
+  store.setNovel(message.novel);
+  store.setLang(message.lang);
   app.mount('#app');
 });
