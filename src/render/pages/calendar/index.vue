@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-18 11:11:47
  * @LastEditors: Lixiao
- * @LastEditTime: 2021-06-23 14:14:55
+ * @LastEditTime: 2022-03-01 17:35:21
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -139,7 +139,7 @@ $padding: 10px;
 
   .calendar-inner {
     display: grid;
-    grid-template-columns: repeat(7, auto);
+    grid-template-columns: repeat(7, calc(100% / 7));
     grid-template-rows: auto auto;
 
     .calendar-header {
