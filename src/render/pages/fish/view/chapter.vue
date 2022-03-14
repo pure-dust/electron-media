@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-18 13:33:40
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-26 10:53:34
+ * @LastEditTime: 2022-03-11 13:54:55
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -28,7 +28,14 @@
   </div>
 </template>
 <script lang="ts">
-import { computed, defineComponent, onMounted, ref, StyleValue } from 'vue';
+import {
+  computed,
+  defineComponent,
+  onMounted,
+  onUnmounted,
+  ref,
+  StyleValue,
+} from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useStore } from '@/store/novel';
 import { useStore as useConfigStore } from '@/store/config';
@@ -46,14 +53,11 @@ export default defineComponent({
     const router = useRouter();
 
     const content = ref('');
-    const miniContent = ref('');
+    const miniContent = ref([]);
     const current = ref(0);
 
     const currentContent = computed(() => {
-      return miniContent.value.substring(
-        current.value * Number(config.novel.count),
-        (current.value + 1) * Number(config.novel.count),
-      );
+      return miniContent.value[current.value];
     });
 
     const style = computed(() => {
@@ -71,7 +75,7 @@ export default defineComponent({
 
     const nextPage = async () => {
       if (!notice.mini) return;
-      if (current.value * config.novel.count > miniContent.value.length) {
+      if (current.value === miniContent.value.length - 1) {
         if (store.current === store.novel.list.length - 1) {
           return;
         }
@@ -91,8 +95,7 @@ export default defineComponent({
         }
         store.setCurrent(store.current - 1);
         await getChapter();
-        current.value =
-          Math.ceil(miniContent.value.length / config.novel.count) - 1;
+        current.value = miniContent.value.length - 1;
       } else {
         current.value--;
       }
@@ -115,7 +118,11 @@ export default defineComponent({
     const getChapter = async () => {
       let res = await transChapter(store.getCurrent[0], store.getCurrent[1]);
       content.value = res?.replace(/(\r)/g, '<br />') || '';
-      miniContent.value = res?.replace(/(\r|\t\s)/g, '') || '';
+      let str = res?.replace(/(\r|\n)/g, '') || '';
+      miniContent.value = [];
+      for (let i = 0; i < str.length; i += config.novel.count) {
+        miniContent.value.push(str.substring(i, i + config.novel.count));
+      }
     };
 
     onMounted(() => {
@@ -125,13 +132,16 @@ export default defineComponent({
         });
       } else {
         getChapter();
-        ipcRenderer.off('mini-size', useNovelMini);
-        ipcRenderer.off('next-page', nextPage);
-        ipcRenderer.off('prev-page', prevPage);
         ipcRenderer.on('mini-size', useNovelMini);
         ipcRenderer.on('next-page', nextPage);
         ipcRenderer.on('prev-page', prevPage);
       }
+    });
+
+    onUnmounted(() => {
+      ipcRenderer.off('mini-size', useNovelMini);
+      ipcRenderer.off('next-page', nextPage);
+      ipcRenderer.off('prev-page', prevPage);
     });
 
     return {
@@ -139,6 +149,8 @@ export default defineComponent({
       style,
       notice,
       currentContent,
+      miniContent,
+      current,
       onMouseDown,
       onMouseUp,
     };

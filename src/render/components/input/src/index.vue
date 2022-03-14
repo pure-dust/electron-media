@@ -1,7 +1,18 @@
 <template>
   <div class="kl-input">
     <input
-      v-if="type != 'textarea'"
+      v-if="type === 'text'"
+      class="animate zcoo"
+      :type="type"
+      spellcheck="false"
+      @input="updateInput"
+      :placeholder="placeholder"
+      :value="inputVal"
+      :readonly="readonly"
+      :style="computedStyle"
+    />
+    <input
+      v-else-if="type === 'number'"
       class="animate zcoo"
       :type="type"
       spellcheck="false"
@@ -12,7 +23,7 @@
       :style="computedStyle"
     />
     <textarea
-      v-else
+      v-else="type === 'textarea'"
       class="animate zcoo"
       @input="updateInput"
       :placeholder="placeholder"
@@ -24,8 +35,16 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, toRefs, onMounted, PropType, watch, computed } from 'vue';
-type inputType = 'text' | 'textarea';
+import {
+  defineComponent,
+  ref,
+  toRefs,
+  onMounted,
+  PropType,
+  watch,
+  computed,
+} from 'vue';
+type inputType = 'text' | 'textarea' | 'number';
 export default defineComponent({
   name: 'KlInput',
   props: {
@@ -70,15 +89,23 @@ export default defineComponent({
     watch(
       () => prop.modelValue,
       (v) => {
-        inputVal.value = v;
+        if (prop.type === 'number') {
+          inputVal.value = +v;
+        } else {
+          inputVal.value = v;
+        }
       },
     );
 
     const updateInput = (e: Event) => {
       const val = (e.target as HTMLInputElement).value;
-      inputVal.value = val;
-      emit('update:modelValue', val);
-      emit('change', val);
+      if (prop.type === 'number') {
+        inputVal.value = +val;
+      } else {
+        inputVal.value = val;
+      }
+      emit('update:modelValue', inputVal.value);
+      emit('change', inputVal.value);
     };
 
     onMounted(() => {
@@ -113,6 +140,8 @@ export default defineComponent({
     color: themed(primary);
     letter-spacing: 1px;
     text-decoration: none;
+    appearance: none;
+    outline: none;
 
     &:focus {
       border: 1px solid themed(primary-dark);
@@ -122,6 +151,12 @@ export default defineComponent({
     &::-webkit-input-placeholder {
       color: themed(disabled);
     }
+  }
+
+  input[type='number']::-webkit-inner-spin-button,
+  input[type='number']::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 
   textarea {

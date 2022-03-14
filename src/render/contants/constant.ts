@@ -1,3 +1,11 @@
+/*
+ * @Author: lixiao
+ * @Date: 2021-07-05 16:39:47
+ * @LastEditors: Lixiao
+ * @LastEditTime: 2022-03-11 11:07:55
+ * @Description: Do not edit
+ * @Email: 932184220@qq.com
+ */
 import { Index } from "@root/typings/global";
 
 export const SCHEDULE_TYPE = {
@@ -10,11 +18,11 @@ export const SCHEDULE_SELECT = [
   { name: '出行', value: SCHEDULE_TYPE.TRAVEL },
 ];
 
-export const NOVEL_CONFIG: Index<'input'|'color'|'check'> = {
+export const NOVEL_CONFIG: Index<'text'|'color'|'check'|'number'> = {
   color: 'color',
-  size: 'input',
+  size: 'number',
   background: 'color',
-  count: 'input',
-  lineHeight: 'input',
+  count: 'number',
+  lineHeight: 'number',
   transparent: 'check',
 };

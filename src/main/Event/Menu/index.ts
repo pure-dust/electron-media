@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-09 14:50:16
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-25 13:57:59
+ * @LastEditTime: 2022-03-14 16:21:02
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -16,6 +16,10 @@ const icon = app.isPackaged
 export default function (win: BrowserWindow): void {
   const menu = new Menu();
   const tray = new Tray(icon);
+
+  tray.on("click", () => {
+    win.show()
+  })
 
   menu.append(
     new MenuItem({

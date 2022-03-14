@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2022-01-19 09:40:27
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-19 14:48:15
+ * @LastEditTime: 2022-03-11 11:08:02
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
 -->
@@ -13,7 +13,15 @@
     </label>
     <div class="kl-dynamic-input-inner">
       <kl-input
-        v-if="type === 'input'"
+        v-if="type === 'text'"
+        v-model="value"
+        @change="onChange"
+        :color="color"
+        :background="background"
+      ></kl-input>
+      <kl-input
+        v-else-if="type === 'number'"
+        :type="type"
         v-model="value"
         @change="onChange"
         :color="color"
@@ -48,7 +56,7 @@ export default defineComponent({
       type: String,
     },
     type: {
-      type: String as PropType<'input' | 'color' | 'check'>,
+      type: String as PropType<'text' | 'color' | 'check' | 'number'>,
     },
     modelValue: {
       type: [String, Number, Boolean],

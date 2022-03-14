@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-15 15:03:00
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-21 11:21:40
+ * @LastEditTime: 2022-03-14 16:20:25
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -55,7 +55,8 @@ const EventBus = (win: BrowserWindow) => {
   });
 
   ipcMain.on('close-window', () => {
-    app.quit();
+    // app.quit();
+    win.hide()
   });
 
   ipcMain.on('use-database', (event: IpcMainEvent, ...message) => {
@@ -144,6 +145,7 @@ const EventBus = (win: BrowserWindow) => {
       win.center();
     }
   });
+
 };
 
 export default EventBus;

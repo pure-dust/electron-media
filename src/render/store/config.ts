@@ -2,16 +2,11 @@
  * @Author: Lixiao2
  * @Date: 2021-06-01 17:51:25
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-20 11:13:22
+ * @LastEditTime: 2022-03-11 11:00:49
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
-import {
-  ThemeConfig,
-  NovelConfig,
-  themeKey,
-  novelKey,
-} from '@root/typings/user-config';
+import { ThemeConfig, NovelConfig } from '@root/typings/user-config';
 import { defineStore } from 'pinia';
 
 export const useStore = defineStore('config', {
@@ -38,18 +33,14 @@ export const useStore = defineStore('config', {
     getNovel: (state): NovelConfig => state.novel,
   },
   actions: {
-    setTheme(payload:  Partial<ThemeConfig>) {
+    setTheme(payload: Partial<ThemeConfig>) {
       Object.keys(this.theme).forEach((key) => {
-        payload[key as themeKey]
-          ? (this.theme[key as themeKey] = payload[key as themeKey])
-          : undefined;
+        payload[key] ? (this.theme[key] = payload[key]) : undefined;
       });
     },
     setNovel(payload: NovelConfig) {
       Object.keys(this.novel).forEach((key) => {
-        payload[key as novelKey]
-          ? (this.novel[key as novelKey] = payload[key as novelKey] as never)
-          : undefined;
+        payload[key] ? (this.novel[key] = payload[key]) : undefined;
       });
     },
     setLang(lang: string) {

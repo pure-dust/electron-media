@@ -16,6 +16,7 @@
   "key": {
     "miniSize": ["CommandOrControl", "Alt", "num1"],
     "prevPage": ["CommandOrControl", "Alt", "numsub"],
-    "nextPage": ["CommandOrControl", "Alt", "numadd"]
+    "nextPage": ["CommandOrControl", "Alt", "numadd"],
+    "simpleMode": ["CommandOrControl", "Alt", "num0"]
   }
 }

@@ -2,7 +2,7 @@
  * @Author: Lixiao2
  * @Date: 2021-06-16 11:07:36
  * @LastEditors: Lixiao
- * @LastEditTime: 2022-01-26 15:38:38
+ * @LastEditTime: 2022-03-14 14:22:26
  * @Desciption: Do not edit
  * @Email: 932184220@qq.com
  */
@@ -13,62 +13,6 @@ import { RemoveOptions, UpdateOptions } from 'nedb';
 import { ConfigItem, ConfigType } from '../../../typings/user-config';
 import { Index, NedbCbParams, RunTimeError } from '../../../typings/global';
 import { FileInfo, NovelInfo } from '../../../typings/novel';
-
-export const getConfig = (message: string) => {
-  ipcRenderer.send('get-config', message);
-  return new Promise<string | ConfigType>((resolve, reject) => {
-    ipcRenderer.on(
-      'get-config',
-      (event: IpcRendererEvent, message: string | ConfigType) => {
-        resolve(message);
-      },
-    );
-  });
-};
-
-export const setConfig = (message: ConfigItem) => {
-  ipcRenderer.send('set-config', message);
-  return new Promise<boolean>((resolve, reject) => {
-    ipcRenderer.on(
-      'set-config',
-      (event: IpcRendererEvent, message: boolean) => {
-        resolve(message);
-      },
-    );
-  });
-};
-
-export const windowMove = (canMove: boolean) => {
-  ipcRenderer.send('window-move-open', canMove);
-};
-
-export const minScreen = () => {
-  ipcRenderer.send('min-window');
-};
-
-export const miniMode = (width: number, height: number, mini: boolean) => {
-  ipcRenderer.send('mini-size', {
-    width,
-    height,
-    mini,
-  });
-};
-
-export const fixWindow = (fixed?: boolean) => {
-  ipcRenderer.send('fix-window', fixed);
-  return new Promise<boolean>((resolve, reject) => {
-    ipcRenderer.on(
-      'get-fixed-window',
-      (event: IpcRendererEvent, message: boolean) => {
-        resolve(message);
-      },
-    );
-  });
-};
-
-export const closeWindow = () => {
-  ipcRenderer.send('close-window');
-};
 
 export type useDatabaseType = 'insert' | 'find' | 'update' | 'remove';
 
@@ -92,6 +36,70 @@ export interface useDatabaseOption extends Object {
   cond?: CondType;
 }
 
+// 获取配置
+export const getConfig = (message: string) => {
+  ipcRenderer.send('get-config', message);
+  return new Promise<string | ConfigType>((resolve, reject) => {
+    ipcRenderer.on(
+      'get-config',
+      (event: IpcRendererEvent, message: string | ConfigType) => {
+        resolve(message);
+      },
+    );
+  });
+};
+
+// 更新配置
+export const setConfig = (message: ConfigItem) => {
+  ipcRenderer.send('set-config', message);
+  return new Promise<boolean>((resolve, reject) => {
+    ipcRenderer.on(
+      'set-config',
+      (event: IpcRendererEvent, message: boolean) => {
+        resolve(message);
+      },
+    );
+  });
+};
+
+// 移动窗口
+export const windowMove = (canMove: boolean) => {
+  ipcRenderer.send('window-move-open', canMove);
+};
+
+// 最小化
+export const minScreen = () => {
+  ipcRenderer.send('min-window');
+};
+
+// 小窗模式
+export const miniMode = (width: number, height: number, mini: boolean) => {
+  ipcRenderer.send('mini-size', {
+    width,
+    height,
+    mini,
+  });
+};
+
+// 置于最上层
+export const fixWindow = (fixed?: boolean) => {
+  ipcRenderer.send('fix-window', fixed);
+  return new Promise<boolean>((resolve, reject) => {
+    ipcRenderer.on(
+      'get-fixed-window',
+      (event: IpcRendererEvent, message: boolean) => {
+        resolve(message);
+      },
+    );
+  });
+};
+
+// 退出程序
+export const closeWindow = () => {
+  ipcRenderer.send('close-window');
+};
+
+// 使用数据库
 export const useDatabase = (
   table: TableList,
   type: useDatabaseType,
@@ -110,10 +118,12 @@ export const useDatabase = (
   });
 };
 
+// 日程
 export const notifyAction = (notice: NotificationConstructorOptions) => {
   ipcRenderer.send('notice', notice);
 };
 
+// 选择文件
 export const selectFile = () => {
   ipcRenderer.send('select-file');
   return new Promise<Array<FileInfo>>((resolve, reject) => {
@@ -130,6 +140,7 @@ export const selectFile = () => {
   });
 };
 
+// 分析文件
 export const analyseFile = (path: string) => {
   ipcRenderer.send('analyse-file', path);
   return new Promise<NovelInfo>((resolve, reject) => {
@@ -146,6 +157,7 @@ export const analyseFile = (path: string) => {
   });
 };
 
+// 获取章节
 export const getChapter = (chapter: string) => {
   ipcRenderer.send('get-chapter', chapter);
   return new Promise<string>((resolve, reject) => {
@@ -153,6 +165,23 @@ export const getChapter = (chapter: string) => {
       'get-chapter',
       (event: IpcRendererEvent, message: string | RunTimeError) => {
         if (typeof message === 'string') {
+          resolve(message);
+        } else {
+          reject(message);
+        }
+      },
+    );
+  });
+};
+
+// 建议快捷键模式
+export const simpleMode = (simple: boolean) => {
+  ipcRenderer.send('simple-mode', simple);
+  return new Promise<boolean>((resolve, reject) => {
+    ipcRenderer.once(
+      'simple-mode',
+      (event: IpcRendererEvent, message: boolean) => {
+        if (typeof message === 'boolean') {
           resolve(message);
         } else {
           reject(message);

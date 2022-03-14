@@ -5,10 +5,9 @@ const isDevelopment = process.env;
 import menuEvent from './Event/Menu/index';
 import eventBus from './Event/event/index';
 import moveEvent from './Event/move/index';
-import shotcut from './Event/shotcut';
+import { registerComHk, registerSysHk } from './Event/shotcut';
 
 import { ConfigLoader } from './Event/config/config';
-
 
 const conf = ConfigLoader.getInstance();
 
@@ -54,7 +53,8 @@ if (!getLock) {
     menuEvent(win);
     eventBus(win);
     moveEvent(win);
-    shotcut(win)
+    registerSysHk(win);
+    registerComHk(win);
 
     if (isDevelopment && !process.env.IS_TEST) {
       try {
